@@ -1,0 +1,81 @@
+npm init -y
+touch index.js
+var http = require('require');
+node --version
+Node 4
+http.createServer(function(reg, res) {
+	res.writeHead(200, {
+		'Content-Type': 'text/plain'
+	});
+	res.end('Hello world');
+}).listen(3000, '127.0.0.1');
+
+console.log('Server running at http://127.0.0.1:3000/');
+
+
+var app = require('express');
+
+npm install --save express
+vi .gitignore node_modules
+gr
+
+
+app.get('/', function(req, res) {
+	res.send('Hello world');
+	//res.json('Hello world');
+});
+
+var server = app.listen(300, function() {
+	console.log('Server running at hettp://127.0.0.1:3000/');
+});
+
+npm install -g nodemon
+
+nodemon index.js
+
+jsonview
+
+var _ = require('lodash');
+
+npm install --save lodash
+
+var bodyParts = require('body-parser');
+
+npm install --save body-parser
+
+app.use(body-parserjson());
+
+app.use(body-parser.urlencoded({
+	extended:true
+}));
+
+var cats = require('./cats')(app);
+
+ctrl+c to stop
+
+npm install --save mongoose
+
+node index.js
+
+npm install --save forever
+npm install --save request
+
+forever start
+node
+nodemon
+
+var async = require('async');
+
+redis-cli
+
+git init
+git add .
+git status
+git commit -m 'initial commit'
+git remote add origin https:gibhub.com/gfgfgf.git
+git push -u origin master
+vi .git/config
+
+
+http://github.com/samartioli/node-play-by-play
+
