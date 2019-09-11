@@ -7,22 +7,13 @@
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "CatalogueID", "KeyType" : "HASH"},
-		  {"AttributeName" : "CatalogueID", "KeyType" : "RANGE"}
+          {"AttributeName" : "CatalogueID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
 		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"},
-          {"AttributeName" : "Name", "AttributeType" : "S"},
-          {"AttributeName" : "Currency", "AttributeType" : "S"},
-		  {"AttributeName" : "TermsCondition", "AttributeType" : "S"},
-		  {"AttributeName" : "Rate", "AttributeType" : "S"},
-		  {"AttributeName" : "Unit", "AttributeType" : "S"},
-		  {"AttributeName" : "Remark", "AttributeType" : "S"},
-		  {"AttributeName" : "Active", "AttributeType" : "S"},
 		  {"AttributeName" : "TagID", "AttributeType" : "S"},
-		  {"AttributeName" : "AvailabilityID", "AttributeType" : "S"},
-		  {"AttributeName" : "Others", "AttributeType" : "S"}
+		  {"AttributeName" : "AvailabilityID", "AttributeType" : "S"}
         ],
 		"GlobalSecondaryIndexes" : [{
           "IndexName" : "CatalogueByTag",
@@ -37,7 +28,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Name"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -58,7 +49,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Name"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -75,22 +66,11 @@
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "UserID", "KeyType" : "HASH"},
-		  {"AttributeName" : "UserID", "KeyType" : "RANGE"}
+          {"AttributeName" : "UserID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
-          {"AttributeName" : "UserID", "AttributeType" : "S"},
-		  {"AttributeName" : "Role", "AttributeType" : "S"},
-		  {"AttributeName" : "UserName", "AttributeType" : "S"},
-		  {"AttributeName" : "Password", "AttributeType" : "S"},
-		  {"AttributeName" : "Email", "AttributeType" : "S"},
-		  {"AttributeName" : "Phone", "AttributeType" : "S"},
-		  {"AttributeName" : "DOB", "AttributeType" : "S"},
-		  {"AttributeName" : "Gender", "AttributeType" : "S"},
-		  {"AttributeName" : "Address", "AttributeType" : "S"},
-		  {"AttributeName" : "UserStatus", "AttributeType" : "S"},
-		  {"AttributeName" : "Active", "AttributeType" : "S"}
+          {"AttributeName" : "UserID", "AttributeType" : "S"}
         ]
       }
     },
@@ -101,8 +81,7 @@
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "BookingID", "KeyType" : "HASH"},
-          {"AttributeName" : "BookingID", "KeyType" : "RANGE"}
+          {"AttributeName" : "BookingID", "KeyType" : "HASH"}
           
         ],
         "AttributeDefinitions" :
@@ -111,11 +90,7 @@
           {"AttributeName" : "UserID", "AttributeType" : "S"},
           {"AttributeName" : "TransactionID", "AttributeType" : "S"},
           {"AttributeName" : "EnrollmentID", "AttributeType" : "S"},
-		  {"AttributeName" : "Status", "AttributeType" : "S"},
-		  {"AttributeName" : "StartTime", "AttributeType" : "N"},
-		  {"AttributeName" : "EndTime", "AttributeType" : "N"},
-		  {"AttributeName" : "Amount", "AttributeType" : "S"},
-		  {"AttributeName" : "Active", "AttributeType" : "S"}
+		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"}
         ],
         "GlobalSecondaryIndexes" : [{
           "IndexName" : "BookingByUser",
@@ -130,7 +105,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Amount"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -151,7 +126,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Amount"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -172,7 +147,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Amount"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -193,7 +168,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Amount"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -206,54 +181,46 @@
     "Tag" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "GMJS.Tag",
+        "TableName" : "Gardabook.Tag",
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "TagID", "KeyType" : "HASH"},
-		  {"AttributeName" : "TagID", "KeyType" : "RANGE"}
+          {"AttributeName" : "TagID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
-          {"AttributeName" : "TagID", "AttributeType" : "S"},
-		  {"AttributeName" : "Description", "AttributeType" : "S"},
-		  {"AttributeName" : "Active", "AttributeType" : "S"}
+          {"AttributeName" : "TagID", "AttributeType" : "S"}
         ]
       }
     },
     "Availabilty" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "GMJS.Availabilty",
+        "TableName" : "Gardabook.Availabilty",
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "AvailabiltyID", "KeyType" : "HASH"},
-		  {"AttributeName" : "AvailabiltyID", "KeyType" : "RANGE"}
+          {"AttributeName" : "AvailabiltyID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
-          {"AttributeName" : "AvailabiltyID", "AttributeType" : "S"},
-		  {"AttributeName" : "Date", "AttributeType" : "N"},
-		  {"AttributeName" : "Time", "AttributeType" : "N"}
+          {"AttributeName" : "AvailabiltyID", "AttributeType" : "S"}
         ]
       }
     },
     "Session" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "GMJS.Session",
+        "TableName" : "Gardabook.Session",
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "SessionID", "KeyType" : "HASH"},
-		  {"AttributeName" : "SessionID", "KeyType" : "RANGE"}
+          {"AttributeName" : "SessionID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
           {"AttributeName" : "SessionID", "AttributeType" : "S"},
-		  {"AttributeName" : "UserID", "AttributeType" : "S"},
-		  {"AttributeName" : "CreateTime", "AttributeType" : "N"}
+		  {"AttributeName" : "UserID", "AttributeType" : "S"}
         ],
 		"GlobalSecondaryIndexes" : [{
           "IndexName" : "SessionByUser",
@@ -268,7 +235,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["CreateTime"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -281,21 +248,17 @@
     "Enrollment" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "GMJS.Enrollment",
+        "TableName" : "Gardabook.Enrollment",
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "EnrollmentID", "KeyType" : "HASH"},
-		  {"AttributeName" : "EnrollmentID", "KeyType" : "RANGE"}
+          {"AttributeName" : "EnrollmentID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
           {"AttributeName" : "EnrollmentID", "AttributeType" : "S"},
 		  {"AttributeName" : "UserID", "AttributeType" : "S"},
-		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"},
-		  {"AttributeName" : "ExpiryDate", "AttributeType" : "N"},
-		  {"AttributeName" : "Fee", "AttributeType" : "S"},
-		  {"AttributeName" : "Active", "AttributeType" : "S"}
+		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"}
         ],
 		"GlobalSecondaryIndexes" : [{
           "IndexName" : "EnrollmentByUser",
@@ -310,7 +273,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Fee"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
@@ -331,7 +294,7 @@
             }
           ],                         
           "Projection" : {
-            "NonKeyAttributes" : ["Fee"],
+            "NonKeyAttributes" : [],
             "ProjectionType" : "ALL"
           },
           "ProvisionedThroughput" : {
