@@ -4,8 +4,8 @@ var async = require('async');
 
 var dynamodb = new AWS.DynamoDB();
 
-// Generate data (100 Jobs and 100 Users)
-var allData = gen.generateAllData(100, 100);
+//numberOfCatalogues, numberOfUsers, numberOfTags, numberOfAvailabilties, numberOfBookings, numberOfEnrollments
+var allData = gen.generateAllData(5, 10, 2, 3, 5, 3);
 
 // SETUP WORKLOADS
 var work = [].concat(
