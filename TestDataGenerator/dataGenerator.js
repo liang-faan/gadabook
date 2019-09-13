@@ -1,4 +1,5 @@
 var faker = require('faker');
+var helpers = require('./helpers');
 
 var currentEpochTime = Math.floor(new Date() / 1000);
 var secondsInADay = 86400;
@@ -31,12 +32,12 @@ function generateUniqueUser() {
       S: faker.internet.email()
     },
 	"Phone": {
-      S: faker.phoneNumber.phoneNumber()
+      S: faker.phone.phoneNumber()
     },
 	"DOB": {
       N: faker.random.number({
         'min': currentEpochTime - secondsInADay * 365 * 40,
-        'max': currentEpochTime - secondsInADay * 365 * 18)
+        'max': currentEpochTime - secondsInADay * 365 * 18
       }).toString()
     },
 	"Gender": {
@@ -54,6 +55,7 @@ function generateUniqueUser() {
   };
 
   users[newUser.UserID.S] = newUser;
+  helpers.printPretty(newUser);
   return newUser;
 }
 
@@ -71,18 +73,19 @@ function generateUniqueTag() {
   };
 
   tags[newTag.TagID.S] = newTag;
+  helpers.printPretty(newTag);
   return newTag;
 }
 
 function generateUniqueAvailability() {
   var newAvailability = {
-    "AvailabiltyID": {
+    "AvailabilityID": {
       S: faker.random.uuid()
     },
     "Date": {
       N: faker.random.number({
         'min': currentEpochTime,
-        'max': currentEpochTime + secondsInADay * 18)
+        'max': currentEpochTime + secondsInADay * 18
       }).toString()
     },
 	"Slot": {
@@ -93,7 +96,8 @@ function generateUniqueAvailability() {
     }
   };
 
-  availabilities[newAvailability.AvailabiltyID.S] = newAvailability;
+  availabilities[newAvailability.AvailabilityID.S] = newAvailability;
+  helpers.printPretty(newAvailability);
   return newAvailability;
 }
 
@@ -106,12 +110,12 @@ function generateUniqueCatalogue(tag, availability) {
 	};
   var newCatalogue = {
     "CatalogueID": {
-      S: tag.TagID
+      S: tag.TagID.S
     },
 	"TagID": {
-      S: availability.AvailabiltyID
+      S: availability.AvailabilityID.S
     },
-	"AvailabiltyID": {
+	"AvailabilityID": {
       S: faker.random.uuid()
     },
     "Name": {
@@ -135,6 +139,7 @@ function generateUniqueCatalogue(tag, availability) {
   };
 
   catalogues[newCatalogue.CatalogueID.S] = newCatalogue;
+  helpers.printPretty(newCatalogue);
   return newCatalogue;
 }
 
@@ -144,10 +149,10 @@ function generateUniqueBooking(user, catalogue) {
       S: faker.random.uuid()
     },
 	"CatalogueID": {
-      S: catalogue.CatalogueID
+      S: catalogue.CatalogueID.S
     },
 	"UserID": {
-      S: user.UserID
+      S: user.UserID.S
     },
 	"TransactionID": {
       S: faker.random.uuid()
@@ -179,6 +184,7 @@ function generateUniqueBooking(user, catalogue) {
   };
 
   bookings[newBooking.BookingID.S] = newBooking;
+  helpers.printPretty(newBooking);
   return newBooking;
 }
 
@@ -188,10 +194,10 @@ function generateUniqueEnrollment(user, catalogue) {
       S: faker.random.uuid()
     },
 	"CatalogueID": {
-      S: catalogue.CatalogueID
+      S: catalogue.CatalogueID.S
     },
 	"UserID": {
-      S: user.UserID
+      S: user.UserID.S
     },
 	"TransactionID": {
       S: faker.random.uuid()
@@ -214,47 +220,54 @@ function generateUniqueEnrollment(user, catalogue) {
   };
 
   enrollments[newEnrollment.EnrollmentID.S] = newEnrollment;
+  helpers.printPretty(newEnrollment);
   return newEnrollment;
 }
 
 function generateAllData(numberOfCatalogues, numberOfUsers, numberOfTags, numberOfAvailabilties, numberOfBookings, numberOfEnrollments) {
   for (var i=0; i<numberOfUsers; i++) {
     generateUniqueUser();
+	console.log('Generated', 'User');
   }
   
   for (var i=0; i<numberOfTags; i++) {
     generateUniqueTag();
+	console.log('Generated', 'Tag');
   }
   
   for (var i=0; i<numberOfAvailabilties; i++) {
     generateUniqueAvailability();
+	console.log('Generated', 'Availability');
   }
   
   for (var i=0; i<numberOfCatalogues; i++) {
 	var tag = faker.random.objectElement(tags);
 	var availability = faker.random.objectElement(availabilities);
     generateUniqueCatalogue(tag, availability);
+	console.log('Generated', 'Catalogue');
   }
   
   for (var i=0; i<numberOfBookings; i++) {
 	var user = faker.random.objectElement(users);
 	var catalogue = faker.random.objectElement(catalogues);
     generateUniqueBooking(user, catalogue);
+	console.log('Generated', 'Bookings');
   }
   
   for (var i=0; i<numberOfEnrollments; i++) {
 	var user = faker.random.objectElement(users);
 	var catalogue = faker.random.objectElement(catalogues);
     generateUniqueEnrollment(user, catalogue);
+	console.log('Generated', 'Enrollment');
   }
 
   return {
-    'GardaBook.User': users,
-    'GardaBook.Tag': tags,
-	'GardaBook.Availability': availabilities,
-	'GardaBook.Catalogue': catalogues,
-	'GardaBook.Booking': bookings,
-	'GardaBook.Enrollment': enrollments
+    'Gardabook.User': users,
+    'Gardabook.Tag': tags,
+	'Gardabook.Availability': availabilities,
+	'Gardabook.Catalogue': catalogues,
+	'Gardabook.Bookings': bookings,
+	'Gardabook.Enrollment': enrollments
   };
 }
 

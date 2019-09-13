@@ -74,10 +74,10 @@
         ]
       }
     },
-    "Booking" : {
+    "Bookings" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "Gardabook.Booking",
+        "TableName" : "Gardabook.Bookings",
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
@@ -89,7 +89,6 @@
           {"AttributeName" : "BookingID", "AttributeType" : "S"},
           {"AttributeName" : "UserID", "AttributeType" : "S"},
           {"AttributeName" : "TransactionID", "AttributeType" : "S"},
-          {"AttributeName" : "EnrollmentID", "AttributeType" : "S"},
 		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"}
         ],
         "GlobalSecondaryIndexes" : [{
@@ -101,27 +100,6 @@
             },
             {
               "AttributeName" : "UserID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        },
-		{
-          "IndexName" : "BookingByEnrollment",
-          "KeySchema" : [
-            {
-              "AttributeName" : "BookingID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "EnrollmentID",
               "KeyType" : "RANGE"
             }
           ],                         
@@ -193,18 +171,18 @@
         ]
       }
     },
-    "Availabilty" : {
+    "Availability" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "TableName" : "Gardabook.Availabilty",
+        "TableName" : "Gardabook.Availability",
         "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
         "KeySchema" :
         [
-          {"AttributeName" : "AvailabiltyID", "KeyType" : "HASH"}
+          {"AttributeName" : "AvailabilityID", "KeyType" : "HASH"}
         ],
         "AttributeDefinitions" :
         [
-          {"AttributeName" : "AvailabiltyID", "AttributeType" : "S"}
+          {"AttributeName" : "AvailabilityID", "AttributeType" : "S"}
         ]
       }
     },

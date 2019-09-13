@@ -2,6 +2,8 @@ var AWS = require('aws-sdk');
 var gen = require('./dataGenerator');
 var async = require('async');
 
+AWS.config.loadFromPath('./../../config.json');
+
 var dynamodb = new AWS.DynamoDB();
 
 //numberOfCatalogues, numberOfUsers, numberOfTags, numberOfAvailabilties, numberOfBookings, numberOfEnrollments
@@ -9,36 +11,31 @@ var allData = gen.generateAllData(5, 10, 2, 3, 5, 3);
 
 // SETUP WORKLOADS
 var work = [].concat(
+	function(done) { 
+        var tableName = 'Gardabook.User';
+        console.log('Generated',Object.keys(allData[tableName]).length, 'User');
+        processDataset(done, allData, tableName);
+    },
+	function(done) { 
+        var tableName = 'Gardabook.Tag';
+        console.log('Generated',Object.keys(allData[tableName]).length, 'Tag');
+        processDataset(done, allData, tableName);
+    },
+	function(done) { 
+        var tableName = 'Gardabook.Availability';
+        console.log('Generated',Object.keys(allData[tableName]).length, 'Availability');
+        processDataset(done, allData, tableName);
+    },
     function(done) { 
         var tableName = 'Gardabook.Catalogue';
         console.log('Generated',Object.keys(allData[tableName]).length, 'Catalogue');
         processDataset(done, allData, tableName);
     },
     function(done) { 
-        var tableName = 'Gardabook.User';
-        console.log('Generated',Object.keys(allData[tableName]).length, 'User');
+        var tableName = 'Gardabook.Bookings';
+        console.log('Generated',Object.keys(allData[tableName]).length, 'Bookings');
         processDataset(done, allData, tableName);
     },
-    function(done) { 
-        var tableName = 'Gardabook.Booking';
-        console.log('Generated',Object.keys(allData[tableName]).length, 'Booking');
-        processDataset(done, allData, tableName);
-    }
-	function(done) { 
-        var tableName = 'Gardabook.Tag';
-        console.log('Generated',Object.keys(allData[tableName]).length, 'Tag');
-        processDataset(done, allData, tableName);
-    }
-	function(done) { 
-        var tableName = 'Gardabook.Availabilty';
-        console.log('Generated',Object.keys(allData[tableName]).length, 'Availabilty');
-        processDataset(done, allData, tableName);
-    }
-	function(done) { 
-        var tableName = 'Gardabook.Session';
-        console.log('Generated',Object.keys(allData[tableName]).length, 'Session');
-        processDataset(done, allData, tableName);
-    }
 	function(done) { 
         var tableName = 'Gardabook.Enrollment';
         console.log('Generated',Object.keys(allData[tableName]).length, 'Enrollment');
