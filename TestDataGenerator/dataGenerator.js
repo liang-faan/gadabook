@@ -53,7 +53,7 @@ function generateUniqueUser() {
       S: "ok"
     },
     Active: {
-      S: "ok"
+      BOOL: true
     }
   }
 
@@ -75,7 +75,7 @@ function generateUniqueTag() {
       S: faker.lorem.paragraphs(1)
     },
     Active: {
-      S: "ok"
+      BOOL: true
     }
   }
 
@@ -202,7 +202,7 @@ function generateUniqueBooking(user, catalogue) {
         .toString()
     },
     Active: {
-      S: "ok"
+      BOOL: true
     },
     Amount: {
       S: faker.random
@@ -254,7 +254,7 @@ function generateUniqueEnrollment(user, catalogue) {
         .toString()
     },
     Active: {
-      S: "ok"
+      BOOL: true
     },
     Fee: {
       S: faker.random
