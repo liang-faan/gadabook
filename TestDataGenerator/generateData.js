@@ -5,7 +5,7 @@ var gen = require("./dataGenerator")
 // AWS.config not required if 'aws configure' has been done in the cli as the sdk will automatically use it.
 
 var dynamodb = new AWS.DynamoDB({ region: "ap-southeast-1" })
-var tableName = "gardabook-sample"
+var tableName = "gardabook-develop"
 
 var numberOfCatalogues = 5
 var numberOfUsers = 10

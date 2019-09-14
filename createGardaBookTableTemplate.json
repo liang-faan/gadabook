@@ -3,7 +3,7 @@
     "dynamodb": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
-        "TableName": "gardabook-sample",
+        "TableName": "gardabook-develop",
         "ProvisionedThroughput": {
           "ReadCapacityUnits": 1,
           "WriteCapacityUnits": 1
@@ -34,7 +34,7 @@
             ],
             "Projection": {
               "NonKeyAttributes": [],
-              "ProjectionType": "KEYS_ONLY"
+              "ProjectionType": "ALL"
             },
             "ProvisionedThroughput": {
               "ReadCapacityUnits": "1",

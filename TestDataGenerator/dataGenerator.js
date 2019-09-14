@@ -174,6 +174,9 @@ function generateUniqueCatalogue(tag, availability) {
     },
     sortKey: {
       S: availability.partitionKey.S
+    },
+    anotherAttributeForConvenience: {
+      S: "attribute about the relationship"
     }
   }
 
