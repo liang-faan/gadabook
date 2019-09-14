@@ -1,285 +1,47 @@
 {
-  "Resources" : {
-    "Catalogue" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.Catalogue",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "CatalogueID", "KeyType" : "HASH"}
-        ],
-        "AttributeDefinitions" :
-        [
-		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"},
-		  {"AttributeName" : "TagID", "AttributeType" : "S"},
-		  {"AttributeName" : "AvailabilityID", "AttributeType" : "S"}
-        ],
-		"GlobalSecondaryIndexes" : [{
-          "IndexName" : "CatalogueByTag",
-          "KeySchema" : [
-            {
-              "AttributeName" : "CatalogueID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "TagID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
+  "Resources": {
+    "dynamodb": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "gardabook-sample",
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
         },
-		{
-          "IndexName" : "CatalogueByAvailability",
-          "KeySchema" : [
-            {
-              "AttributeName" : "CatalogueID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "AvailabilityID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
+        "KeySchema": [
+          { "AttributeName": "partitionKey", "KeyType": "HASH" },
+          {
+            "AttributeName": "sortKey",
+            "KeyType": "RANGE"
           }
-        }]
-      }
-    },
-    "User" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.User",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "UserID", "KeyType" : "HASH"}
         ],
-        "AttributeDefinitions" :
-        [
-          {"AttributeName" : "UserID", "AttributeType" : "S"}
+        "AttributeDefinitions": [
+          { "AttributeName": "partitionKey", "AttributeType": "S" },
+          { "AttributeName": "sortKey", "AttributeType": "S" }
+        ],
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "gsi",
+            "KeySchema": [
+              {
+                "AttributeName": "sortKey",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "partitionKey",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "NonKeyAttributes": [],
+              "ProjectionType": "KEYS_ONLY"
+            },
+            "ProvisionedThroughput": {
+              "ReadCapacityUnits": "1",
+              "WriteCapacityUnits": "1"
+            }
+          }
         ]
-      }
-    },
-    "Bookings" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.Bookings",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "BookingID", "KeyType" : "HASH"}
-          
-        ],
-        "AttributeDefinitions" :
-        [
-          {"AttributeName" : "BookingID", "AttributeType" : "S"},
-          {"AttributeName" : "UserID", "AttributeType" : "S"},
-          {"AttributeName" : "TransactionID", "AttributeType" : "S"},
-		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"}
-        ],
-        "GlobalSecondaryIndexes" : [{
-          "IndexName" : "BookingByUser",
-          "KeySchema" : [
-            {
-              "AttributeName" : "BookingID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "UserID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        },
-		{
-          "IndexName" : "BookingByTransaction",
-          "KeySchema" : [
-            {
-              "AttributeName" : "BookingID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "TransactionID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        },
-		{
-          "IndexName" : "BookingByCatalogue",
-          "KeySchema" : [
-            {
-              "AttributeName" : "BookingID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "CatalogueID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        }]
-      }
-    },
-    "Tag" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.Tag",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "TagID", "KeyType" : "HASH"}
-        ],
-        "AttributeDefinitions" :
-        [
-          {"AttributeName" : "TagID", "AttributeType" : "S"}
-        ]
-      }
-    },
-    "Availability" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.Availability",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "AvailabilityID", "KeyType" : "HASH"}
-        ],
-        "AttributeDefinitions" :
-        [
-          {"AttributeName" : "AvailabilityID", "AttributeType" : "S"}
-        ]
-      }
-    },
-    "Session" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.Session",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "SessionID", "KeyType" : "HASH"}
-        ],
-        "AttributeDefinitions" :
-        [
-          {"AttributeName" : "SessionID", "AttributeType" : "S"},
-		  {"AttributeName" : "UserID", "AttributeType" : "S"}
-        ],
-		"GlobalSecondaryIndexes" : [{
-          "IndexName" : "SessionByUser",
-          "KeySchema" : [
-            {
-              "AttributeName" : "SessionID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "UserID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        }]
-      }
-    },
-    "Enrollment" : {
-      "Type" : "AWS::DynamoDB::Table",
-      "Properties" : {
-        "TableName" : "Gardabook.Enrollment",
-        "ProvisionedThroughput" : {"ReadCapacityUnits" : 1, "WriteCapacityUnits" : 1},
-        "KeySchema" :
-        [
-          {"AttributeName" : "EnrollmentID", "KeyType" : "HASH"}
-        ],
-        "AttributeDefinitions" :
-        [
-          {"AttributeName" : "EnrollmentID", "AttributeType" : "S"},
-		  {"AttributeName" : "UserID", "AttributeType" : "S"},
-		  {"AttributeName" : "CatalogueID", "AttributeType" : "S"}
-        ],
-		"GlobalSecondaryIndexes" : [{
-          "IndexName" : "EnrollmentByUser",
-          "KeySchema" : [
-            {
-              "AttributeName" : "EnrollmentID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "UserID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        },
-		{
-          "IndexName" : "EnrollmentByCatalogue",
-          "KeySchema" : [
-            {
-              "AttributeName" : "EnrollmentID",
-              "KeyType" : "HASH"
-            },
-            {
-              "AttributeName" : "CatalogueID",
-              "KeyType" : "RANGE"
-            }
-          ],                         
-          "Projection" : {
-            "NonKeyAttributes" : [],
-            "ProjectionType" : "ALL"
-          },
-          "ProvisionedThroughput" : {
-            "ReadCapacityUnits" : "1",
-            "WriteCapacityUnits" : "1"
-          }
-        }]
       }
     }
   }
