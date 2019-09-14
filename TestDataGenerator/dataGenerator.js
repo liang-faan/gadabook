@@ -4,6 +4,7 @@ var helpers = require("./helpers")
 var currentEpochTime = Math.floor(new Date() / 1000)
 var secondsInADay = 86400
 
+var fullData = {}
 var users = {}
 var tags = {}
 var availabilities = {}
@@ -12,7 +13,7 @@ var bookings = {}
 var enrollments = {}
 
 function generateUniqueUser() {
-  var newUser = {
+  var data = {
     partitionKey: {
       S: `User_${faker.random.uuid()}`
     },
@@ -59,13 +60,13 @@ function generateUniqueUser() {
     }
   }
 
-  users[newUser.UserID.S] = newUser
-  helpers.printPretty(newUser)
-  return newUser
+  fullData[data.partitionKey.S] = data
+  helpers.printPretty(data)
+  return data
 }
 
 function generateUniqueTag() {
-  var newTag = {
+  var data = {
     partitionKey: {
       S: `Tag_${faker.random.uuid()}`
     },
@@ -80,13 +81,13 @@ function generateUniqueTag() {
     }
   }
 
-  tags[newTag.TagID.S] = newTag
-  helpers.printPretty(newTag)
-  return newTag
+  fullData[data.partitionKey.S] = data
+  helpers.printPretty(data)
+  return data
 }
 
 function generateUniqueAvailability() {
-  var newAvailability = {
+  var data = {
     partitionKey: {
       S: `Availability_${faker.random.uuid()}`
     },
@@ -111,9 +112,9 @@ function generateUniqueAvailability() {
     }
   }
 
-  availabilities[newAvailability.AvailabilityID.S] = newAvailability
-  helpers.printPretty(newAvailability)
-  return newAvailability
+  fullData[data.partitionKey.S] = data
+  helpers.printPretty(data)
+  return data
 }
 
 function generateUniqueCatalogue(tag, availability) {
@@ -123,15 +124,15 @@ function generateUniqueCatalogue(tag, availability) {
     City: faker.address.city,
     Address: faker.address.streetAddress
   }
-  var newCatalogue = {
+  var data = {
     partitionKey: {
-      S: `Catalogue_${tag.TagID.S}`
+      S: `Catalogue_${tag.partitionKey.S}`
     },
     sortKey: {
-      S: `Catalogue_${tag.TagID.S}`
+      S: `Catalogue_${tag.partitionKey.S}`
     },
     TagID: {
-      S: availability.AvailabilityID.S
+      S: availability.partitionKey.S
     },
     AvailabilityID: {
       S: faker.random.uuid()
@@ -158,13 +159,13 @@ function generateUniqueCatalogue(tag, availability) {
     }
   }
 
-  catalogues[newCatalogue.CatalogueID.S] = newCatalogue
-  helpers.printPretty(newCatalogue)
-  return newCatalogue
+  fullData[data.partitionKey.S] = data
+  helpers.printPretty(data)
+  return data
 }
 
 function generateUniqueBooking(user, catalogue) {
-  var newBooking = {
+  var data = {
     partitionKey: {
       S: `Booking_${faker.random.uuid()}`
     },
@@ -172,10 +173,10 @@ function generateUniqueBooking(user, catalogue) {
       S: `Booking_${faker.random.uuid()}`
     },
     CatalogueID: {
-      S: catalogue.CatalogueID.S
+      S: catalogue.partitionKey.S
     },
     UserID: {
-      S: user.UserID.S
+      S: user.partitionKey.S
     },
     TransactionID: {
       S: faker.random.uuid()
@@ -212,13 +213,13 @@ function generateUniqueBooking(user, catalogue) {
     }
   }
 
-  bookings[newBooking.BookingID.S] = newBooking
-  helpers.printPretty(newBooking)
-  return newBooking
+  fullData[data.partitionKey.S] = data
+  helpers.printPretty(data)
+  return data
 }
 
 function generateUniqueEnrollment(user, catalogue) {
-  var newEnrollment = {
+  var data = {
     partitionKey: {
       S: `Enrollment_${faker.random.uuid()}`
     },
@@ -226,10 +227,10 @@ function generateUniqueEnrollment(user, catalogue) {
       S: `Enrollment_${faker.random.uuid()}`
     },
     CatalogueID: {
-      S: catalogue.CatalogueID.S
+      S: catalogue.partitionKey.S
     },
     UserID: {
-      S: user.UserID.S
+      S: user.partitionKey.S
     },
     TransactionID: {
       S: faker.random.uuid()
@@ -255,9 +256,9 @@ function generateUniqueEnrollment(user, catalogue) {
     }
   }
 
-  enrollments[newEnrollment.EnrollmentID.S] = newEnrollment
-  helpers.printPretty(newEnrollment)
-  return newEnrollment
+  fullData[data.partitionKey.S] = data
+  helpers.printPretty(data)
+  return data
 }
 
 function generateAllData(
@@ -286,31 +287,26 @@ function generateAllData(
   for (var i = 0; i < numberOfCatalogues; i++) {
     var tag = faker.random.objectElement(tags)
     var availability = faker.random.objectElement(availabilities)
-    generateUniqueCatalogue(tag, availability)
+    // generateUniqueCatalogue(tag, availability)
     console.log("Generated", "Catalogue")
   }
 
   for (var i = 0; i < numberOfBookings; i++) {
     var user = faker.random.objectElement(users)
     var catalogue = faker.random.objectElement(catalogues)
-    generateUniqueBooking(user, catalogue)
+    // generateUniqueBooking(user, catalogue)
     console.log("Generated", "Bookings")
   }
 
   for (var i = 0; i < numberOfEnrollments; i++) {
     var user = faker.random.objectElement(users)
     var catalogue = faker.random.objectElement(catalogues)
-    generateUniqueEnrollment(user, catalogue)
+    // generateUniqueEnrollment(user, catalogue)
     console.log("Generated", "Enrollment")
   }
 
   return {
-    "Gardabook.User": users,
-    "Gardabook.Tag": tags,
-    "Gardabook.Availability": availabilities,
-    "Gardabook.Catalogue": catalogues,
-    "Gardabook.Bookings": bookings,
-    "Gardabook.Enrollment": enrollments
+    ...fullData
   }
 }
 

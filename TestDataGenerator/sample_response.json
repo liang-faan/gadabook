@@ -1,0 +1,261 @@
+{
+  "RequestItems": [
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_4bdbe6d4-8fec-4691-9058-678f9afd077b" },
+          "sortKey": { "S": "User_c60bef3d-cd5b-487d-999e-76e48aefe3a8" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Jasen.Lubowitz" },
+          "FirstName": { "S": "Lauriane" },
+          "LastName": { "S": "Hills" },
+          "Email": { "S": "Princess.Kerluke@gmail.com" },
+          "Phone": { "S": "779-679-6886" },
+          "DOB": { "N": "936673343" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "585 Kerluke Ports" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_914094a2-4306-40a5-89c3-ed6debe9fe59" },
+          "sortKey": { "S": "User_4524545b-ebf4-4b44-bc13-59b0ecb01c05" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Lulu81" },
+          "FirstName": { "S": "Jay" },
+          "LastName": { "S": "Franecki" },
+          "Email": { "S": "Idella.Wilderman60@yahoo.com" },
+          "Phone": { "S": "899.040.1275" },
+          "DOB": { "N": "333765641" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "8795 Schoen Ramp" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_7daab92f-2fbd-4717-8bd9-1360b971f458" },
+          "sortKey": { "S": "User_ce67ff37-34b7-4eec-8d07-e7de06b26e7e" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Noel.Hayes90" },
+          "FirstName": { "S": "Dave" },
+          "LastName": { "S": "Dibbert" },
+          "Email": { "S": "Vince84@gmail.com" },
+          "Phone": { "S": "387-025-2398 x275" },
+          "DOB": { "N": "687956046" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "19835 Adrianna Park" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_554bbe0b-4383-49a3-b5f3-78bb3de7677c" },
+          "sortKey": { "S": "User_5b54cb5d-f898-42c8-ae95-b7a5e251543e" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Sedrick71" },
+          "FirstName": { "S": "Sibyl" },
+          "LastName": { "S": "Zemlak" },
+          "Email": { "S": "Adela.McLaughlin29@hotmail.com" },
+          "Phone": { "S": "995.556.0033 x50789" },
+          "DOB": { "N": "541358740" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "03358 Prohaska Streets" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_953055c0-d525-48c0-b983-2585845d02e4" },
+          "sortKey": { "S": "User_ac3c9325-1a98-4d2c-a20d-2d77043c6a46" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Titus.Douglas" },
+          "FirstName": { "S": "Barrett" },
+          "LastName": { "S": "Beatty" },
+          "Email": { "S": "Aurore.Nader71@gmail.com" },
+          "Phone": { "S": "738-087-8353 x9729" },
+          "DOB": { "N": "847646048" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "324 Breitenberg Course" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_a74d8a96-064b-406d-8389-f02004b7ded7" },
+          "sortKey": { "S": "User_1203f4e8-34b4-4e27-8624-e22080f8523f" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Brycen62" },
+          "FirstName": { "S": "Charlotte" },
+          "LastName": { "S": "Schowalter" },
+          "Email": { "S": "Fredrick.Adams47@yahoo.com" },
+          "Phone": { "S": "1-379-271-2182 x487" },
+          "DOB": { "N": "561623043" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "6932 Brown Centers" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_9f81b070-b377-4536-913a-65032351a80f" },
+          "sortKey": { "S": "User_70decbd3-4df1-4dd6-8d13-cc80d4bb9a86" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Summer_Fisher40" },
+          "FirstName": { "S": "Nigel" },
+          "LastName": { "S": "Ankunding" },
+          "Email": { "S": "Lillian_Stoltenberg66@hotmail.com" },
+          "Phone": { "S": "744.015.2343 x49610" },
+          "DOB": { "N": "728234759" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "86136 Davon Burgs" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_a836d1ca-c34e-49e5-8553-b1cf7a1da25f" },
+          "sortKey": { "S": "User_26d3e15c-01c0-49ab-b5b2-c422bf4be647" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Jerrod11" },
+          "FirstName": { "S": "Candelario" },
+          "LastName": { "S": "Kub" },
+          "Email": { "S": "Loraine.Cassin@hotmail.com" },
+          "Phone": { "S": "108.604.0004 x8205" },
+          "DOB": { "N": "358744006" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "2959 Kohler Passage" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_6f2470d9-53ff-4b73-9ba3-5d4d8eb7c1b6" },
+          "sortKey": { "S": "User_7f6215ca-9034-408a-9a61-62dc1e4b7373" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Samson_Romaguera74" },
+          "FirstName": { "S": "Ladarius" },
+          "LastName": { "S": "Weimann" },
+          "Email": { "S": "Maeve.Schuster@hotmail.com" },
+          "Phone": { "S": "1-295-641-8397" },
+          "DOB": { "N": "346550240" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "6993 Lorena Shoal" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "User_d7d2595c-64bc-4026-9d39-210223119384" },
+          "sortKey": { "S": "User_8d7786b6-8302-45ed-a370-16be7885d3f9" },
+          "Role": { "S": "normal" },
+          "Name": { "S": "Era.Denesik" },
+          "FirstName": { "S": "Clovis" },
+          "LastName": { "S": "Gerhold" },
+          "Email": { "S": "Shane.Ledner42@gmail.com" },
+          "Phone": { "S": "1-591-583-0664 x4274" },
+          "DOB": { "N": "453737531" },
+          "Gender": { "S": "Male" },
+          "Address": { "S": "099 Wiegand Haven" },
+          "UserStatus": { "S": "ok" },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "Tag_3bf88a05-8caf-44f0-a7e2-3aa3437f4af8" },
+          "sortKey": { "S": "Tag_f5f1e8d1-fcfa-4c5f-88cf-80129fc6d8c6" },
+          "Description": {
+            "S": "Vel aut porro. Consequatur similique aliquam molestiae esse molestias quod qui et. Ut officiis consequatur iusto optio. Dolorum et et non vel sit nihil et qui. Consectetur harum nostrum velit rerum."
+          },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": { "S": "Tag_5a1fc997-2323-4230-bc0a-2e76bb513b94" },
+          "sortKey": { "S": "Tag_902f69f8-e008-4854-ac3e-da6bf6fdf749" },
+          "Description": {
+            "S": "Sunt ex pariatur voluptates veritatis eos. Ducimus eos veniam. Velit maiores totam unde fugiat."
+          },
+          "Active": { "S": "ok" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "Availability_52b4b20c-bc53-48a7-965e-b333f004b3ea"
+          },
+          "sortKey": {
+            "S": "Availability_8c223093-f5fb-4f5d-a20c-8af257d5dff5"
+          },
+          "Date": { "N": "1569472626" },
+          "Slot": { "N": "5" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "Availability_7db72722-a8b6-4b88-86e9-14b2e069c6c2"
+          },
+          "sortKey": {
+            "S": "Availability_5c9b9fbc-abb1-43b0-bc2c-22e45e3856a3"
+          },
+          "Date": { "N": "1569991905" },
+          "Slot": { "N": "3" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "partitionKey": {
+            "S": "Availability_5937dd21-c698-4d8f-9f9e-d6f179f7356c"
+          },
+          "sortKey": {
+            "S": "Availability_edc1839d-512e-4fde-9d2f-5c2b4482dac7"
+          },
+          "Date": { "N": "1568993940" },
+          "Slot": { "N": "2" }
+        }
+      }
+    }
+  ],
+  "ReturnConsumedCapacity": "TOTAL"
+}

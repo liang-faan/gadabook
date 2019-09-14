@@ -1,60 +1,58 @@
-// Libraries
 var AWS = require("aws-sdk")
 var async = require("async")
-
-// Code
 var gen = require("./dataGenerator")
 
 // AWS.config not required if 'aws configure' has been done in the cli as the sdk will automatically use it.
 
-var dynamodb = new AWS.DynamoDB()
+var dynamodb = new AWS.DynamoDB({ region: "ap-southeast-1" })
 var tableName = "gardabook-sample"
 
-//numberOfCatalogues, numberOfUsers, numberOfTags, numberOfAvailabilties, numberOfBookings, numberOfEnrollments
-var allData = gen.generateAllData(5, 10, 2, 3, 5, 3)
+var numberOfCatalogues = 5
+var numberOfUsers = 10
+var numberOfTags = 2
+var numberOfAvailabilties = 3
+var numberOfBookings = 5
+var numberOfEnrollments = 3
+
+var allData = gen.generateAllData(
+  numberOfCatalogues,
+  numberOfUsers,
+  numberOfTags,
+  numberOfAvailabilties,
+  numberOfBookings,
+  numberOfEnrollments
+)
 
 // SETUP WORKLOADS
 var work = [].concat(
   function(done) {
-    var tableName = "Gardabook.User"
-    console.log("Generated", Object.keys(allData[tableName]).length, "User")
+    // var tableName = "Gardabook.User"
+    console.log("Generated", Object.keys(allData).length, "User")
     processDataset(done, allData, tableName)
   },
   function(done) {
-    var tableName = "Gardabook.Tag"
-    console.log("Generated", Object.keys(allData[tableName]).length, "Tag")
+    // var tableName = "Gardabook.Tag"
+    console.log("Generated", Object.keys(allData).length, "Tag")
     processDataset(done, allData, tableName)
   },
   function(done) {
-    var tableName = "Gardabook.Availability"
-    console.log(
-      "Generated",
-      Object.keys(allData[tableName]).length,
-      "Availability"
-    )
+    // var tableName = "Gardabook.Availability"
+    console.log("Generated", Object.keys(allData).length, "Availability")
     processDataset(done, allData, tableName)
   },
   function(done) {
-    var tableName = "Gardabook.Catalogue"
-    console.log(
-      "Generated",
-      Object.keys(allData[tableName]).length,
-      "Catalogue"
-    )
+    // var tableName = "Gardabook.Catalogue"
+    console.log("Generated", Object.keys(allData).length, "Catalogue")
     processDataset(done, allData, tableName)
   },
   function(done) {
-    var tableName = "Gardabook.Bookings"
-    console.log("Generated", Object.keys(allData[tableName]).length, "Bookings")
+    // var tableName = "Gardabook.Bookings"
+    console.log("Generated", Object.keys(allData).length, "Bookings")
     processDataset(done, allData, tableName)
   },
   function(done) {
-    var tableName = "Gardabook.Enrollment"
-    console.log(
-      "Generated",
-      Object.keys(allData[tableName]).length,
-      "Enrollment"
-    )
+    // var tableName = "Gardabook.Enrollment"
+    console.log("Generated", Object.keys(allData).length, "Enrollment")
     processDataset(done, allData, tableName)
   }
 )
@@ -74,8 +72,10 @@ function executeBatchPut(params) {
 }
 
 function processDataset(done, allData, tableName, UnprocessedItems) {
+  console.log("processDataset")
   var params = buildParams()
-  var requestItemCount = params.RequestItems[tableName].length
+  console.log(params)
+  var requestItemCount = params.RequestItems.length
   if (requestItemCount === 0) {
     done()
     return
@@ -94,8 +94,7 @@ function processDataset(done, allData, tableName, UnprocessedItems) {
       return
     }
 
-    var unprocessedCount = Object.keys(response.UnprocessedItems[tableName])
-      .length
+    var unprocessedCount = Object.keys(response.UnprocessedItems).length
     if (unprocessedCount > 0) {
       console.log(
         "   Wrote",
@@ -111,7 +110,9 @@ function processDataset(done, allData, tableName, UnprocessedItems) {
   }
 
   function buildParams() {
-    var dataSet = allData[tableName]
+    var dataSet = allData
+    console.log("dataSet")
+    console.log(dataSet)
     var params = {
       RequestItems: {},
       ReturnConsumedCapacity: "TOTAL"
@@ -139,7 +140,7 @@ function processDataset(done, allData, tableName, UnprocessedItems) {
 
   function handleError(err) {
     console.log("   Error:", err, err.stack)
-    if (params.RequestItems[tableName].length !== 0) {
+    if (params.RequestItems.length !== 0) {
       processDataset(done, allData, tableName, params.RequestItems)
     }
   }
