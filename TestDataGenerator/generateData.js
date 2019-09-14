@@ -2,6 +2,14 @@ var AWS = require('aws-sdk');
 var gen = require('./dataGenerator');
 var async = require('async');
 
+/*
+content of config.json
+{ 
+    "accessKeyId": "xxx", 
+    "secretAccessKey": "xxxxx", 
+    "region": "xxx" 
+}
+*/
 AWS.config.loadFromPath('./../../config.json');
 
 var dynamodb = new AWS.DynamoDB();
