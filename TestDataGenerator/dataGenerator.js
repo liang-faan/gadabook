@@ -159,7 +159,27 @@ function generateUniqueCatalogue(tag, availability) {
     }
   }
 
+  var data2 = {
+    partitionKey: {
+      S: uuid
+    },
+    sortKey: {
+      S: tag.partitionKey.S
+    }
+  }
+
+  var data3 = {
+    partitionKey: {
+      S: uuid
+    },
+    sortKey: {
+      S: availability.partitionKey.S
+    }
+  }
+
   fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+  fullData[`${data.partitionKey.S}_${data2.sortKey.S}`] = data2
+  fullData[`${data.partitionKey.S}_${data3.sortKey.S}`] = data3
   helpers.printPretty(data)
   return data
 }
@@ -295,16 +315,22 @@ function generateAllData(
   }
 
   for (var i = 0; i < numberOfCatalogues; i++) {
-    // var tags = Object.keys(fullData).filter(function(d) {
-    //   return d.match(/^Tag_/)
-    // })
-    // var tag = faker.random.objectElement(tags)
-    // var availabilities = Object.keys(fullData).filter(function(d) {
-    //   return d.match(/^Availability_/)
-    // })
-    // var availability = faker.random.objectElement(availabilities)
-    // generateUniqueCatalogue(tag, availability)
-    // console.log("Generated", "Catalogue")
+    var tags = Object.keys(fullData)
+      .filter(function(d) {
+        return d.match(/^Tag_/)
+      })
+      .reduce((res, key) => ((res[key] = fullData[key]), res), {})
+    var tag = faker.random.objectElement(tags)
+
+    var availabilities = Object.keys(fullData)
+      .filter(function(d) {
+        return d.match(/^Availability_/)
+      })
+      .reduce((res, key) => ((res[key] = fullData[key]), res), {})
+    var availability = faker.random.objectElement(availabilities)
+
+    generateUniqueCatalogue(tag, availability)
+    console.log("Generated", "Catalogue")
   }
 
   for (var i = 0; i < numberOfBookings; i++) {
