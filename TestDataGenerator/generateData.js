@@ -75,7 +75,7 @@ function processDataset(done, allData, tableName, UnprocessedItems) {
   console.log("processDataset")
   var params = buildParams()
   console.log(params)
-  var requestItemCount = params.RequestItems.length
+  var requestItemCount = params.RequestItems[tableName].length
   if (requestItemCount === 0) {
     done()
     return
