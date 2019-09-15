@@ -161,37 +161,37 @@ function generateUniqueCatalogue(tag, availability, catalogues) {
 
   var gsiData1 = {
     partitionKey: {
-      S: uuid
-    },
-    sortKey: {
       S: tag.partitionKey.S
     },
-    Name: {
+    sortKey: {
+      S: uuid
+    },
+    CatalogueName: {
       S: name
     },
-    Rate: {
+    CatalogueRate: {
       S: rate
     }
   }
 
   var gsiData2 = {
     partitionKey: {
-      S: uuid
-    },
-    sortKey: {
       S: availability.partitionKey.S
     },
-    Name: {
+    sortKey: {
+      S: uuid
+    },
+    CatalogueName: {
       S: name
     },
-    Rate: {
+    CatalogueRate: {
       S: rate
     }
   }
 
   fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.sortKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.sortKey.S}`] = gsiData2
+  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
+  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
   catalogues.push(baseData)
   helpers.printPretty(baseData)
   return baseData
@@ -245,31 +245,31 @@ function generateUniqueBooking(user, catalogue, bookings) {
 
   var gsiData1 = {
     partitionKey: {
-      S: uuid
-    },
-    sortKey: {
       S: user.partitionKey.S
     },
-    Amount: {
+    sortKey: {
+      S: uuid
+    },
+    BookingAmount: {
       S: amount
     }
   }
   
   var gsiData2 = {
     partitionKey: {
-      S: uuid
-    },
-    sortKey: {
       S: catalogue.partitionKey.S
     },
-    Amount: {
+    sortKey: {
+      S: uuid
+    },
+    BookingAmount: {
       S: amount
     }
   }
 
   fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.sortKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.sortKey.S}`] = gsiData2
+  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
+  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
   bookings.push(baseData)
   helpers.printPretty(baseData)
   return baseData
@@ -312,31 +312,31 @@ function generateUniqueEnrollment(user, catalogue, enrollments) {
   
   var gsiData1 = {
     partitionKey: {
-      S: uuid
-    },
-    sortKey: {
       S: user.partitionKey.S
     },
-    Fee: {
+    sortKey: {
+      S: uuid
+    },
+    EnrollmentFee: {
       S: fee
     }
   }
   
   var gsiData2 = {
     partitionKey: {
-      S: uuid
-    },
-    sortKey: {
       S: catalogue.partitionKey.S
     },
-    Fee: {
+    sortKey: {
+      S: uuid
+    },
+    EnrollmentFee: {
       S: fee
     }
   }
 
   fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.sortKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.sortKey.S}`] = gsiData2
+  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
+  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
   enrollments.push(baseData)
   helpers.printPretty(baseData)
   return baseData
