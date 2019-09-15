@@ -8,7 +8,7 @@ var secondsInADay = 86400
 
 var fullData = {}
 
-function generateUniqueUser() {
+function generateUniqueUser(users) {
   var uuid = `User_${faker.random.uuid()}`
   var data = {
     partitionKey: {
@@ -58,11 +58,12 @@ function generateUniqueUser() {
   }
 
   fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+  users.push(data)
   helpers.printPretty(data)
   return data
 }
 
-function generateUniqueTag() {
+function generateUniqueTag(tags) {
   var uuid = `Tag_${faker.random.uuid()}`
   var data = {
     partitionKey: {
@@ -80,11 +81,12 @@ function generateUniqueTag() {
   }
 
   fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+  tags.push(data)
   helpers.printPretty(data)
   return data
 }
 
-function generateUniqueAvailability() {
+function generateUniqueAvailability(availabilities) {
   var uuid = `Availability_${faker.random.uuid()}`
   var data = {
     partitionKey: {
@@ -112,11 +114,12 @@ function generateUniqueAvailability() {
   }
 
   fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+  availabilities.push(data)
   helpers.printPretty(data)
   return data
 }
 
-function generateUniqueCatalogue(tag, availability) {
+function generateUniqueCatalogue(tag, availability, catalogues) {
   var variables = {
     Venue: "Room 2",
     Type: "Facility",
@@ -124,7 +127,9 @@ function generateUniqueCatalogue(tag, availability) {
     Address: faker.address.streetAddress
   }
   var uuid = `Catalogue_${faker.random.uuid()}`
-  var data = {
+  var name = faker.lorem.word(5)
+  var rate = faker.random.number({min: 10, max: 100}).toString()
+  var baseData = {
     partitionKey: {
       S: uuid
     },
@@ -132,13 +137,13 @@ function generateUniqueCatalogue(tag, availability) {
       S: uuid
     },
     TagID: {
-      S: availability.partitionKey.S
+      S: tag.partitionKey.S
     },
     AvailabilityID: {
-      S: faker.random.uuid()
+      S: availability.partitionKey.S
     },
     Name: {
-      S: faker.lorem.word(5)
+      S: name
     },
     Currency: {
       S: "SGD"
@@ -147,49 +152,55 @@ function generateUniqueCatalogue(tag, availability) {
       S: faker.lorem.paragraphs(1)
     },
     Rate: {
-      S: faker.random
-        .number({
-          min: 10,
-          max: 100
-        })
-        .toString()
+      S: rate
     },
     Variables: {
       S: JSON.stringify(variables)
     }
   }
 
-  var data2 = {
+  var gsiData1 = {
     partitionKey: {
       S: uuid
     },
     sortKey: {
       S: tag.partitionKey.S
+    },
+    Name: {
+      S: name
+    },
+    Rate: {
+      S: rate
     }
   }
 
-  var data3 = {
+  var gsiData2 = {
     partitionKey: {
       S: uuid
     },
     sortKey: {
       S: availability.partitionKey.S
     },
-    anotherAttributeForConvenience: {
-      S: "attribute about the relationship"
+    Name: {
+      S: name
+    },
+    Rate: {
+      S: rate
     }
   }
 
-  fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-  fullData[`${data.partitionKey.S}_${data2.sortKey.S}`] = data2
-  fullData[`${data.partitionKey.S}_${data3.sortKey.S}`] = data3
-  helpers.printPretty(data)
-  return data
+  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
+  fullData[`${baseData.partitionKey.S}_${gsiData1.sortKey.S}`] = gsiData1
+  fullData[`${baseData.partitionKey.S}_${gsiData2.sortKey.S}`] = gsiData2
+  catalogues.push(baseData)
+  helpers.printPretty(baseData)
+  return baseData
 }
 
-function generateUniqueBooking(user, catalogue) {
+function generateUniqueBooking(user, catalogue, bookings) {
   var uuid = `Booking_${faker.random.uuid()}`
-  var data = {
+  var amount = faker.random.number({min: 10, max: 100}).toString()
+  var baseData = {
     partitionKey: {
       S: uuid
     },
@@ -228,31 +239,46 @@ function generateUniqueBooking(user, catalogue) {
       BOOL: true
     },
     Amount: {
-      S: faker.random
-        .number({
-          min: 10,
-          max: 100
-        })
-        .toString()
+      S: amount
     }
   }
 
-  var data2 = {
+  var gsiData1 = {
     partitionKey: {
-      S: user
+      S: uuid
     },
-    sortKey: data.partitionKey.S
+    sortKey: {
+      S: user.partitionKey.S
+    },
+    Amount: {
+      S: amount
+    }
+  }
+  
+  var gsiData2 = {
+    partitionKey: {
+      S: uuid
+    },
+    sortKey: {
+      S: catalogue.partitionKey.S
+    },
+    Amount: {
+      S: amount
+    }
   }
 
-  fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-  fullData[`${data.partitionKey.S}_${data2.sortKey.S}`] = data
-  helpers.printPretty(data)
-  return data
+  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
+  fullData[`${baseData.partitionKey.S}_${gsiData1.sortKey.S}`] = gsiData1
+  fullData[`${baseData.partitionKey.S}_${gsiData2.sortKey.S}`] = gsiData2
+  bookings.push(baseData)
+  helpers.printPretty(baseData)
+  return baseData
 }
 
-function generateUniqueEnrollment(user, catalogue) {
+function generateUniqueEnrollment(user, catalogue, enrollments) {
   var uuid = `Enrollment_${faker.random.uuid()}`
-  var data = {
+  var fee = faker.random.number({min: 10, max: 100}).toString()
+  var baseData = {
     partitionKey: {
       S: uuid
     },
@@ -280,18 +306,40 @@ function generateUniqueEnrollment(user, catalogue) {
       BOOL: true
     },
     Fee: {
-      S: faker.random
-        .number({
-          min: 10,
-          max: 100
-        })
-        .toString()
+      S: fee
+    }
+  }
+  
+  var gsiData1 = {
+    partitionKey: {
+      S: uuid
+    },
+    sortKey: {
+      S: user.partitionKey.S
+    },
+    Fee: {
+      S: fee
+    }
+  }
+  
+  var gsiData2 = {
+    partitionKey: {
+      S: uuid
+    },
+    sortKey: {
+      S: catalogue.partitionKey.S
+    },
+    Fee: {
+      S: fee
     }
   }
 
-  fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-  helpers.printPretty(data)
-  return data
+  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
+  fullData[`${baseData.partitionKey.S}_${gsiData1.sortKey.S}`] = gsiData1
+  fullData[`${baseData.partitionKey.S}_${gsiData2.sortKey.S}`] = gsiData2
+  enrollments.push(baseData)
+  helpers.printPretty(baseData)
+  return baseData
 }
 
 function generateAllData(
@@ -302,57 +350,46 @@ function generateAllData(
   numberOfBookings,
   numberOfEnrollments
 ) {
+  var users = []
   for (var i = 0; i < numberOfUsers; i++) {
-    generateUniqueUser()
+    generateUniqueUser(users)
     console.log("Generated", "User")
   }
 
+  var tags = []
   for (var i = 0; i < numberOfTags; i++) {
-    generateUniqueTag()
+    generateUniqueTag(tags)
     console.log("Generated", "Tag")
   }
 
+  var availabilities = []
   for (var i = 0; i < numberOfAvailabilties; i++) {
-    generateUniqueAvailability()
+    generateUniqueAvailability(availabilities)
     console.log("Generated", "Availability")
   }
 
+  var catalogues = []
   for (var i = 0; i < numberOfCatalogues; i++) {
-    var tags = Object.keys(fullData)
-      .filter(function(d) {
-        return d.match(/^Tag_/)
-      })
-      .reduce((res, key) => ((res[key] = fullData[key]), res), {})
     var tag = faker.random.objectElement(tags)
-
-    var availabilities = Object.keys(fullData)
-      .filter(function(d) {
-        return d.match(/^Availability_/)
-      })
-      .reduce((res, key) => ((res[key] = fullData[key]), res), {})
     var availability = faker.random.objectElement(availabilities)
 
-    generateUniqueCatalogue(tag, availability)
+    generateUniqueCatalogue(tag, availability, catalogues)
     console.log("Generated", "Catalogue")
   }
 
+  var bookings = []
   for (var i = 0; i < numberOfBookings; i++) {
-    // var users = Object.keys(fullData).filter(function(d) {
-    //   return d.match(/^User_/)
-    // })
-    // var user = faker.random.objectElement(users)
-    // var catalogues = Object.keys(fullData).filter(function(d) {
-    //   return d.match(/^Catalogue_/)
-    // })
-    // var catalogue = faker.random.objectElement(catalogues)
-    // generateUniqueBooking(user, catalogue)
-    // console.log("Generated", "Bookings")
+    var user = faker.random.objectElement(users)
+    var catalogue = faker.random.objectElement(catalogues)
+    generateUniqueBooking(user, catalogue, bookings)
+    console.log("Generated", "Bookings")
   }
 
+  var enrollments = []
   for (var i = 0; i < numberOfEnrollments; i++) {
-    // var user = faker.random.objectElement(users)
-    // var catalogue = faker.random.objectElement(catalogues)
-    // generateUniqueEnrollment(user, catalogue)
+    var user = faker.random.objectElement(users)
+    var catalogue = faker.random.objectElement(catalogues)
+    generateUniqueEnrollment(user, catalogue, enrollments)
     console.log("Generated", "Enrollment")
   }
 
