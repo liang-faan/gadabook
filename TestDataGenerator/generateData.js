@@ -5,12 +5,11 @@ var gen = require("./dataGenerator")
 // AWS.config not required if 'aws configure' has been done in the cli as the sdk will automatically use it.
 
 var dynamodb = new AWS.DynamoDB({ region: "ap-southeast-1" })
-var tableName = "gardabook-develop"
 
-var numberOfCatalogues = 5
-var numberOfUsers = 10
-var numberOfTags = 2
-var numberOfAvailabilties = 3
+var numberOfCatalogues = 10
+var numberOfUsers = 50
+var numberOfTags = 4
+var numberOfAvailabilties = 6
 var numberOfBookings = 5
 var numberOfEnrollments = 3
 
@@ -26,8 +25,8 @@ var allData = gen.generateAllData(
 // SETUP WORKLOADS
 var work = [].concat(
   function(done) {
-    // var tableName = "Gardabook.User"
-    console.log("Generated", Object.keys(allData).length, "User")
+    var tableName = "gardabook-develop"
+    console.log("Generated", Object.keys(allData).length, tableName)
     processDataset(done, allData, tableName)
   }
 )
