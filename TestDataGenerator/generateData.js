@@ -29,31 +29,6 @@ var work = [].concat(
     // var tableName = "Gardabook.User"
     console.log("Generated", Object.keys(allData).length, "User")
     processDataset(done, allData, tableName)
-  },
-  function(done) {
-    // var tableName = "Gardabook.Tag"
-    console.log("Generated", Object.keys(allData).length, "Tag")
-    processDataset(done, allData, tableName)
-  },
-  function(done) {
-    // var tableName = "Gardabook.Availability"
-    console.log("Generated", Object.keys(allData).length, "Availability")
-    processDataset(done, allData, tableName)
-  },
-  function(done) {
-    // var tableName = "Gardabook.Catalogue"
-    console.log("Generated", Object.keys(allData).length, "Catalogue")
-    processDataset(done, allData, tableName)
-  },
-  function(done) {
-    // var tableName = "Gardabook.Bookings"
-    console.log("Generated", Object.keys(allData).length, "Bookings")
-    processDataset(done, allData, tableName)
-  },
-  function(done) {
-    // var tableName = "Gardabook.Enrollment"
-    console.log("Generated", Object.keys(allData).length, "Enrollment")
-    processDataset(done, allData, tableName)
   }
 )
 // END SETUP WORKLOADS
