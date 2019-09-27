@@ -1,67 +1,12 @@
 var faker = require("faker")
 var helpers = require("./helpers")
+var { generateUniqueUser } = require("./entities/user")
 
-faker.seed(1)
+var { currentEpochTime, secondsInADay, fakerSeed } = helpers
 
-var currentEpochTime = Math.floor(new Date() / 1000)
-var secondsInADay = 86400
+faker.seed(fakerSeed)
 
 var fullData = {}
-
-function generateUniqueUser(users) {
-  var uuid = `User_${faker.random.uuid()}`
-  var data = {
-    partitionKey: {
-      S: uuid
-    },
-    sortKey: {
-      S: uuid
-    },
-    Role: {
-      S: "normal"
-    },
-    Name: {
-      S: faker.internet.userName()
-    },
-    FirstName: {
-      S: faker.name.firstName()
-    },
-    LastName: {
-      S: faker.name.lastName()
-    },
-    Email: {
-      S: faker.internet.email()
-    },
-    Phone: {
-      S: faker.phone.phoneNumber()
-    },
-    DOB: {
-      N: faker.random
-        .number({
-          min: currentEpochTime - secondsInADay * 365 * 40,
-          max: currentEpochTime - secondsInADay * 365 * 18
-        })
-        .toString()
-    },
-    Gender: {
-      S: "Male"
-    },
-    Address: {
-      S: faker.address.streetAddress()
-    },
-    UserStatus: {
-      S: "ok"
-    },
-    Active: {
-      BOOL: true
-    }
-  }
-
-  fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-  users.push(data)
-  helpers.printPretty(data)
-  return data
-}
 
 function generateUniqueTag(tags) {
   var uuid = `Tag_${faker.random.uuid()}`
@@ -128,7 +73,7 @@ function generateUniqueCatalogue(tag, availability, catalogues) {
   }
   var uuid = `Catalogue_${faker.random.uuid()}`
   var name = faker.lorem.word(5)
-  var rate = faker.random.number({min: 10, max: 100}).toString()
+  var rate = faker.random.number({ min: 10, max: 100 }).toString()
   var baseData = {
     partitionKey: {
       S: uuid
@@ -199,7 +144,7 @@ function generateUniqueCatalogue(tag, availability, catalogues) {
 
 function generateUniqueBooking(user, catalogue, bookings) {
   var uuid = `Booking_${faker.random.uuid()}`
-  var amount = faker.random.number({min: 10, max: 100}).toString()
+  var amount = faker.random.number({ min: 10, max: 100 }).toString()
   var baseData = {
     partitionKey: {
       S: uuid
@@ -254,7 +199,7 @@ function generateUniqueBooking(user, catalogue, bookings) {
       S: amount
     }
   }
-  
+
   var gsiData2 = {
     partitionKey: {
       S: catalogue.partitionKey.S
@@ -277,7 +222,7 @@ function generateUniqueBooking(user, catalogue, bookings) {
 
 function generateUniqueEnrollment(user, catalogue, enrollments) {
   var uuid = `Enrollment_${faker.random.uuid()}`
-  var fee = faker.random.number({min: 10, max: 100}).toString()
+  var fee = faker.random.number({ min: 10, max: 100 }).toString()
   var baseData = {
     partitionKey: {
       S: uuid
@@ -309,7 +254,7 @@ function generateUniqueEnrollment(user, catalogue, enrollments) {
       S: fee
     }
   }
-  
+
   var gsiData1 = {
     partitionKey: {
       S: user.partitionKey.S
@@ -321,7 +266,7 @@ function generateUniqueEnrollment(user, catalogue, enrollments) {
       S: fee
     }
   }
-  
+
   var gsiData2 = {
     partitionKey: {
       S: catalogue.partitionKey.S
@@ -352,7 +297,9 @@ function generateAllData(
 ) {
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
-    generateUniqueUser(users)
+    var data = generateUniqueUser(users)
+    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+    users.push(data)
     console.log("Generated", "User")
   }
 
