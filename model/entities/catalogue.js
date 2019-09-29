@@ -1,4 +1,4 @@
-function generateUniqueCatalogue(props) {
+function generateCatalogueObject(props) {
   if (!validateProps(props)) {
     return false
   }
@@ -69,5 +69,5 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateUniqueCatalogue
+  generateCatalogueObject
 }

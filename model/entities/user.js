@@ -1,4 +1,4 @@
-function generateUniqueUser(props) {
+function generateUserObject(props) {
   if (!validateProps(props)) {
     return false
   }
@@ -54,5 +54,5 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateUniqueUser
+  generateUserObject
 }

@@ -1,4 +1,4 @@
-function generateUniqueBooking(props) {
+function generateBookingObject(props) {
   if (!validateProps(props)) {
     return false
   }
@@ -57,5 +57,5 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateUniqueBooking
+  generateBookingObject
 }

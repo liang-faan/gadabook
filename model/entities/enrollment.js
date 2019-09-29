@@ -1,4 +1,4 @@
-function generateUniqueEnrollment(props) {
+function generateEnrollmentObject(props) {
   if (!validateProps(props)) {
     return false
   }
@@ -42,5 +42,5 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateUniqueEnrollment
+  generateEnrollmentObject
 }

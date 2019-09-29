@@ -1,4 +1,4 @@
-function generateUniqueTag(props) {
+function generateTagObject(props) {
   if (!validateProps(props)) {
     return false
   }
@@ -27,5 +27,5 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateUniqueTag
+  generateTagObject
 }

@@ -1,12 +1,12 @@
 var faker = require("faker")
 var helpers = require("./helpers")
-var { generateUniqueUser } = require("./entities/user")
-var { generateUniqueTag } = require("./entities/tag")
-var { generateUniqueAvailability } = require("./entities/availability")
-var { generateUniqueCatalogue } = require("./entities/catalogue")
-var { generateUniqueBooking } = require("./entities/booking")
-var { generateUniqueEnrollment } = require("./entities/enrollment")
-var { generateSessionObject } = require("./entities/session")
+var { generateUserObject } = require("../entities/user")
+var { generateTagObject } = require("../entities/tag")
+var { generateAvailabilityObject } = require("../entities/availability")
+var { generateCatalogueObject } = require("../entities/catalogue")
+var { generateBookingObject } = require("../entities/booking")
+var { generateEnrollmentObject } = require("../entities/enrollment")
+var { generateSessionObject } = require("../entities/session")
 
 var { currentEpochTime, secondsInADay, fakerSeed } = helpers
 faker.seed(fakerSeed)
@@ -47,7 +47,7 @@ function generateAllData(
       active: true
     }
 
-    var { userUser } = generateUniqueUser(props)
+    var { userUser } = generateUserObject(props)
     fullData[`${userUser.pKey.S}_${userUser.sKey.S}`] = userUser
 
     users.push(userUser)
@@ -89,7 +89,7 @@ function generateAllData(
       active: true
     }
 
-    var { tagTag } = generateUniqueTag(props)
+    var { tagTag } = generateTagObject(props)
 
     fullData[`${tagTag.pKey.S}_${tagTag.sKey.S}`] = tagTag
     tags.push(tagTag)
@@ -116,7 +116,7 @@ function generateAllData(
       active: true
     }
 
-    var { enrollmentEnrollment, userEnrollment } = generateUniqueEnrollment(
+    var { enrollmentEnrollment, userEnrollment } = generateEnrollmentObject(
       props
     )
     fullData[
@@ -158,7 +158,7 @@ function generateAllData(
       catalogueCatalogue,
       tagCatalogue,
       enrollmentCatalogue
-    } = generateUniqueCatalogue(props)
+    } = generateCatalogueObject(props)
     fullData[
       `${catalogueCatalogue.pKey.S}_${catalogueCatalogue.sKey.S}`
     ] = catalogueCatalogue
@@ -212,7 +212,7 @@ function generateAllData(
     var {
       availabilityAvailability,
       catalogueAvailability
-    } = generateUniqueAvailability(props)
+    } = generateAvailabilityObject(props)
     fullData[
       `${availabilityAvailability.pKey.S}_${availabilityAvailability.sKey.S}`
     ] = availabilityAvailability
@@ -255,7 +255,7 @@ function generateAllData(
       bookingBooking,
       userBooking,
       availabilityBooking
-    } = generateUniqueBooking(props)
+    } = generateBookingObject(props)
     fullData[
       `${bookingBooking.pKey.S}_${bookingBooking.sKey.S}`
     ] = bookingBooking

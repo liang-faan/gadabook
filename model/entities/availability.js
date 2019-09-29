@@ -1,4 +1,4 @@
-function generateUniqueAvailability(props) {
+function generateAvailabilityObject(props) {
   if (!validateProps(props)) {
     return false
   }
@@ -48,5 +48,5 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateUniqueAvailability
+  generateAvailabilityObject
 }
