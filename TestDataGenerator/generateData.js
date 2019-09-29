@@ -6,12 +6,12 @@ var gen = require("./dataGenerator")
 
 var dynamodb = new AWS.DynamoDB({ region: "ap-southeast-1" })
 
-var numberOfCatalogues = 10
-var numberOfUsers = 50
-var numberOfTags = 4
-var numberOfAvailabilties = 6
-var numberOfBookings = 5
-var numberOfEnrollments = 3
+var numberOfCatalogues = 1
+var numberOfUsers = 1
+var numberOfTags = 1
+var numberOfAvailabilties = 1
+var numberOfBookings = 1
+var numberOfEnrollments = 1
 
 var allData = gen.generateAllData(
   numberOfCatalogues,
@@ -23,13 +23,11 @@ var allData = gen.generateAllData(
 )
 
 // SETUP WORKLOADS
-var work = [].concat(
-  function(done) {
-    var tableName = "gardabook-develop"
-    console.log("Generated", Object.keys(allData).length, tableName)
-    processDataset(done, allData, tableName)
-  }
-)
+var work = [].concat(function(done) {
+  var tableName = "gardabook-develop"
+  console.log("Generated", Object.keys(allData).length, tableName)
+  processDataset(done, allData, tableName)
+})
 // END SETUP WORKLOADS
 
 function startProcessingDataSeries() {
