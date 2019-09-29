@@ -1,0 +1,14 @@
+title This is a title
+
+Commonlib->Commonlib: store key
+
+Client->Auth:login
+Auth->Client: JWT token (signed with private key)
+Auth->Auth: store the jwt in DB
+Client->Catalogue: retrieve catalogue service (with JWT token)
+
+Catalogue ->Catalogue: verify JWT token with public key & verify in DB is revoked?
+Catalogue->Client: return catalogue list
+Client->Booking service: Send JWT token together with booking
+Booking service ->Booking service: verify JWT token with public key & verify in DB is revoked?
+Booking service -> Client: return success booking
