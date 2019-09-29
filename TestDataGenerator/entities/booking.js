@@ -1,78 +1,58 @@
-var faker = require("faker")
-var helpers = require("../helpers")
+function generateUniqueBooking(props) {
+  if (!validateProps(props)) {
+    return false
+  }
 
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueBooking(user, availability) {
-  var uuid = `Booking_${faker.random.uuid()}`
-  var amount = faker.random.number({ min: 10, max: 100 }).toString()
   var bookingBooking = {
     pKey: {
-      S: uuid
+      S: props.pKey
     },
     sKey: {
-      S: uuid
+      S: props.sKey
     },
-    availabilityID: {
-      S: availability.pKey.S
+    userId: {
+      S: props.userId
     },
-    UserID: {
-      S: user.pKey.S
+    availabilityId: {
+      S: props.availabilityId
     },
-    TransactionID: {
-      S: faker.random.uuid()
+    startTime: {
+      N: props.startTime
     },
-    Status: {
-      S: "ok"
+    endTime: {
+      N: props.endTime
     },
-    StartTime: {
-      N: faker.random
-        .number({
-          min: currentEpochTime - secondsInADay * 10,
-          max: currentEpochTime - secondsInADay
-        })
-        .toString()
+    amount: {
+      S: props.amount
     },
-    EndTime: {
-      N: faker.random
-        .number({
-          min: currentEpochTime + secondsInADay,
-          max: currentEpochTime + secondsInADay * 10
-        })
-        .toString()
-    },
-    Active: {
-      BOOL: true
-    },
-    Amount: {
-      S: amount
+    active: {
+      BOOL: props.active
     }
   }
 
   var userBooking = {
     pKey: {
-      S: user.pKey.S
+      S: props.userID
     },
     sKey: {
-      S: uuid
-    },
-    BookingAmount: {
-      S: amount
+      S: props.pKey
     }
   }
 
   var availabilityBooking = {
     pKey: {
-      S: availability.pKey.S
+      S: props.availabilityId
     },
     sKey: {
-      S: uuid
+      S: props.pKey
     }
   }
 
-  helpers.printPretty(bookingBooking)
   return { bookingBooking, userBooking, availabilityBooking }
 }
+
+// TODO: Validate booking props
+function validateProps(props) {}
 
 module.exports = {
   generateUniqueBooking

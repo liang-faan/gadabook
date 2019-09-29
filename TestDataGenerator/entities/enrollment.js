@@ -1,55 +1,43 @@
-var faker = require("faker")
-var helpers = require("../helpers")
+function generateUniqueEnrollment(props) {
+  if (!validateProps(props)) {
+    return false
+  }
 
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueEnrollment(user) {
-  var uuid = `Enrollment_${faker.random.uuid()}`
-  var fee = faker.random.number({ min: 10, max: 100 }).toString()
   var enrollmentEnrollment = {
     pKey: {
-      S: uuid
+      S: props.pKey
     },
     sKey: {
-      S: uuid
+      S: props.sKey
     },
-    UserID: {
-      S: user.pKey.S
+    userId: {
+      S: props.userId
     },
-    TransactionID: {
-      S: faker.random.uuid()
+    expiryDate: {
+      N: props.expiryDate
     },
-    ExpiryDate: {
-      N: faker.random
-        .number({
-          min: currentEpochTime + secondsInADay,
-          max: currentEpochTime + secondsInADay * 10
-        })
-        .toString()
+    fee: {
+      S: props.fee
     },
-    Active: {
-      BOOL: true
-    },
-    Fee: {
-      S: fee
+    active: {
+      BOOL: props.active
     }
   }
 
   var userEnrollment = {
     pKey: {
-      S: user.pKey.S
+      S: props.userId
     },
     sKey: {
-      S: uuid
-    },
-    EnrollmentFee: {
-      S: fee
+      S: props.pKey
     }
   }
 
-  helpers.printPretty(enrollmentEnrollment)
   return { enrollmentEnrollment, userEnrollment }
 }
+
+// TODO: Validate enrollment props
+function validateProps(props) {}
 
 module.exports = {
   generateUniqueEnrollment

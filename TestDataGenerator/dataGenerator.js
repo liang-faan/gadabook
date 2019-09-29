@@ -25,9 +25,10 @@ function generateAllData(
   // PREPARE GENERATED USERS
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
+    var uuid = `User_${faker.random.uuid()}`
     var props = {
-      pKey: `User_${faker.random.uuid()}`,
-      sKey: pKey,
+      pKey: uuid,
+      sKey: uuid,
       role: "normal",
       username: faker.internet.userName(),
       firstName: faker.name.firstName(),
@@ -56,9 +57,10 @@ function generateAllData(
   // PREPARE GENERATED SESSIONS
   var sessions = []
   for (var i = 0; i < numberOfSessions; i++) {
+    var uuid = `Session_${faker.random.uuid()}`
     var props = {
-      pKey: `Session_${faker.random.uuid()}`,
-      sKey: pKey,
+      pKey: uuid,
+      sKey: uuid,
       userId: faker.random.objectElement(users).pKey.S,
       csrfToken: faker.random.uuid(),
       createTime: "TIME",
@@ -86,8 +88,24 @@ function generateAllData(
   var enrollments = []
   for (var i = 0; i < numberOfEnrollments; i++) {
     var user = faker.random.objectElement(users)
+    var uuid = `Enrollment_${faker.random.uuid()}`
+
+    var props = {
+      pKey: uuid,
+      sKey: uuid,
+      userId: user.pKey.S,
+      expiryDate: faker.random
+        .number({
+          min: currentEpochTime + secondsInADay,
+          max: currentEpochTime + secondsInADay * 10
+        })
+        .toString(),
+      fee: faker.random.number({ min: 10, max: 100 }).toString(),
+      active: true
+    }
+
     var { enrollmentEnrollment, userEnrollment } = generateUniqueEnrollment(
-      user
+      props
     )
     fullData[
       `${enrollmentEnrollment.pKey.S}_${enrollmentEnrollment.sKey.S}`
@@ -141,13 +159,36 @@ function generateAllData(
 
   var bookings = []
   for (var i = 0; i < numberOfBookings; i++) {
-    var user = faker.random.objectElement(users)
+    var uuid = `Booking_${faker.random.uuid()}`
     var availability = faker.random.objectElement(availabilities)
+    var user = faker.random.objectElement(users)
+
+    var props = {
+      pKey: uuid,
+      sKey: uuid,
+      userID: user.pKey.S,
+      availabilityID: availability.pKey.S,
+      startTime: faker.random
+        .number({
+          min: currentEpochTime - secondsInADay * 10,
+          max: currentEpochTime - secondsInADay
+        })
+        .toString(),
+      endTime: faker.random
+        .number({
+          min: currentEpochTime + secondsInADay,
+          max: currentEpochTime + secondsInADay * 10
+        })
+        .toString(),
+      amount: faker.random.number({ min: 10, max: 100 }).toString(),
+      active: true
+    }
+
     var {
       bookingBooking,
       userBooking,
       availabilityBooking
-    } = generateUniqueBooking(user, availability)
+    } = generateUniqueBooking(props)
     fullData[
       `${bookingBooking.pKey.S}_${bookingBooking.sKey.S}`
     ] = bookingBooking
