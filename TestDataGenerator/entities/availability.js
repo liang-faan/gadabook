@@ -6,10 +6,10 @@ var { currentEpochTime, secondsInADay } = helpers
 function generateUniqueAvailability(catalogue) {
   var uuid = `Availability_${faker.random.uuid()}`
   var availabilityAvailability = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     Date: {
@@ -21,7 +21,7 @@ function generateUniqueAvailability(catalogue) {
         .toString()
     },
     catalogueId: {
-      S: catalogue.partitionKey.S
+      S: catalogue.pKey.S
     },
     Slot: {
       N: faker.random
@@ -34,10 +34,10 @@ function generateUniqueAvailability(catalogue) {
   }
 
   var catalogueAvailability = {
-    partitionKey: {
-      S: catalogue.partitionKey.S
+    pKey: {
+      S: catalogue.pKey.S
     },
-    sortKey: {
+    sKey: {
       S: uuid
     }
   }

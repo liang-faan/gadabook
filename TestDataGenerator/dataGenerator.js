@@ -25,7 +25,7 @@ function generateAllData(
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
     var { userUser } = generateUniqueUser()
-    fullData[`${userUser.partitionKey.S}_${userUser.sortKey.S}`] = userUser
+    fullData[`${userUser.pKey.S}_${userUser.sKey.S}`] = userUser
     users.push(userUser)
     console.log("Generated", "User")
   }
@@ -35,7 +35,7 @@ function generateAllData(
     var user = faker.random.objectElement(users)
     var { sessionSession } = generateUniqueSession(user)
     fullData[
-      `${sessionSession.partitionKey.S}_${sessionSession.sortKey.S}`
+      `${sessionSession.pKey.S}_${sessionSession.sKey.S}`
     ] = sessionSession
     sessions.push(sessionSession)
     console.log("Generated", "Session")
@@ -44,7 +44,7 @@ function generateAllData(
   var tags = []
   for (var i = 0; i < numberOfTags; i++) {
     var { tagTag } = generateUniqueTag()
-    fullData[`${tagTag.partitionKey.S}_${tagTag.sortKey.S}`] = tagTag
+    fullData[`${tagTag.pKey.S}_${tagTag.sKey.S}`] = tagTag
     tags.push(tagTag)
     console.log("Generated", "Tag")
   }
@@ -56,10 +56,10 @@ function generateAllData(
       user
     )
     fullData[
-      `${enrollmentEnrollment.partitionKey.S}_${enrollmentEnrollment.sortKey.S}`
+      `${enrollmentEnrollment.pKey.S}_${enrollmentEnrollment.sKey.S}`
     ] = enrollmentEnrollment
     fullData[
-      `${userEnrollment.partitionKey.S}_${enrollmentEnrollment.partitionKey.S}`
+      `${userEnrollment.pKey.S}_${enrollmentEnrollment.pKey.S}`
     ] = userEnrollment
     enrollments.push(enrollmentEnrollment)
     console.log("Generated", "Enrollment")
@@ -76,13 +76,13 @@ function generateAllData(
       enrollmentCatalogue
     } = generateUniqueCatalogue(tag, enrollment)
     fullData[
-      `${catalogueCatalogue.partitionKey.S}_${catalogueCatalogue.sortKey.S}`
+      `${catalogueCatalogue.pKey.S}_${catalogueCatalogue.sKey.S}`
     ] = catalogueCatalogue
     fullData[
-      `${tagCatalogue.partitionKey.S}_${catalogueCatalogue.partitionKey.S}`
+      `${tagCatalogue.pKey.S}_${catalogueCatalogue.pKey.S}`
     ] = tagCatalogue
     fullData[
-      `${enrollmentCatalogue.partitionKey.S}_${catalogueCatalogue.partitionKey.S}`
+      `${enrollmentCatalogue.pKey.S}_${catalogueCatalogue.pKey.S}`
     ] = enrollmentCatalogue
     catalogues.push(catalogueCatalogue)
     console.log("Generated", "Catalogue")
@@ -96,10 +96,10 @@ function generateAllData(
       catalogueAvailability
     } = generateUniqueAvailability(catalogue)
     fullData[
-      `${availabilityAvailability.partitionKey.S}_${availabilityAvailability.sortKey.S}`
+      `${availabilityAvailability.pKey.S}_${availabilityAvailability.sKey.S}`
     ] = availabilityAvailability
     fullData[
-      `${catalogueAvailability.partitionKey.S}_${availabilityAvailability.sortKey.S}`
+      `${catalogueAvailability.pKey.S}_${availabilityAvailability.sKey.S}`
     ] = catalogueAvailability
     availabilities.push(availabilityAvailability)
     console.log("Generated", "Availability")
@@ -115,13 +115,11 @@ function generateAllData(
       availabilityBooking
     } = generateUniqueBooking(user, availability)
     fullData[
-      `${bookingBooking.partitionKey.S}_${bookingBooking.sortKey.S}`
+      `${bookingBooking.pKey.S}_${bookingBooking.sKey.S}`
     ] = bookingBooking
+    fullData[`${userBooking.pKey.S}_${bookingBooking.pKey.S}`] = userBooking
     fullData[
-      `${userBooking.partitionKey.S}_${bookingBooking.partitionKey.S}`
-    ] = userBooking
-    fullData[
-      `${availabilityBooking.partitionKey.S}_${bookingBooking.partitionKey.S}`
+      `${availabilityBooking.pKey.S}_${bookingBooking.pKey.S}`
     ] = availabilityBooking
     bookings.push(bookingBooking)
     console.log("Generated", "Bookings")

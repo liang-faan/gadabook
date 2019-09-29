@@ -7,17 +7,17 @@ function generateUniqueBooking(user, availability) {
   var uuid = `Booking_${faker.random.uuid()}`
   var amount = faker.random.number({ min: 10, max: 100 }).toString()
   var bookingBooking = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     availabilityID: {
-      S: availability.partitionKey.S
+      S: availability.pKey.S
     },
     UserID: {
-      S: user.partitionKey.S
+      S: user.pKey.S
     },
     TransactionID: {
       S: faker.random.uuid()
@@ -50,10 +50,10 @@ function generateUniqueBooking(user, availability) {
   }
 
   var userBooking = {
-    partitionKey: {
-      S: user.partitionKey.S
+    pKey: {
+      S: user.pKey.S
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     BookingAmount: {
@@ -62,10 +62,10 @@ function generateUniqueBooking(user, availability) {
   }
 
   var availabilityBooking = {
-    partitionKey: {
-      S: availability.partitionKey.S
+    pKey: {
+      S: availability.pKey.S
     },
-    sortKey: {
+    sKey: {
       S: uuid
     }
   }

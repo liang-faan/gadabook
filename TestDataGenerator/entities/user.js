@@ -6,10 +6,10 @@ var { currentEpochTime, secondsInADay } = helpers
 function generateUniqueUser() {
   var uuid = `User_${faker.random.uuid()}`
   var userUser = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     Role: {

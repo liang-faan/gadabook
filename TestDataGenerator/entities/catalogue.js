@@ -14,14 +14,14 @@ function generateUniqueCatalogue(tag, enrollment) {
   var name = faker.lorem.word(5)
   var rate = faker.random.number({ min: 10, max: 100 }).toString()
   var catalogueCatalogue = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     enrollmentId: {
-      S: enrollment.partitionKey.S
+      S: enrollment.pKey.S
     },
     Name: {
       S: name
@@ -41,10 +41,10 @@ function generateUniqueCatalogue(tag, enrollment) {
   }
 
   var tagCatalogue = {
-    partitionKey: {
-      S: tag.partitionKey.S
+    pKey: {
+      S: tag.pKey.S
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     CatalogueName: {
@@ -56,10 +56,10 @@ function generateUniqueCatalogue(tag, enrollment) {
   }
 
   var enrollmentCatalogue = {
-    partitionKey: {
-      S: enrollment.partitionKey.S
+    pKey: {
+      S: enrollment.pKey.S
     },
-    sortKey: {
+    sKey: {
       S: uuid
     }
   }

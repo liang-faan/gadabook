@@ -6,10 +6,10 @@ var { currentEpochTime, secondsInADay } = helpers
 function generateUniqueTag() {
   var uuid = `Tag_${faker.random.uuid()}`
   var tagTag = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     Description: {

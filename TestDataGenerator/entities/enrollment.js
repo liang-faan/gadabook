@@ -7,14 +7,14 @@ function generateUniqueEnrollment(user) {
   var uuid = `Enrollment_${faker.random.uuid()}`
   var fee = faker.random.number({ min: 10, max: 100 }).toString()
   var enrollmentEnrollment = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     UserID: {
-      S: user.partitionKey.S
+      S: user.pKey.S
     },
     TransactionID: {
       S: faker.random.uuid()
@@ -36,10 +36,10 @@ function generateUniqueEnrollment(user) {
   }
 
   var userEnrollment = {
-    partitionKey: {
-      S: user.partitionKey.S
+    pKey: {
+      S: user.pKey.S
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     EnrollmentFee: {

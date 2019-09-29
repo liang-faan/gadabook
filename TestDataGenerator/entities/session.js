@@ -6,14 +6,14 @@ var { currentEpochTime, secondsInADay } = helpers
 function generateUniqueSession(user) {
   var uuid = `Session_${faker.random.uuid()}`
   var sessionSession = {
-    partitionKey: {
+    pKey: {
       S: uuid
     },
-    sortKey: {
+    sKey: {
       S: uuid
     },
     userId: {
-      S: user.partitionKey.S
+      S: user.pKey.S
     },
     active: {
       BOOL: true
