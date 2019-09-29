@@ -1,0 +1,1 @@
+{"version":3,"sources":["transitions.css"],"names":[],"mappings":"AAAA,YACE,SAAU,CACV,SACF,CAEA,8BACE,SAAU,CACV,uCAAiC,CAAjC,+BAAiC,CACjC,SACF","file":"main.2e4b6446.chunk.css","sourcesContent":[".fade-enter {\n  opacity: 0;\n  z-index: 1;\n}\n\n.fade-enter.fade-enter-active {\n  opacity: 1;\n  transition: opacity 250ms ease-in;\n  z-index: 1;\n}\n"]}

@@ -1,0 +1,38 @@
+export default (theme: any) => ({
+  bottomNav: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
+    width: 'calc(100% - 20px)',
+    height: 50,
+    padding: '0px 10px',
+    backgroundColor: 'white',
+    boxShadow: '0px -3px 6px lightgrey',
+    zIndex: 99999,
+  },
+  navItem: {
+    display: 'flex',
+    width: 75,
+    height: 40,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'grey',
+    fill: 'blue',
+    fontSize: 12,
+  },
+  navItemSelected: {
+    color: 'black',
+    fontWeight: 900,
+    fontSize: 13,
+  },
+  faPlusContainer: {
+    padding: 3,
+    borderRadius: 3,
+    backgroundColor: 'orange',
+    color: 'white',
+  },
+  navItemPlus: {},
+})
