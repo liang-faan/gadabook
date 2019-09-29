@@ -1,33 +1,35 @@
-function generateSessionObject(
-  pKey,
-  sKey,
-  userId,
-  csrfToken,
-  createTime,
-  active
-) {
+function generateSessionObject(props) {
+  if (!validateProps(props)) {
+    return false
+  }
+
   var sessionSession = {
     pKey: {
-      S: pKey
+      S: props.pKey
     },
     sKey: {
-      S: sKey
+      S: props.sKey
     },
     userId: {
-      S: userId
+      S: props.userId
     },
     csrfToken: {
-      S: csrfToken
+      S: props.csrfToken
     },
     createTime: {
-      S: createTime
+      S: props.createTime
     },
     active: {
-      BOOL: active
+      BOOL: props.active
     }
   }
 
   return { sessionSession }
+}
+
+// TODO: Validate session props
+function validateProps(props) {
+  return true
 }
 
 module.exports = {

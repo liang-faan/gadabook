@@ -1,62 +1,55 @@
-function generateUniqueUser(
-  pKey,
-  sKey,
-  role,
-  username,
-  firstName,
-  lastName,
-  email,
-  phone,
-  dob,
-  gender,
-  address,
-  status,
-  active
-) {
+function generateUniqueUser(props) {
+  if (!validateProps(props)) {
+    return false
+  }
+
   var userUser = {
     pKey: {
-      S: pKey
+      S: props.pKey
     },
     sKey: {
-      S: sKey
+      S: props.sKey
     },
     role: {
-      S: role
+      S: props.role
     },
     username: {
-      S: username
+      S: props.username
     },
     firstName: {
-      S: firstName
+      S: props.firstName
     },
     lastName: {
-      S: lastName
+      S: props.lastName
     },
     email: {
-      S: email
+      S: props.email
     },
     phone: {
-      S: phone
+      S: props.phone
     },
     dob: {
-      N: dob
+      N: props.dob
     },
     gender: {
-      S: gender
+      S: props.gender
     },
     address: {
-      S: address
+      S: props.address
     },
     status: {
-      S: status
+      S: props.status
     },
     active: {
-      BOOL: active
+      BOOL: props.active
     }
   }
 
   return { userUser }
 }
+
+// TODO: Validate user props
+function validateProps(props) {}
 
 module.exports = {
   generateUniqueUser

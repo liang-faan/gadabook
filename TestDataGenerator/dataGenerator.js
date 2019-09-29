@@ -25,40 +25,28 @@ function generateAllData(
   // PREPARE GENERATED USERS
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
-    var pKey = `User_${faker.random.uuid()}`
-    var sKey = pKey
-    var role = "normal"
-    var username = faker.internet.userName()
-    var firstName = faker.name.firstName()
-    var lastName = faker.name.lastName()
-    var email = faker.internet.email()
-    var phone = faker.phone.phoneNumber()
-    var dob = faker.random
-      .number({
-        min: currentEpochTime - secondsInADay * 365 * 40,
-        max: currentEpochTime - secondsInADay * 365 * 18
-      })
-      .toString()
-    var gender = "Male"
-    var address = faker.address.streetAddress()
-    var status = "ok"
-    var active = true
+    var props = {
+      pKey: `User_${faker.random.uuid()}`,
+      sKey: pKey,
+      role: "normal",
+      username: faker.internet.userName(),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      phone: faker.phone.phoneNumber(),
+      dob: faker.random
+        .number({
+          min: currentEpochTime - secondsInADay * 365 * 40,
+          max: currentEpochTime - secondsInADay * 365 * 18
+        })
+        .toString(),
+      gender: "Male",
+      address: faker.address.streetAddress(),
+      status: "ok",
+      active: true
+    }
 
-    var { userUser } = generateUniqueUser(
-      pKey,
-      sKey,
-      role,
-      username,
-      firstName,
-      lastName,
-      email,
-      phone,
-      dob,
-      gender,
-      address,
-      status,
-      active
-    )
+    var { userUser } = generateUniqueUser(props)
     fullData[`${userUser.pKey.S}_${userUser.sKey.S}`] = userUser
 
     users.push(userUser)
@@ -68,21 +56,16 @@ function generateAllData(
   // PREPARE GENERATED SESSIONS
   var sessions = []
   for (var i = 0; i < numberOfSessions; i++) {
-    var pKey = `Session_${faker.random.uuid()}`
-    var sKey = pKey
-    var userId = faker.random.objectElement(users).pKey.S
-    var csrfToken = faker.random.uuid()
-    var createTime = "TIME"
-    var active = true
+    var props = {
+      pKey: `Session_${faker.random.uuid()}`,
+      sKey: pKey,
+      userId: faker.random.objectElement(users).pKey.S,
+      csrfToken: faker.random.uuid(),
+      createTime: "TIME",
+      active: true
+    }
 
-    var { sessionSession } = generateSessionObject(
-      pKey,
-      sKey,
-      userId,
-      csrfToken,
-      createTime,
-      active
-    )
+    var { sessionSession } = generateSessionObject(props)
 
     fullData[
       `${sessionSession.pKey.S}_${sessionSession.sKey.S}`
