@@ -3,7 +3,7 @@ var helpers = require("../helpers")
 
 var { currentEpochTime, secondsInADay } = helpers
 
-function generateUniqueBooking(user, catalogue) {
+function generateUniqueBooking(user, availability) {
   var uuid = `Booking_${faker.random.uuid()}`
   var amount = faker.random.number({ min: 10, max: 100 }).toString()
   var bookingBooking = {
@@ -13,8 +13,8 @@ function generateUniqueBooking(user, catalogue) {
     sortKey: {
       S: uuid
     },
-    CatalogueID: {
-      S: catalogue.partitionKey.S
+    availabilityID: {
+      S: availability.partitionKey.S
     },
     UserID: {
       S: user.partitionKey.S
@@ -61,9 +61,9 @@ function generateUniqueBooking(user, catalogue) {
     }
   }
 
-  var catalogueBooking = {
+  var availabilityBooking = {
     partitionKey: {
-      S: catalogue.partitionKey.S
+      S: availability.partitionKey.S
     },
     sortKey: {
       S: uuid
@@ -74,7 +74,7 @@ function generateUniqueBooking(user, catalogue) {
   }
 
   helpers.printPretty(bookingBooking)
-  return { bookingBooking, userBooking, catalogueBooking }
+  return { bookingBooking, userBooking, availabilityBooking }
 }
 
 module.exports = {

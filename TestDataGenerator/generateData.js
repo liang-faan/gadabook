@@ -12,6 +12,7 @@ var numberOfTags = 1
 var numberOfAvailabilties = 1
 var numberOfBookings = 1
 var numberOfEnrollments = 1
+var numberOfSessions = 1
 
 var allData = gen.generateAllData(
   numberOfCatalogues,
@@ -19,7 +20,8 @@ var allData = gen.generateAllData(
   numberOfTags,
   numberOfAvailabilties,
   numberOfBookings,
-  numberOfEnrollments
+  numberOfEnrollments,
+  numberOfSessions
 )
 
 // SETUP WORKLOADS

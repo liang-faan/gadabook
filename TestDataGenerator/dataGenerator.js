@@ -6,6 +6,7 @@ var { generateUniqueAvailability } = require("./entities/availability")
 var { generateUniqueCatalogue } = require("./entities/catalogue")
 var { generateUniqueBooking } = require("./entities/booking")
 var { generateUniqueEnrollment } = require("./entities/enrollment")
+var { generateUniqueSession } = require("./entities/session")
 
 var { fakerSeed } = helpers
 faker.seed(fakerSeed)
@@ -18,14 +19,24 @@ function generateAllData(
   numberOfTags,
   numberOfAvailabilties,
   numberOfBookings,
-  numberOfEnrollments
+  numberOfEnrollments,
+  numberOfSessions
 ) {
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
-    var data = generateUniqueUser(users)
+    var data = generateUniqueUser()
     fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
     users.push(data)
     console.log("Generated", "User")
+  }
+
+  var sessions = []
+  for (var i = 0; i < numberOfSessions; i++) {
+    var user = faker.random.objectElement(users)
+    var data = generateUniqueSession(user)
+    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+    sessions.push(data)
+    console.log("Generated", "Session")
   }
 
   var tags = []
@@ -70,12 +81,12 @@ function generateAllData(
   var bookings = []
   for (var i = 0; i < numberOfBookings; i++) {
     var user = faker.random.objectElement(users)
-    var catalogue = faker.random.objectElement(catalogues)
+    var availability = faker.random.objectElement(availabilities)
     var {
       bookingBooking,
       userBooking,
-      catalogueBooking
-    } = generateUniqueBooking(user, catalogue)
+      availabilityBooking
+    } = generateUniqueBooking(user, availability)
     fullData[
       `${bookingBooking.partitionKey.S}_${bookingBooking.sortKey.S}`
     ] = bookingBooking
@@ -83,8 +94,8 @@ function generateAllData(
       `${bookingBooking.partitionKey.S}_${userBooking.partitionKey.S}`
     ] = userBooking
     fullData[
-      `${bookingBooking.partitionKey.S}_${catalogueBooking.partitionKey.S}`
-    ] = catalogueBooking
+      `${bookingBooking.partitionKey.S}_${availabilityBooking.partitionKey.S}`
+    ] = availabilityBooking
     bookings.push(bookingBooking)
     console.log("Generated", "Bookings")
   }
