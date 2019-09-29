@@ -1,27 +1,29 @@
-var faker = require("faker")
-var helpers = require("../helpers")
+function generateUniqueTag(props) {
+  if (!validateProps(props)) {
+    return false
+  }
 
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueTag() {
-  var uuid = `Tag_${faker.random.uuid()}`
   var tagTag = {
     pKey: {
-      S: uuid
+      S: props.pKey
     },
     sKey: {
-      S: uuid
+      S: props.sKey
     },
-    Description: {
-      S: faker.lorem.paragraphs(1)
+    description: {
+      S: props.description
     },
-    Active: {
-      BOOL: true
+    active: {
+      BOOL: props.active
     }
   }
 
-  helpers.printPretty(tagTag)
   return { tagTag }
+}
+
+// TODO: Validate tag props
+function validateProps(props) {
+  return true
 }
 
 module.exports = {

@@ -32,7 +32,7 @@ function generateUniqueBooking(props) {
 
   var userBooking = {
     pKey: {
-      S: props.userID
+      S: props.userId
     },
     sKey: {
       S: props.pKey
@@ -52,7 +52,9 @@ function generateUniqueBooking(props) {
 }
 
 // TODO: Validate booking props
-function validateProps(props) {}
+function validateProps(props) {
+  return true
+}
 
 module.exports = {
   generateUniqueBooking

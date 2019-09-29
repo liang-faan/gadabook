@@ -37,7 +37,9 @@ function generateUniqueEnrollment(props) {
 }
 
 // TODO: Validate enrollment props
-function validateProps(props) {}
+function validateProps(props) {
+  return true
+}
 
 module.exports = {
   generateUniqueEnrollment

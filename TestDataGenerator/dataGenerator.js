@@ -77,14 +77,26 @@ function generateAllData(
     console.log("Generated", "Session")
   }
 
+  // PREPARE GENERATED TAGS
   var tags = []
   for (var i = 0; i < numberOfTags; i++) {
-    var { tagTag } = generateUniqueTag()
+    var uuid = `Tag_${faker.random.uuid()}`
+
+    var props = {
+      pKey: uuid,
+      sKey: uuid,
+      description: faker.lorem.paragraphs(1),
+      active: true
+    }
+
+    var { tagTag } = generateUniqueTag(props)
+
     fullData[`${tagTag.pKey.S}_${tagTag.sKey.S}`] = tagTag
     tags.push(tagTag)
     console.log("Generated", "Tag")
   }
 
+  // PREPARE GENERATED ENROLLMENTS
   var enrollments = []
   for (var i = 0; i < numberOfEnrollments; i++) {
     var user = faker.random.objectElement(users)
@@ -117,16 +129,36 @@ function generateAllData(
     console.log("Generated", "Enrollment")
   }
 
+  // PREPARE GENERATED CATAGLOGUES
   var catalogues = []
   for (var i = 0; i < numberOfCatalogues; i++) {
+    var uuid = `Catalogue_${faker.random.uuid()}`
     var tag = faker.random.objectElement(tags)
     var enrollment = faker.random.objectElement(enrollments)
+
+    var props = {
+      pKey: uuid,
+      sKey: uuid,
+      enrollmentId: enrollment.pKey.S,
+      name: faker.lorem.word(5),
+      currency: "SGD",
+      tnc: faker.lorem.paragraphs(1),
+      rate: faker.random.number({ min: 10, max: 100 }).toString(),
+      unit: "per hour",
+      remark: faker.lorem.word(5),
+      venue: "Room 2",
+      type: "Facility",
+      city: faker.address.city(),
+      address: faker.address.streetAddress(),
+      active: true,
+      tagId: tag.pKey.S
+    }
 
     var {
       catalogueCatalogue,
       tagCatalogue,
       enrollmentCatalogue
-    } = generateUniqueCatalogue(tag, enrollment)
+    } = generateUniqueCatalogue(props)
     fullData[
       `${catalogueCatalogue.pKey.S}_${catalogueCatalogue.sKey.S}`
     ] = catalogueCatalogue
@@ -140,13 +172,47 @@ function generateAllData(
     console.log("Generated", "Catalogue")
   }
 
+  // PREPARE GENERATED AVAILABILITIES
   var availabilities = []
   for (var i = 0; i < numberOfAvailabilties; i++) {
+    var uuid = `Availability_${faker.random.uuid()}`
     var catalogue = faker.random.objectElement(catalogues)
+
+    var props = {
+      pKey: uuid,
+      sKey: uuid,
+      catalogueId: catalogue.pKey.S,
+      date: faker.random
+        .number({
+          min: currentEpochTime,
+          max: currentEpochTime + secondsInADay * 18
+        })
+        .toString(),
+      time: faker.random
+        .number({
+          min: currentEpochTime,
+          max: currentEpochTime + secondsInADay * 18
+        })
+        .toString(),
+      slot: faker.random
+        .number({
+          min: 1,
+          max: 5
+        })
+        .toString(),
+      createdAt: faker.random
+        .number({
+          min: currentEpochTime,
+          max: currentEpochTime + secondsInADay * 18
+        })
+        .toString(),
+      active: true
+    }
+
     var {
       availabilityAvailability,
       catalogueAvailability
-    } = generateUniqueAvailability(catalogue)
+    } = generateUniqueAvailability(props)
     fullData[
       `${availabilityAvailability.pKey.S}_${availabilityAvailability.sKey.S}`
     ] = availabilityAvailability
@@ -157,6 +223,7 @@ function generateAllData(
     console.log("Generated", "Availability")
   }
 
+  // PREPARE GENERATED BOOKINGS
   var bookings = []
   for (var i = 0; i < numberOfBookings; i++) {
     var uuid = `Booking_${faker.random.uuid()}`
@@ -166,8 +233,8 @@ function generateAllData(
     var props = {
       pKey: uuid,
       sKey: uuid,
-      userID: user.pKey.S,
-      availabilityID: availability.pKey.S,
+      userId: user.pKey.S,
+      availabilityId: availability.pKey.S,
       startTime: faker.random
         .number({
           min: currentEpochTime - secondsInADay * 10,
@@ -199,7 +266,7 @@ function generateAllData(
     bookings.push(bookingBooking)
     console.log("Generated", "Bookings")
   }
-
+  // console.log(fullData)
   return {
     ...fullData
   }

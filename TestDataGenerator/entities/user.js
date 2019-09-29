@@ -49,7 +49,9 @@ function generateUniqueUser(props) {
 }
 
 // TODO: Validate user props
-function validateProps(props) {}
+function validateProps(props) {
+  return true
+}
 
 module.exports = {
   generateUniqueUser

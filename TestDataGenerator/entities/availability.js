@@ -1,49 +1,50 @@
-var faker = require("faker")
-var helpers = require("../helpers")
+function generateUniqueAvailability(props) {
+  if (!validateProps(props)) {
+    return false
+  }
 
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueAvailability(catalogue) {
-  var uuid = `Availability_${faker.random.uuid()}`
   var availabilityAvailability = {
     pKey: {
-      S: uuid
+      S: props.pKey
     },
     sKey: {
-      S: uuid
-    },
-    Date: {
-      N: faker.random
-        .number({
-          min: currentEpochTime,
-          max: currentEpochTime + secondsInADay * 18
-        })
-        .toString()
+      S: props.sKey
     },
     catalogueId: {
-      S: catalogue.pKey.S
+      S: props.catalogueId
     },
-    Slot: {
-      N: faker.random
-        .number({
-          min: 1,
-          max: 5
-        })
-        .toString()
+    date: {
+      N: props.date
+    },
+    time: {
+      N: props.time
+    },
+    slot: {
+      N: props.slot
+    },
+    createdAt: {
+      N: props.createdAt
+    },
+    active: {
+      BOOL: props.active
     }
   }
 
   var catalogueAvailability = {
     pKey: {
-      S: catalogue.pKey.S
+      S: props.catalogueId
     },
     sKey: {
-      S: uuid
+      S: props.pKey
     }
   }
 
-  helpers.printPretty(availabilityAvailability)
   return { availabilityAvailability, catalogueAvailability }
+}
+
+// TODO: Validate availability props
+function validateProps(props) {
+  return true
 }
 
 module.exports = {

@@ -1,71 +1,71 @@
-var faker = require("faker")
-var helpers = require("../helpers")
-
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueCatalogue(tag, enrollment) {
-  var variables = {
-    Venue: "Room 2",
-    Type: "Facility",
-    City: faker.address.city,
-    Address: faker.address.streetAddress
+function generateUniqueCatalogue(props) {
+  if (!validateProps(props)) {
+    return false
   }
-  var uuid = `Catalogue_${faker.random.uuid()}`
-  var name = faker.lorem.word(5)
-  var rate = faker.random.number({ min: 10, max: 100 }).toString()
+
   var catalogueCatalogue = {
     pKey: {
-      S: uuid
+      S: props.pKey
     },
     sKey: {
-      S: uuid
+      S: props.sKey
     },
     enrollmentId: {
-      S: enrollment.pKey.S
+      S: props.enrollmentId
     },
-    Name: {
-      S: name
+    name: {
+      S: props.name
     },
-    Currency: {
-      S: "SGD"
+    currency: {
+      S: props.currency
     },
-    TermsCondition: {
-      S: faker.lorem.paragraphs(1)
+    tnc: {
+      S: props.tnc
     },
-    Rate: {
-      S: rate
+    rate: {
+      S: props.rate
     },
-    Variables: {
-      S: JSON.stringify(variables)
+    venue: {
+      S: props.venue
+    },
+    type: {
+      S: props.type
+    },
+    city: {
+      S: props.city
+    },
+    address: {
+      S: props.address
+    },
+    active: {
+      BOOL: props.active
     }
   }
 
   var tagCatalogue = {
     pKey: {
-      S: tag.pKey.S
+      S: props.tagId
     },
     sKey: {
-      S: uuid
-    },
-    CatalogueName: {
-      S: name
-    },
-    CatalogueRate: {
-      S: rate
+      S: props.pKey
     }
   }
 
   var enrollmentCatalogue = {
     pKey: {
-      S: enrollment.pKey.S
+      S: props.enrollmentId
     },
     sKey: {
-      S: uuid
+      S: props.pKey
     }
   }
 
-  helpers.printPretty(catalogueCatalogue)
   return { catalogueCatalogue, tagCatalogue, enrollmentCatalogue }
+}
+
+// TODO: Validate catalogue props
+function validateProps(props) {
+  return true
 }
 
 module.exports = {
