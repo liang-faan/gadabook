@@ -1,29 +1,35 @@
-var faker = require("faker")
-var helpers = require("../helpers")
-
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueSession(user) {
-  var uuid = `Session_${faker.random.uuid()}`
+function generateSessionObject(
+  pKey,
+  sKey,
+  userId,
+  csrfToken,
+  createTime,
+  active
+) {
   var sessionSession = {
     pKey: {
-      S: uuid
+      S: pKey
     },
     sKey: {
-      S: uuid
+      S: sKey
     },
     userId: {
-      S: user.pKey.S
+      S: userId
+    },
+    csrfToken: {
+      S: csrfToken
+    },
+    createTime: {
+      S: createTime
     },
     active: {
-      BOOL: true
+      BOOL: active
     }
   }
 
-  helpers.printPretty(sessionSession)
   return { sessionSession }
 }
 
 module.exports = {
-  generateUniqueSession
+  generateSessionObject
 }

@@ -6,9 +6,9 @@ var { generateUniqueAvailability } = require("./entities/availability")
 var { generateUniqueCatalogue } = require("./entities/catalogue")
 var { generateUniqueBooking } = require("./entities/booking")
 var { generateUniqueEnrollment } = require("./entities/enrollment")
-var { generateUniqueSession } = require("./entities/session")
+var { generateSessionObject } = require("./entities/session")
 
-var { fakerSeed } = helpers
+var { currentEpochTime, secondsInADay, fakerSeed } = helpers
 faker.seed(fakerSeed)
 
 var fullData = {}
@@ -22,21 +22,72 @@ function generateAllData(
   numberOfEnrollments,
   numberOfSessions
 ) {
+  // PREPARE GENERATED USERS
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
-    var { userUser } = generateUniqueUser()
+    var pKey = `User_${faker.random.uuid()}`
+    var sKey = pKey
+    var role = "normal"
+    var username = faker.internet.userName()
+    var firstName = faker.name.firstName()
+    var lastName = faker.name.lastName()
+    var email = faker.internet.email()
+    var phone = faker.phone.phoneNumber()
+    var dob = faker.random
+      .number({
+        min: currentEpochTime - secondsInADay * 365 * 40,
+        max: currentEpochTime - secondsInADay * 365 * 18
+      })
+      .toString()
+    var gender = "Male"
+    var address = faker.address.streetAddress()
+    var status = "ok"
+    var active = true
+
+    var { userUser } = generateUniqueUser(
+      pKey,
+      sKey,
+      role,
+      username,
+      firstName,
+      lastName,
+      email,
+      phone,
+      dob,
+      gender,
+      address,
+      status,
+      active
+    )
     fullData[`${userUser.pKey.S}_${userUser.sKey.S}`] = userUser
+
     users.push(userUser)
     console.log("Generated", "User")
   }
 
+  // PREPARE GENERATED SESSIONS
   var sessions = []
   for (var i = 0; i < numberOfSessions; i++) {
-    var user = faker.random.objectElement(users)
-    var { sessionSession } = generateUniqueSession(user)
+    var pKey = `Session_${faker.random.uuid()}`
+    var sKey = pKey
+    var userId = faker.random.objectElement(users).pKey.S
+    var csrfToken = faker.random.uuid()
+    var createTime = "TIME"
+    var active = true
+
+    var { sessionSession } = generateSessionObject(
+      pKey,
+      sKey,
+      userId,
+      csrfToken,
+      createTime,
+      active
+    )
+
     fullData[
       `${sessionSession.pKey.S}_${sessionSession.sKey.S}`
     ] = sessionSession
+
     sessions.push(sessionSession)
     console.log("Generated", "Session")
   }

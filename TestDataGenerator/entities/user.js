@@ -1,58 +1,60 @@
-var faker = require("faker")
-var helpers = require("../helpers")
-
-var { currentEpochTime, secondsInADay } = helpers
-
-function generateUniqueUser() {
-  var uuid = `User_${faker.random.uuid()}`
+function generateUniqueUser(
+  pKey,
+  sKey,
+  role,
+  username,
+  firstName,
+  lastName,
+  email,
+  phone,
+  dob,
+  gender,
+  address,
+  status,
+  active
+) {
   var userUser = {
     pKey: {
-      S: uuid
+      S: pKey
     },
     sKey: {
-      S: uuid
+      S: sKey
     },
-    Role: {
-      S: "normal"
+    role: {
+      S: role
     },
-    Name: {
-      S: faker.internet.userName()
+    username: {
+      S: username
     },
-    FirstName: {
-      S: faker.name.firstName()
+    firstName: {
+      S: firstName
     },
-    LastName: {
-      S: faker.name.lastName()
+    lastName: {
+      S: lastName
     },
-    Email: {
-      S: faker.internet.email()
+    email: {
+      S: email
     },
-    Phone: {
-      S: faker.phone.phoneNumber()
+    phone: {
+      S: phone
     },
-    DOB: {
-      N: faker.random
-        .number({
-          min: currentEpochTime - secondsInADay * 365 * 40,
-          max: currentEpochTime - secondsInADay * 365 * 18
-        })
-        .toString()
+    dob: {
+      N: dob
     },
-    Gender: {
-      S: "Male"
+    gender: {
+      S: gender
     },
-    Address: {
-      S: faker.address.streetAddress()
+    address: {
+      S: address
     },
-    UserStatus: {
-      S: "ok"
+    status: {
+      S: status
     },
-    Active: {
-      BOOL: true
+    active: {
+      BOOL: active
     }
   }
 
-  helpers.printPretty(userUser)
   return { userUser }
 }
 
