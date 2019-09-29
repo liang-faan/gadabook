@@ -1,146 +1,15 @@
 var faker = require("faker")
 var helpers = require("./helpers")
 var { generateUniqueUser } = require("./entities/user")
+var { generateUniqueTag } = require("./entities/tag")
+var { generateUniqueAvailability } = require("./entities/availability")
+var { generateUniqueCatalogue } = require("./entities/catalogue")
 
 var { currentEpochTime, secondsInADay, fakerSeed } = helpers
 
 faker.seed(fakerSeed)
 
 var fullData = {}
-
-function generateUniqueTag(tags) {
-  var uuid = `Tag_${faker.random.uuid()}`
-  var data = {
-    partitionKey: {
-      S: uuid
-    },
-    sortKey: {
-      S: uuid
-    },
-    Description: {
-      S: faker.lorem.paragraphs(1)
-    },
-    Active: {
-      BOOL: true
-    }
-  }
-
-  fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-  tags.push(data)
-  helpers.printPretty(data)
-  return data
-}
-
-function generateUniqueAvailability(availabilities) {
-  var uuid = `Availability_${faker.random.uuid()}`
-  var data = {
-    partitionKey: {
-      S: uuid
-    },
-    sortKey: {
-      S: uuid
-    },
-    Date: {
-      N: faker.random
-        .number({
-          min: currentEpochTime,
-          max: currentEpochTime + secondsInADay * 18
-        })
-        .toString()
-    },
-    Slot: {
-      N: faker.random
-        .number({
-          min: 1,
-          max: 5
-        })
-        .toString()
-    }
-  }
-
-  fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-  availabilities.push(data)
-  helpers.printPretty(data)
-  return data
-}
-
-function generateUniqueCatalogue(tag, availability, catalogues) {
-  var variables = {
-    Venue: "Room 2",
-    Type: "Facility",
-    City: faker.address.city,
-    Address: faker.address.streetAddress
-  }
-  var uuid = `Catalogue_${faker.random.uuid()}`
-  var name = faker.lorem.word(5)
-  var rate = faker.random.number({ min: 10, max: 100 }).toString()
-  var baseData = {
-    partitionKey: {
-      S: uuid
-    },
-    sortKey: {
-      S: uuid
-    },
-    TagID: {
-      S: tag.partitionKey.S
-    },
-    AvailabilityID: {
-      S: availability.partitionKey.S
-    },
-    Name: {
-      S: name
-    },
-    Currency: {
-      S: "SGD"
-    },
-    TermsCondition: {
-      S: faker.lorem.paragraphs(1)
-    },
-    Rate: {
-      S: rate
-    },
-    Variables: {
-      S: JSON.stringify(variables)
-    }
-  }
-
-  var gsiData1 = {
-    partitionKey: {
-      S: tag.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    CatalogueName: {
-      S: name
-    },
-    CatalogueRate: {
-      S: rate
-    }
-  }
-
-  var gsiData2 = {
-    partitionKey: {
-      S: availability.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    CatalogueName: {
-      S: name
-    },
-    CatalogueRate: {
-      S: rate
-    }
-  }
-
-  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
-  catalogues.push(baseData)
-  helpers.printPretty(baseData)
-  return baseData
-}
 
 function generateUniqueBooking(user, catalogue, bookings) {
   var uuid = `Booking_${faker.random.uuid()}`
@@ -305,13 +174,17 @@ function generateAllData(
 
   var tags = []
   for (var i = 0; i < numberOfTags; i++) {
-    generateUniqueTag(tags)
+    var data = generateUniqueTag()
+    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+    tags.push(data)
     console.log("Generated", "Tag")
   }
 
   var availabilities = []
   for (var i = 0; i < numberOfAvailabilties; i++) {
-    generateUniqueAvailability(availabilities)
+    var data = generateUniqueAvailability()
+    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
+    availabilities.push(data)
     console.log("Generated", "Availability")
   }
 
