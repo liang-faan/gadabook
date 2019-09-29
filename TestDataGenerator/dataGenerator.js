@@ -4,157 +4,13 @@ var { generateUniqueUser } = require("./entities/user")
 var { generateUniqueTag } = require("./entities/tag")
 var { generateUniqueAvailability } = require("./entities/availability")
 var { generateUniqueCatalogue } = require("./entities/catalogue")
+var { generateUniqueBooking } = require("./entities/booking")
+var { generateUniqueEnrollment } = require("./entities/enrollment")
 
-var { currentEpochTime, secondsInADay, fakerSeed } = helpers
-
+var { fakerSeed } = helpers
 faker.seed(fakerSeed)
 
 var fullData = {}
-
-function generateUniqueBooking(user, catalogue, bookings) {
-  var uuid = `Booking_${faker.random.uuid()}`
-  var amount = faker.random.number({ min: 10, max: 100 }).toString()
-  var baseData = {
-    partitionKey: {
-      S: uuid
-    },
-    sortKey: {
-      S: uuid
-    },
-    CatalogueID: {
-      S: catalogue.partitionKey.S
-    },
-    UserID: {
-      S: user.partitionKey.S
-    },
-    TransactionID: {
-      S: faker.random.uuid()
-    },
-    Status: {
-      S: "ok"
-    },
-    StartTime: {
-      N: faker.random
-        .number({
-          min: currentEpochTime - secondsInADay * 10,
-          max: currentEpochTime - secondsInADay
-        })
-        .toString()
-    },
-    EndTime: {
-      N: faker.random
-        .number({
-          min: currentEpochTime + secondsInADay,
-          max: currentEpochTime + secondsInADay * 10
-        })
-        .toString()
-    },
-    Active: {
-      BOOL: true
-    },
-    Amount: {
-      S: amount
-    }
-  }
-
-  var gsiData1 = {
-    partitionKey: {
-      S: user.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    BookingAmount: {
-      S: amount
-    }
-  }
-
-  var gsiData2 = {
-    partitionKey: {
-      S: catalogue.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    BookingAmount: {
-      S: amount
-    }
-  }
-
-  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
-  bookings.push(baseData)
-  helpers.printPretty(baseData)
-  return baseData
-}
-
-function generateUniqueEnrollment(user, catalogue, enrollments) {
-  var uuid = `Enrollment_${faker.random.uuid()}`
-  var fee = faker.random.number({ min: 10, max: 100 }).toString()
-  var baseData = {
-    partitionKey: {
-      S: uuid
-    },
-    sortKey: {
-      S: uuid
-    },
-    CatalogueID: {
-      S: catalogue.partitionKey.S
-    },
-    UserID: {
-      S: user.partitionKey.S
-    },
-    TransactionID: {
-      S: faker.random.uuid()
-    },
-    ExpiryDate: {
-      N: faker.random
-        .number({
-          min: currentEpochTime + secondsInADay,
-          max: currentEpochTime + secondsInADay * 10
-        })
-        .toString()
-    },
-    Active: {
-      BOOL: true
-    },
-    Fee: {
-      S: fee
-    }
-  }
-
-  var gsiData1 = {
-    partitionKey: {
-      S: user.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    EnrollmentFee: {
-      S: fee
-    }
-  }
-
-  var gsiData2 = {
-    partitionKey: {
-      S: catalogue.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    EnrollmentFee: {
-      S: fee
-    }
-  }
-
-  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
-  enrollments.push(baseData)
-  helpers.printPretty(baseData)
-  return baseData
-}
 
 function generateAllData(
   numberOfCatalogues,
@@ -193,7 +49,21 @@ function generateAllData(
     var tag = faker.random.objectElement(tags)
     var availability = faker.random.objectElement(availabilities)
 
-    generateUniqueCatalogue(tag, availability, catalogues)
+    var {
+      catalogueCatalogue,
+      tagCatalogue,
+      availabilityCatalogue
+    } = generateUniqueCatalogue(tag, availability)
+    fullData[
+      `${catalogueCatalogue.partitionKey.S}_${catalogueCatalogue.sortKey.S}`
+    ] = catalogueCatalogue
+    fullData[
+      `${catalogueCatalogue.partitionKey.S}_${tagCatalogue.partitionKey.S}`
+    ] = tagCatalogue
+    fullData[
+      `${catalogueCatalogue.partitionKey.S}_${availabilityCatalogue.partitionKey.S}`
+    ] = availabilityCatalogue
+    catalogues.push(catalogueCatalogue)
     console.log("Generated", "Catalogue")
   }
 
@@ -201,7 +71,21 @@ function generateAllData(
   for (var i = 0; i < numberOfBookings; i++) {
     var user = faker.random.objectElement(users)
     var catalogue = faker.random.objectElement(catalogues)
-    generateUniqueBooking(user, catalogue, bookings)
+    var {
+      bookingBooking,
+      userBooking,
+      catalogueBooking
+    } = generateUniqueBooking(user, catalogue)
+    fullData[
+      `${bookingBooking.partitionKey.S}_${bookingBooking.sortKey.S}`
+    ] = bookingBooking
+    fullData[
+      `${bookingBooking.partitionKey.S}_${userBooking.partitionKey.S}`
+    ] = userBooking
+    fullData[
+      `${bookingBooking.partitionKey.S}_${catalogueBooking.partitionKey.S}`
+    ] = catalogueBooking
+    bookings.push(bookingBooking)
     console.log("Generated", "Bookings")
   }
 
@@ -209,7 +93,21 @@ function generateAllData(
   for (var i = 0; i < numberOfEnrollments; i++) {
     var user = faker.random.objectElement(users)
     var catalogue = faker.random.objectElement(catalogues)
-    generateUniqueEnrollment(user, catalogue, enrollments)
+    var {
+      enrollmentEnrollment,
+      userEnrollment,
+      catalogueEnrollment
+    } = generateUniqueEnrollment(user, catalogue)
+    fullData[
+      `${enrollmentEnrollment.partitionKey.S}_${enrollmentEnrollment.sortKey.S}`
+    ] = enrollmentEnrollment
+    fullData[
+      `${enrollmentEnrollment.partitionKey.S}_${userEnrollment.partitionKey.S}`
+    ] = userEnrollment
+    fullData[
+      `${enrollmentEnrollment.partitionKey.S}_${catalogueEnrollment.partitionKey.S}`
+    ] = catalogueEnrollment
+    enrollments.push(enrollmentEnrollment)
     console.log("Generated", "Enrollment")
   }
 
@@ -218,4 +116,6 @@ function generateAllData(
   }
 }
 
-module.exports.generateAllData = generateAllData
+module.exports = {
+  generateAllData
+}

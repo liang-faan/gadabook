@@ -13,7 +13,7 @@ function generateUniqueCatalogue(tag, availability) {
   var uuid = `Catalogue_${faker.random.uuid()}`
   var name = faker.lorem.word(5)
   var rate = faker.random.number({ min: 10, max: 100 }).toString()
-  var baseData = {
+  var catalogueCatalogue = {
     partitionKey: {
       S: uuid
     },
@@ -43,7 +43,7 @@ function generateUniqueCatalogue(tag, availability) {
     }
   }
 
-  var gsiData1 = {
+  var tagCatalogue = {
     partitionKey: {
       S: tag.partitionKey.S
     },
@@ -58,7 +58,7 @@ function generateUniqueCatalogue(tag, availability) {
     }
   }
 
-  var gsiData2 = {
+  var availabilityCatalogue = {
     partitionKey: {
       S: availability.partitionKey.S
     },
@@ -73,10 +73,10 @@ function generateUniqueCatalogue(tag, availability) {
     }
   }
 
-  fullData[`${baseData.partitionKey.S}_${baseData.sortKey.S}`] = baseData
-  fullData[`${baseData.partitionKey.S}_${gsiData1.partitionKey.S}`] = gsiData1
-  fullData[`${baseData.partitionKey.S}_${gsiData2.partitionKey.S}`] = gsiData2
-  catalogues.push(baseData)
-  helpers.printPretty(baseData)
-  return baseData
+  helpers.printPretty(catalogueCatalogue)
+  return { catalogueCatalogue, tagCatalogue, availabilityCatalogue }
+}
+
+module.exports = {
+  generateUniqueCatalogue
 }
