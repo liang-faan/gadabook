@@ -3,7 +3,7 @@ var helpers = require("../helpers")
 
 var { currentEpochTime, secondsInADay } = helpers
 
-function generateUniqueEnrollment(user, catalogue) {
+function generateUniqueEnrollment(user) {
   var uuid = `Enrollment_${faker.random.uuid()}`
   var fee = faker.random.number({ min: 10, max: 100 }).toString()
   var enrollmentEnrollment = {
@@ -12,9 +12,6 @@ function generateUniqueEnrollment(user, catalogue) {
     },
     sortKey: {
       S: uuid
-    },
-    CatalogueID: {
-      S: catalogue.partitionKey.S
     },
     UserID: {
       S: user.partitionKey.S
@@ -50,20 +47,8 @@ function generateUniqueEnrollment(user, catalogue) {
     }
   }
 
-  var catalogueEnrollment = {
-    partitionKey: {
-      S: catalogue.partitionKey.S
-    },
-    sortKey: {
-      S: uuid
-    },
-    EnrollmentFee: {
-      S: fee
-    }
-  }
-
   helpers.printPretty(enrollmentEnrollment)
-  return { enrollmentEnrollment, userEnrollment, catalogueEnrollment }
+  return { enrollmentEnrollment, userEnrollment }
 }
 
 module.exports = {

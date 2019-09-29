@@ -24,58 +24,85 @@ function generateAllData(
 ) {
   var users = []
   for (var i = 0; i < numberOfUsers; i++) {
-    var data = generateUniqueUser()
-    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-    users.push(data)
+    var { userUser } = generateUniqueUser()
+    fullData[`${userUser.partitionKey.S}_${userUser.sortKey.S}`] = userUser
+    users.push(userUser)
     console.log("Generated", "User")
   }
 
   var sessions = []
   for (var i = 0; i < numberOfSessions; i++) {
     var user = faker.random.objectElement(users)
-    var data = generateUniqueSession(user)
-    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-    sessions.push(data)
+    var { sessionSession } = generateUniqueSession(user)
+    fullData[
+      `${sessionSession.partitionKey.S}_${sessionSession.sortKey.S}`
+    ] = sessionSession
+    sessions.push(sessionSession)
     console.log("Generated", "Session")
   }
 
   var tags = []
   for (var i = 0; i < numberOfTags; i++) {
-    var data = generateUniqueTag()
-    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-    tags.push(data)
+    var { tagTag } = generateUniqueTag()
+    fullData[`${tagTag.partitionKey.S}_${tagTag.sortKey.S}`] = tagTag
+    tags.push(tagTag)
     console.log("Generated", "Tag")
   }
 
-  var availabilities = []
-  for (var i = 0; i < numberOfAvailabilties; i++) {
-    var data = generateUniqueAvailability()
-    fullData[`${data.partitionKey.S}_${data.sortKey.S}`] = data
-    availabilities.push(data)
-    console.log("Generated", "Availability")
+  var enrollments = []
+  for (var i = 0; i < numberOfEnrollments; i++) {
+    var user = faker.random.objectElement(users)
+    var { enrollmentEnrollment, userEnrollment } = generateUniqueEnrollment(
+      user
+    )
+    fullData[
+      `${enrollmentEnrollment.partitionKey.S}_${enrollmentEnrollment.sortKey.S}`
+    ] = enrollmentEnrollment
+    fullData[
+      `${userEnrollment.partitionKey.S}_${enrollmentEnrollment.partitionKey.S}`
+    ] = userEnrollment
+    enrollments.push(enrollmentEnrollment)
+    console.log("Generated", "Enrollment")
   }
 
   var catalogues = []
   for (var i = 0; i < numberOfCatalogues; i++) {
     var tag = faker.random.objectElement(tags)
-    var availability = faker.random.objectElement(availabilities)
+    var enrollment = faker.random.objectElement(enrollments)
 
     var {
       catalogueCatalogue,
       tagCatalogue,
-      availabilityCatalogue
-    } = generateUniqueCatalogue(tag, availability)
+      enrollmentCatalogue
+    } = generateUniqueCatalogue(tag, enrollment)
     fullData[
       `${catalogueCatalogue.partitionKey.S}_${catalogueCatalogue.sortKey.S}`
     ] = catalogueCatalogue
     fullData[
-      `${catalogueCatalogue.partitionKey.S}_${tagCatalogue.partitionKey.S}`
+      `${tagCatalogue.partitionKey.S}_${catalogueCatalogue.partitionKey.S}`
     ] = tagCatalogue
     fullData[
-      `${catalogueCatalogue.partitionKey.S}_${availabilityCatalogue.partitionKey.S}`
-    ] = availabilityCatalogue
+      `${enrollmentCatalogue.partitionKey.S}_${catalogueCatalogue.partitionKey.S}`
+    ] = enrollmentCatalogue
     catalogues.push(catalogueCatalogue)
     console.log("Generated", "Catalogue")
+  }
+
+  var availabilities = []
+  for (var i = 0; i < numberOfAvailabilties; i++) {
+    var catalogue = faker.random.objectElement(catalogues)
+    var {
+      availabilityAvailability,
+      catalogueAvailability
+    } = generateUniqueAvailability(catalogue)
+    fullData[
+      `${availabilityAvailability.partitionKey.S}_${availabilityAvailability.sortKey.S}`
+    ] = availabilityAvailability
+    fullData[
+      `${catalogueAvailability.partitionKey.S}_${availabilityAvailability.sortKey.S}`
+    ] = catalogueAvailability
+    availabilities.push(availabilityAvailability)
+    console.log("Generated", "Availability")
   }
 
   var bookings = []
@@ -91,35 +118,13 @@ function generateAllData(
       `${bookingBooking.partitionKey.S}_${bookingBooking.sortKey.S}`
     ] = bookingBooking
     fullData[
-      `${bookingBooking.partitionKey.S}_${userBooking.partitionKey.S}`
+      `${userBooking.partitionKey.S}_${bookingBooking.partitionKey.S}`
     ] = userBooking
     fullData[
-      `${bookingBooking.partitionKey.S}_${availabilityBooking.partitionKey.S}`
+      `${availabilityBooking.partitionKey.S}_${bookingBooking.partitionKey.S}`
     ] = availabilityBooking
     bookings.push(bookingBooking)
     console.log("Generated", "Bookings")
-  }
-
-  var enrollments = []
-  for (var i = 0; i < numberOfEnrollments; i++) {
-    var user = faker.random.objectElement(users)
-    var catalogue = faker.random.objectElement(catalogues)
-    var {
-      enrollmentEnrollment,
-      userEnrollment,
-      catalogueEnrollment
-    } = generateUniqueEnrollment(user, catalogue)
-    fullData[
-      `${enrollmentEnrollment.partitionKey.S}_${enrollmentEnrollment.sortKey.S}`
-    ] = enrollmentEnrollment
-    fullData[
-      `${enrollmentEnrollment.partitionKey.S}_${userEnrollment.partitionKey.S}`
-    ] = userEnrollment
-    fullData[
-      `${enrollmentEnrollment.partitionKey.S}_${catalogueEnrollment.partitionKey.S}`
-    ] = catalogueEnrollment
-    enrollments.push(enrollmentEnrollment)
-    console.log("Generated", "Enrollment")
   }
 
   return {

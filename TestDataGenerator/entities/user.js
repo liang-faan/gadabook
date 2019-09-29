@@ -5,7 +5,7 @@ var { currentEpochTime, secondsInADay } = helpers
 
 function generateUniqueUser() {
   var uuid = `User_${faker.random.uuid()}`
-  var data = {
+  var userUser = {
     partitionKey: {
       S: uuid
     },
@@ -52,8 +52,8 @@ function generateUniqueUser() {
     }
   }
 
-  helpers.printPretty(data)
-  return data
+  helpers.printPretty(userUser)
+  return { userUser }
 }
 
 module.exports = {

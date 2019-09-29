@@ -5,7 +5,7 @@ var { currentEpochTime, secondsInADay } = helpers
 
 function generateUniqueSession(user) {
   var uuid = `Session_${faker.random.uuid()}`
-  var data = {
+  var sessionSession = {
     partitionKey: {
       S: uuid
     },
@@ -20,8 +20,8 @@ function generateUniqueSession(user) {
     }
   }
 
-  helpers.printPretty(data)
-  return data
+  helpers.printPretty(sessionSession)
+  return { sessionSession }
 }
 
 module.exports = {

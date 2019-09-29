@@ -3,7 +3,7 @@ var helpers = require("../helpers")
 
 var { currentEpochTime, secondsInADay } = helpers
 
-function generateUniqueCatalogue(tag, availability) {
+function generateUniqueCatalogue(tag, enrollment) {
   var variables = {
     Venue: "Room 2",
     Type: "Facility",
@@ -20,11 +20,8 @@ function generateUniqueCatalogue(tag, availability) {
     sortKey: {
       S: uuid
     },
-    TagID: {
-      S: tag.partitionKey.S
-    },
-    AvailabilityID: {
-      S: availability.partitionKey.S
+    enrollmentId: {
+      S: enrollment.partitionKey.S
     },
     Name: {
       S: name
@@ -58,23 +55,17 @@ function generateUniqueCatalogue(tag, availability) {
     }
   }
 
-  var availabilityCatalogue = {
+  var enrollmentCatalogue = {
     partitionKey: {
-      S: availability.partitionKey.S
+      S: enrollment.partitionKey.S
     },
     sortKey: {
       S: uuid
-    },
-    CatalogueName: {
-      S: name
-    },
-    CatalogueRate: {
-      S: rate
     }
   }
 
   helpers.printPretty(catalogueCatalogue)
-  return { catalogueCatalogue, tagCatalogue, availabilityCatalogue }
+  return { catalogueCatalogue, tagCatalogue, enrollmentCatalogue }
 }
 
 module.exports = {

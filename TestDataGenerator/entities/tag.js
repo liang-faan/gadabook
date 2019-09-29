@@ -5,7 +5,7 @@ var { currentEpochTime, secondsInADay } = helpers
 
 function generateUniqueTag() {
   var uuid = `Tag_${faker.random.uuid()}`
-  var data = {
+  var tagTag = {
     partitionKey: {
       S: uuid
     },
@@ -20,8 +20,8 @@ function generateUniqueTag() {
     }
   }
 
-  helpers.printPretty(data)
-  return data
+  helpers.printPretty(tagTag)
+  return { tagTag }
 }
 
 module.exports = {

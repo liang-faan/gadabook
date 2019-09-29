@@ -67,9 +67,6 @@ function generateUniqueBooking(user, availability) {
     },
     sortKey: {
       S: uuid
-    },
-    BookingAmount: {
-      S: amount
     }
   }
 

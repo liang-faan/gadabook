@@ -23,7 +23,7 @@ var allData = gen.generateAllData(
   numberOfEnrollments,
   numberOfSessions
 )
-
+console.log(allData)
 // SETUP WORKLOADS
 var work = [].concat(function(done) {
   var tableName = "gardabook-develop"
