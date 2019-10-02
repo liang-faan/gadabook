@@ -4,10 +4,18 @@ var gen = require("./dataGenerator")
 
 // AWS.config not required if 'aws configure' has been done in the cli as the sdk will automatically use it.
 
-var dynamodb = new AWS.DynamoDB({
+var env = "local"
+// var env = 'remote'
+
+var options = {
   region: "ap-southeast-1",
   apiVersion: "2012-08-10"
-})
+}
+if (env === "local") {
+  options.endpoint = "http://localhost:8000"
+}
+
+var dynamodb = new AWS.DynamoDB(options)
 
 var numberOfCatalogues = 1
 var numberOfUsers = 1

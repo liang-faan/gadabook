@@ -5,6 +5,11 @@ var dynamodb = new AWS.DynamoDB({
   apiVersion: "2012-08-10"
 })
 
+var tableName = "gardabook-develop"
+
+var pKey = "Availability_926883be-a742-41c5-ba13-1c21541c23ea"
+var sKey = "Availability_926883be-a742-41c5-ba13-1c21541c23ea"
+
 var params = {
   AttributeUpdates: {
     active: {
@@ -16,14 +21,14 @@ var params = {
   },
   Key: {
     pKey: {
-      S: "Availability_926883be-a742-41c5-ba13-1c21541c23ea"
+      S: pKey
     },
     sKey: {
-      S: "Availability_926883be-a742-41c5-ba13-1c21541c23ea"
+      S: sKey
     }
   },
   ReturnValues: "ALL_NEW",
-  TableName: "gardabook-develop"
+  TableName: tableName
 }
 
 dynamodb.updateItem(params, function(err, data) {
