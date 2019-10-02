@@ -7,6 +7,17 @@ var dynamodb = new AWS.DynamoDB({
 
 var tableName = "gardabook-develop"
 
+var possiblePropKeys = [
+  "pKey",
+  "sKey",
+  "catalogueId",
+  "date",
+  "time",
+  "slot",
+  "createdAt",
+  "active"
+]
+
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<string, any> | boolean}
@@ -60,9 +71,32 @@ function generateAvailabilityObject(props) {
  * @returns {Promise}
  */
 function createAvailability(props) {
+  var propKeys = Object.keys(props)
   var correctProps = true
 
-  // TODO: Check if required (and optional) keys for this action is present
+  var requiredPropKeys = [
+    "pKey",
+    "sKey",
+    "catalogueId",
+    "date",
+    "time",
+    "slot",
+    "createdAt",
+    "active"
+  ]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      var index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
 
   var obj = generateAvailabilityObject(props)
   var operations = Object.keys(obj).map(function(key) {
@@ -103,5 +137,6 @@ function validateProps(props) {
 }
 
 module.exports = {
-  generateAvailabilityObject
+  generateAvailabilityObject,
+  createAvailability
 }
