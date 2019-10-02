@@ -12,7 +12,7 @@ var options = {
   apiVersion: "2012-08-10"
 }
 if (env === "local") {
-  options.endpoint = "http://localhost:8000"
+  options.endpoint = new AWS.Endpoint("http://localhost:8000")
 }
 
 var dynamodb = new AWS.DynamoDB(options)
