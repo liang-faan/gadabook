@@ -32,9 +32,7 @@ module.exports = function(app) {
               console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
           } else {
               console.log("Query succeeded.");
-              data.Items.forEach(function(item) {
-                  console.log(" -", item.year + ": " + item.title);
-              });
+              res.json({ data: booking });
           }
       });
     });
