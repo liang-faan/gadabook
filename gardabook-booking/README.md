@@ -18,7 +18,7 @@ open http://localhost:8080/docs
 
 This project leverages the mega-awesome [swagger-tools](https://github.com/apigee-127/swagger-tools) middleware which does most all the work.
 
-```
+
 #api
 ##To stores API definition and swagger.yaml will be the API definition
 
@@ -36,4 +36,4 @@ This project leverages the mega-awesome [swagger-tools](https://github.com/apige
 
 #utils
 ##Application utils
-```
+
