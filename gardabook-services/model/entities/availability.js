@@ -1,11 +1,4 @@
-var AWS = require("aws-sdk")
-
-var dynamodb = new AWS.DynamoDB({
-  region: "ap-southeast-1",
-  apiVersion: "2012-08-10"
-})
-
-var tableName = "gardabook-develop"
+const { ddb, tableName } = require("./ddb")
 
 var possiblePropKeys = [
   "pKey",
@@ -110,7 +103,7 @@ function createAvailability(props) {
           TableName: tableName
         }
 
-        dynamodb.putItem(params, function(err, data) {
+        ddb.putItem(params, function(err, data) {
           if (err) console.log(err, err.stack)
           else console.log(data)
         })
