@@ -13,8 +13,10 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
-    "connect": "^3.2.0",
-    "js-yaml": "^3.3.0",
-    "swagger-tools": "0.10.1"
+    "aws-sdk": "^2.543.0",
+    "connect": "^3.7.0",
+    "js-yaml": "^3.13.1",
+    "jsonwebtoken": "^8.5.1",
+    "swagger-tools": "0.10.4"
   }
 }
