@@ -20,20 +20,26 @@ This project leverages the mega-awesome [swagger-tools](https://github.com/apige
 
 #Folders
 ## api
-### To stores API definition and swagger.yaml will be the API definition
-
+```
+To stores API definition and swagger.yaml will be the API definition
+```
 ## SwaggerSrc
-### Swagger API definition source code
-
+```
+Swagger API definition source code
+```
 ## config
-### Stores application configuration. such as AWS configuration
-
+```
+Stores application configuration. such as AWS configuration
+```
 ## controllers
-### Each API service RESTful endpoints
-
+```
+Each API service RESTful endpoints
+```
 ## service
-### API business logic.
-
-#utils
-##Application utils
-
+```
+API business logic.
+```
+## utils
+```
+Application utils
+```
