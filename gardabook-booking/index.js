@@ -25,12 +25,13 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
   app.use(middleware.swaggerMetadata());
 
-  app.use(
-    middleware.swaggerSecurity({
-      //manage token function in the 'auth' module
-      Bearer: auth.verifyToken
-    })
-  );
+  //03 Oct 2019 - No more required authenticate JWT token here. will create seperate Lambda API authorizer to implement this. 
+  // app.use(
+  //   middleware.swaggerSecurity({
+  //     //manage token function in the 'auth' module
+  //     Bearer: auth.verifyToken
+  //   })
+  // );
   // Validate Swagger requests
   app.use(middleware.swaggerValidator());
 
