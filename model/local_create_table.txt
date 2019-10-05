@@ -1,0 +1,11 @@
+aws dynamodb create-table --cli-input-json file://./table_definition.json --endpoint-url http://localhost:8000
+
+
+
+dynamodb create-table help --endpoint-url http://localhost:8000
+
+
+aws dynamodb --endpoint-url http://localhost:8000 list-tables
+
+
+aws dynamodb create-table --cli-input-json file:///Users/Lanphan/Documents/Projects/gardabook/model/local_CLI_table_definition.json --endpoint-url http://localhost:8000

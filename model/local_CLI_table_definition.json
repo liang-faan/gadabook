@@ -1,0 +1,40 @@
+{
+    "TableName": "gardabook-develop",
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 1,
+      "WriteCapacityUnits": 1
+    },
+    "KeySchema": [
+      { "AttributeName": "pKey", "KeyType": "HASH" },
+      {
+        "AttributeName": "sKey",
+        "KeyType": "RANGE"
+      }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "pKey", "AttributeType": "S" },
+      { "AttributeName": "sKey", "AttributeType": "S" }
+    ],
+    "GlobalSecondaryIndexes": [
+      {
+        "IndexName": "gsi",
+        "KeySchema": [
+          {
+            "AttributeName": "sKey",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "pKey",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    ]
+  }
