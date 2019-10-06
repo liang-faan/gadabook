@@ -1,9 +1,11 @@
 
-service: aws-lambda-cognito-authorizer
+service: gadabook-authorizer
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.x
+  stage: dev
+  region: ap-southeast-1
 
 functions:
   publicEndpoint:

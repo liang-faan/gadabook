@@ -4,11 +4,8 @@ const jwk = require('jsonwebtoken');
 const jwkToPem = require('jwk-to-pem');
 const request = require('request');
 
-// For Auth0:       https://<project>.auth0.com/
-// refer to:        http://bit.ly/2hoeRXk
 // For AWS Cognito: https://cognito-idp.<region>.amazonaws.com/<user pool id>
-// refer to:        http://amzn.to/2fo77UI
-const iss = 'https://<url>.com/';
+const iss = 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_aBjWtf10v';
 
 // Generate policy to allow this user on this API:
 const generatePolicy = (principalId, effect, resource) => {
@@ -25,6 +22,7 @@ const generatePolicy = (principalId, effect, resource) => {
     policyDocument.Statement[0] = statementOne;
     authResponse.policyDocument = policyDocument;
   }
+  console.log(authResponse);
   return authResponse;
 };
 
@@ -32,15 +30,21 @@ const generatePolicy = (principalId, effect, resource) => {
 module.exports.authorize = (event, context, cb) => {
   console.log('Auth function invoked');
   if (event.authorizationToken) {
-    // Remove 'bearer ' from token:
-    const token = event.authorizationToken.substring(7);
+    // Remove 'Bearer ' from token:
+    var token =  event.authorizationToken;
+    if(token.startsWith("Bearer")||token.startsWith("bearer")){
+      token= token.substring(6).trim();
+    }
+    
+    console.log(token);
     // Make a request to the iss + .well-known/jwks.json URL:
     request(
-      { url: `${iss}/.well-known/jwks.json`, json: true },
+      { url: "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_aBjWtf10v/.well-known/jwks.json", json: true },
       (error, response, body) => {
+        // console.log(request.url);
         if (error || response.statusCode !== 200) {
           console.log('Request error:', error);
-          cb('Unauthorized');
+          cb('Unauthorized Access');
         }
         const keys = body;
         // Based on the JSON of `jwks` create a Pem:
@@ -56,7 +60,7 @@ module.exports.authorize = (event, context, cb) => {
         jwk.verify(token, pem, { issuer: iss }, (err, decoded) => {
           if (err) {
             console.log('Unauthorized user:', err.message);
-            cb('Unauthorized');
+            cb('Unauthorized Access');
           } else {
             cb(null, generatePolicy(decoded.sub, 'Allow', event.methodArn));
           }
