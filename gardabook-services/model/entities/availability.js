@@ -1,6 +1,18 @@
 const { ddb, tableName } = require("./ddb")
+const { validateProps } = require("./validators/availabilityValidator")
 
-var possiblePropKeys = [
+const possiblePropKeys = [
+  "pKey",
+  "sKey",
+  "catalogueId",
+  "date",
+  "time",
+  "slot",
+  "createdAt",
+  "active"
+]
+
+const requiredPropKeysForCreate = [
   "pKey",
   "sKey",
   "catalogueId",
@@ -13,14 +25,14 @@ var possiblePropKeys = [
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
- * @returns {Object.<string, any> | boolean}
+ * @returns {Object.<object, any> | boolean}
  */
-function generateAvailabilityObject(props) {
+const generateAvailabilityObject = props => {
   if (!validateProps(props)) {
     return false
   }
 
-  var availabilityAvailability = {
+  const availabilityAvailability = {
     pKey: {
       S: props.pKey
     },
@@ -47,7 +59,7 @@ function generateAvailabilityObject(props) {
     }
   }
 
-  var catalogueAvailability = {
+  const catalogueAvailability = {
     pKey: {
       S: props.catalogueId
     },
@@ -61,28 +73,20 @@ function generateAvailabilityObject(props) {
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
- * @returns {Promise}
+ * @returns {Promise.<boolean>}
  */
-function createAvailability(props) {
-  var propKeys = Object.keys(props)
-  var correctProps = true
+const createAvailability = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
 
-  var requiredPropKeys = [
-    "pKey",
-    "sKey",
-    "catalogueId",
-    "date",
-    "time",
-    "slot",
-    "createdAt",
-    "active"
-  ]
+  const requiredPropKeys = [...requiredPropKeysForCreate]
 
   propKeys.forEach(key => {
     if (!possiblePropKeys.includes(key)) {
       correctProps = false
     } else {
-      var index = requiredPropKeys.indexOf(key)
+      const index = requiredPropKeys.indexOf(key)
       requiredPropKeys.splice(index, 1)
     }
   })
@@ -91,42 +95,66 @@ function createAvailability(props) {
     correctProps = false
   }
 
-  var obj = generateAvailabilityObject(props)
-  var operations = Object.keys(obj).map(function(key) {
-    var operation = obj[key]
-    return new Promise(function(resolve, reject) {
-      if (correctProps) {
-        var params = {
-          Item: {
-            ...operation
-          },
-          TableName: tableName
-        }
+  if (!correctProps) {
+    return false
+  }
 
-        ddb.putItem(params, function(err, data) {
-          if (err) console.log(err, err.stack)
-          else console.log(data)
-        })
+  // Create API payload and call
+  const obj = generateAvailabilityObject(props)
+  if (!obj) {
+    return false
+  }
 
-        resolve("TODO: add dynamo")
+  const { availabilityAvailability, catalogueAvailability } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...availabilityAvailability
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
       } else {
-        reject("Error with availability props")
+        console.log(data)
+        resolve()
       }
     })
   })
 
-  return Promise.all(operations).then(function(res, err) {
-    if (!err) {
-      return true
-    } else {
-      return false
+  const op2 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...catalogueAvailability
+      },
+      TableName: tableName
     }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
+      } else {
+        console.log(data)
+        resolve()
+      }
+    })
   })
-}
 
-// TODO: Validate availability props
-function validateProps(props) {
-  return true
+  return Promise.all([op1, op2])
+    .then((res, err) => {
+      if (!err) {
+        return true
+      } else {
+        return false
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      return false
+    })
 }
 
 module.exports = {
