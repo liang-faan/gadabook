@@ -26,6 +26,21 @@ const requiredPropKeysForCreate = [
   "active"
 ]
 
+const requiredPropKeysForRead = [
+  "pKey",
+  "sKey",
+  "catalogueId",
+  "date",
+  "time",
+  "slot",
+  "createdAt",
+  "active"
+]
+
+const requiredPropKeysForUpdate = ["pKey", "sKey"]
+
+const requiredPropKeysForDelete = ["pKey", "sKey"]
+
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
@@ -174,7 +189,7 @@ const createAvailability = async props => {
 }
 
 /**
- * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
  * @returns {Promise.<boolean>}
  */
 const readAvailability = async props => {
@@ -207,45 +222,31 @@ const readAvailability = async props => {
     return false
   }
 
-  const { availabilityAvailability, catalogueAvailability } = obj
+  const { availabilityAvailability } = obj
 
   const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...availabilityAvailability
+    var params = {
+      ExpressionAttributeValues: {
+        ":v1": {
+          S: availabilityAvailability.pKey.S
+        }
       },
+      KeyConditionExpression: "pKey = :v1",
       TableName: tableName
     }
-    ddb.putItem(params, (err, data) => {
+
+    ddb.query(params, (err, data) => {
       if (err) {
         console.log(err, err.stack)
         reject()
       } else {
-        console.log(data)
+        console.log(JSON.stringify(data))
         resolve()
       }
     })
   })
 
-  const op2 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...catalogueAvailability
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
-
-  return Promise.all([op1, op2]).then((res, err) => {
+  return Promise.all([op1]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -256,5 +257,6 @@ const readAvailability = async props => {
 
 module.exports = {
   generateAvailabilityObject: generateObj,
-  createAvailability
+  createAvailability,
+  readAvailability
 }
