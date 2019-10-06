@@ -309,9 +309,101 @@ const updateAvailability = async props => {
   })
 }
 
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Promise.<boolean>}
+ */
+const deleteAvailability = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
+
+  const requiredPropKeys = [...requiredPropKeysForUpdate]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      const index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
+
+  if (!correctProps) {
+    return false
+  }
+
+  // Create API payload and call
+  const obj = generateObj(props)
+  if (!obj) {
+    return false
+  }
+
+  const { availabilityAvailability, catalogueAvailability } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: availabilityAvailability.pKey.S
+        },
+        sKey: {
+          S: availabilityAvailability.sKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  const op2 = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: catalogueAvailability.pKey.S
+        },
+        sKey: {
+          S: catalogueAvailability.sKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1, op2]).then((res, err) => {
+    if (!err) {
+      return true
+    } else {
+      return false
+    }
+  })
+}
+
 module.exports = {
   generateAvailabilityObject: generateObj,
   createAvailability,
   readAvailability,
-  updateAvailability
+  updateAvailability,
+  deleteAvailability
 }

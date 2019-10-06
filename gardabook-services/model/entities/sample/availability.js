@@ -1,7 +1,8 @@
 const {
   createAvailability,
   readAvailability,
-  updateAvailability
+  updateAvailability,
+  deleteAvailability
 } = require("../availability")
 
 const test1 = {
@@ -15,12 +16,12 @@ const test1 = {
   active: true
 }
 
-createAvailability(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+// createAvailability(test1)
+//   .then(res => {
+//     console.log("res")
+//     console.log(res)
+//   })
+//   .catch(err => console.log(err))
 
 readAvailability(test1)
   .then(res => {
@@ -29,9 +30,16 @@ readAvailability(test1)
   })
   .catch(err => console.log(err))
 
-updateAvailability(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+//   updateAvailability(test1)
+//   .then(res => {
+//     console.log("res")
+//     console.log(res)
+//   })
+//   .catch(err => console.log(err))
+
+// deleteAvailability(test1)
+//   .then(res => {
+//     console.log("res")
+//     console.log(res)
+//   })
+//   .catch(err => console.log(err))
