@@ -27,3 +27,6 @@ Custom Authorizers allow you to run an AWS Lambda Function via API Gateway befor
   ```sh
   curl --header "Authorization: bearer <id_token>" https://{api}.execute-api.{region}.amazonaws.com/api/private
   ```
+
+
+[How do I resolve API Gateway "malformed Lambda proxy response" errors or 502 status codes?](https://aws.amazon.com/premiumsupport/knowledge-center/malformed-502-api-gateway/)
