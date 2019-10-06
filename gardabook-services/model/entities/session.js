@@ -102,7 +102,7 @@ const createSession = async props => {
     return false
   }
 
-  const { sessionSession, userSession, sessionCatalogue } = obj
+  const { sessionSession, userSession } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {

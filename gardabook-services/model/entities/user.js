@@ -1,58 +1,391 @@
-function generateUserObject(props) {
+const { ddb, tableName } = require("./ddb")
+const { validateProps } = require("./validators/userValidator")
+
+// Specify properties available to each operation
+// Modifications should also be updated in generateObj
+
+const possiblePropKeys = [
+  "pKey",
+  "sKey",
+  "role",
+  "username",
+  "firstName",
+  "lastName",
+  "email",
+  "phone",
+  "dob",
+  "gender",
+  "address",
+  "status"
+]
+
+const requiredPropKeysForCreate = [
+  "pKey",
+  "sKey",
+  "role",
+  "username",
+  "firstName",
+  "lastName",
+  "email",
+  "phone",
+  "dob",
+  "gender",
+  "address",
+  "status"
+]
+
+const requiredPropKeysForRead = ["pKey"]
+
+const requiredPropKeysForUpdate = ["pKey", "sKey"]
+
+const requiredPropKeysForDelete = ["pKey", "sKey"]
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Object.<object, any> | boolean}
+ */
+const generateObj = props => {
   if (!validateProps(props)) {
     return false
   }
 
-  var userUser = {
+  const userUser = {
     pKey: {
       S: props.pKey
     },
     sKey: {
       S: props.sKey
-    },
-    role: {
+    }
+  }
+
+  if (props.role) {
+    userUser.role = {
       S: props.role
-    },
-    username: {
+    }
+  }
+
+  if (props.username) {
+    userUser.username = {
       S: props.username
-    },
-    firstName: {
+    }
+  }
+
+  if (props.firstName) {
+    userUser.firstName = {
       S: props.firstName
-    },
-    lastName: {
+    }
+  }
+
+  if (props.lastName) {
+    userUser.lastName = {
       S: props.lastName
-    },
-    email: {
+    }
+  }
+
+  if (props.email) {
+    userUser.email = {
       S: props.email
-    },
-    phone: {
+    }
+  }
+
+  if (props.phone) {
+    userUser.phone = {
       S: props.phone
-    },
-    dob: {
-      N: props.dob
-    },
-    gender: {
+    }
+  }
+
+  if (props.dob) {
+    userUser.dob = {
+      S: props.dob
+    }
+  }
+
+  if (props.gender) {
+    userUser.gender = {
       S: props.gender
-    },
-    address: {
+    }
+  }
+
+  if (props.address) {
+    userUser.address = {
       S: props.address
-    },
-    status: {
+    }
+  }
+
+  if (props.status) {
+    userUser.status = {
       S: props.status
-    },
-    active: {
-      BOOL: props.active
     }
   }
 
   return { userUser }
 }
 
-// TODO: Validate user props
-function validateProps(props) {
-  return true
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Promise.<boolean>}
+ */
+const createUser = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
+
+  const requiredPropKeys = [...requiredPropKeysForCreate]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      const index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
+
+  if (!correctProps) {
+    return false
+  }
+
+  // Create API payload and call
+  const obj = generateObj(props)
+  if (!obj) {
+    return false
+  }
+
+  const { userUser } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...userUser
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return true
+    } else {
+      return false
+    }
+  })
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
+ * @returns {Promise.<object>}
+ */
+const readUser = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
+
+  const requiredPropKeys = [...requiredPropKeysForRead]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      const index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
+
+  if (!correctProps) {
+    return false
+  }
+
+  // Create API payload and call
+  const obj = generateObj(props)
+  if (!obj) {
+    return false
+  }
+
+  const { userUser } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    var params = {
+      ExpressionAttributeValues: {
+        ":v1": {
+          S: userUser.pKey.S
+        }
+      },
+      KeyConditionExpression: "pKey = :v1",
+      TableName: tableName
+    }
+
+    ddb.query(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(JSON.stringify(data))
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return op1
+    } else {
+      return false
+    }
+  })
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Promise.<boolean>}
+ */
+const updateUser = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
+
+  const requiredPropKeys = [...requiredPropKeysForUpdate]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      const index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
+
+  if (!correctProps) {
+    return false
+  }
+
+  // Create API payload and call
+  const obj = generateObj(props)
+  if (!obj) {
+    return false
+  }
+
+  const { userUser } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...userUser
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return true
+    } else {
+      return false
+    }
+  })
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Promise.<boolean>}
+ */
+const deleteUser = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
+
+  const requiredPropKeys = [...requiredPropKeysForDelete]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      const index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
+
+  if (!correctProps) {
+    return false
+  }
+
+  // Create API payload and call
+  const obj = generateObj(props)
+  if (!obj) {
+    return false
+  }
+
+  const { userUser } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: userUser.pKey.S
+        },
+        sKey: {
+          S: userUser.sKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return true
+    } else {
+      return false
+    }
+  })
 }
 
 module.exports = {
-  generateUserObject
+  generateUserObject: generateObj,
+  createUser,
+  readUser,
+  updateUser,
+  deleteUser
 }
