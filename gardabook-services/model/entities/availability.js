@@ -11,8 +11,7 @@ const possiblePropKeys = [
   "date",
   "time",
   "slot",
-  "createdAt",
-  "active"
+  "createdAt"
 ]
 
 const requiredPropKeysForCreate = [
@@ -22,8 +21,7 @@ const requiredPropKeysForCreate = [
   "date",
   "time",
   "slot",
-  "createdAt",
-  "active"
+  "createdAt"
 ]
 
 const requiredPropKeysForRead = ["pKey"]
@@ -77,12 +75,6 @@ const generateObj = props => {
   if (props.createdAt) {
     availabilityAvailability.createdAt = {
       N: props.createdAt
-    }
-  }
-
-  if (props.active) {
-    availabilityAvailability.active = {
-      BOOL: props.active
     }
   }
 

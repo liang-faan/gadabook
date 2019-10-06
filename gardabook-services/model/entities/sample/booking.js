@@ -1,42 +1,42 @@
 const {
-  createAvailability,
-  readAvailability,
-  updateAvailability,
-  deleteAvailability
-} = require("../availability")
+  createBooking,
+  readBooking,
+  updateBooking,
+  deleteBooking
+} = require("../booking")
 
 const test1 = {
   pKey: "abc123",
   sKey: "def",
-  catalogueId: "cat1",
-  date: "1",
-  time: "1",
-  slot: "1",
-  createdAt: "1"
+  userId: "cat1",
+  availabilityId: "1",
+  startTime: "1",
+  endTime: "1",
+  amount: "1"
 }
 
-// createAvailability(test1)
+// createBooking(test1)
 //   .then(res => {
 //     console.log("res")
 //     console.log(res)
 //   })
 //   .catch(err => console.log(err))
 
-readAvailability(test1)
+readBooking(test1)
   .then(res => {
     console.log("res")
     console.log(res)
   })
   .catch(err => console.log(err))
 
-//   updateAvailability(test1)
+//   updateBooking(test1)
 //   .then(res => {
 //     console.log("res")
 //     console.log(res)
 //   })
 //   .catch(err => console.log(err))
 
-// deleteAvailability(test1)
+// deleteBooking(test1)
 //   .then(res => {
 //     console.log("res")
 //     console.log(res)
