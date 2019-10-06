@@ -2,11 +2,12 @@ const {
   createCatalogue,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue
+  deleteCatalogue,
+  readCataloguelist
 } = require("../catalogue")
 
 const test1 = {
-  pKey: "abc123",
+  pKey: "abc1234",
   sKey: "def",
   enrollmentId: "cat1",
   name: "1",
@@ -29,12 +30,12 @@ const test1 = {
 //   })
 //   .catch(err => console.log(err))
 
-readCatalogue(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+// readCatalogue(test1)
+//   .then(res => {
+//     console.log("res")
+//     console.log(res)
+//   })
+//   .catch(err => console.log(err))
 
 //   updateCatalogue(test1)
 //   .then(res => {
@@ -49,3 +50,10 @@ readCatalogue(test1)
 //     console.log(res)
 //   })
 //   .catch(err => console.log(err))
+
+readCataloguelist({})
+  .then(res => {
+    console.log("res")
+    console.log(res)
+  })
+  .catch(err => console.log(err))

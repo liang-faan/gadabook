@@ -467,6 +467,7 @@ const readUserlist = async props => {
     }
   })
 }
+
 module.exports = {
   generateUserObject: generateObj,
   createUser,

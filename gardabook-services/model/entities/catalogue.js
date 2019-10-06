@@ -146,7 +146,21 @@ const generateObj = props => {
     }
   }
 
-  return { catalogueCatalogue, tagCatalogue, enrollmentCatalogue }
+  const cataloguelistCatalogue = {
+    pKey: {
+      S: "Cataloguelist"
+    },
+    sKey: {
+      S: props.pKey
+    }
+  }
+
+  return {
+    catalogueCatalogue,
+    tagCatalogue,
+    enrollmentCatalogue,
+    cataloguelistCatalogue
+  }
 }
 
 /**
@@ -183,7 +197,12 @@ const createCatalogue = async props => {
     return false
   }
 
-  const { catalogueCatalogue, tagCatalogue, enrollmentCatalogue } = obj
+  const {
+    catalogueCatalogue,
+    tagCatalogue,
+    enrollmentCatalogue,
+    cataloguelistCatalogue
+  } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -239,7 +258,25 @@ const createCatalogue = async props => {
     })
   })
 
-  return Promise.all([op1, op2, op3]).then((res, err) => {
+  const op4 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...cataloguelistCatalogue
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
+      } else {
+        console.log(data)
+        resolve()
+      }
+    })
+  })
+
+  return Promise.all([op1, op2, op3, op4]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -412,7 +449,12 @@ const deleteCatalogue = async props => {
     return false
   }
 
-  const { catalogueCatalogue, tagCatalogue, enrollmentCatalogue } = obj
+  const {
+    catalogueCatalogue,
+    tagCatalogue,
+    enrollmentCatalogue,
+    cataloguelistCatalogue
+  } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -483,9 +525,68 @@ const deleteCatalogue = async props => {
     })
   })
 
-  return Promise.all([op1, op2, op3]).then((res, err) => {
+  const op4 = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: cataloguelistCatalogue.pKey.S
+        },
+        sKey: {
+          S: cataloguelistCatalogue.sKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1, op2, op3, op4]).then((res, err) => {
     if (!err) {
       return true
+    } else {
+      return false
+    }
+  })
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
+ * @returns {Promise.<object>}
+ */
+const readCataloguelist = async props => {
+  const op1 = await new Promise((resolve, reject) => {
+    var params = {
+      ExpressionAttributeValues: {
+        ":v1": {
+          S: "Cataloguelist"
+        }
+      },
+      KeyConditionExpression: "pKey = :v1",
+      TableName: tableName
+    }
+
+    ddb.query(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(JSON.stringify(data))
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return op1
     } else {
       return false
     }
@@ -497,5 +598,6 @@ module.exports = {
   createCatalogue,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue
+  deleteCatalogue,
+  readCataloguelist
 }
