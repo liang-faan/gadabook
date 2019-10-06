@@ -1,4 +1,4 @@
-const { createAvailability } = require("../availability")
+const { createAvailability, readAvailability } = require("../availability")
 
 const test1 = {
   pKey: "abc",
@@ -11,7 +11,7 @@ const test1 = {
   active: true
 }
 
-createAvailability(test1)
+readAvailability(test1)
   .then(res => {
     console.log("res")
     console.log(res)
