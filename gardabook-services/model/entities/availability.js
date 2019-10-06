@@ -26,16 +26,7 @@ const requiredPropKeysForCreate = [
   "active"
 ]
 
-const requiredPropKeysForRead = [
-  "pKey",
-  "sKey",
-  "catalogueId",
-  "date",
-  "time",
-  "slot",
-  "createdAt",
-  "active"
-]
+const requiredPropKeysForRead = ["pKey"]
 
 const requiredPropKeysForUpdate = ["pKey", "sKey"]
 
@@ -153,10 +144,10 @@ const createAvailability = async props => {
     ddb.putItem(params, (err, data) => {
       if (err) {
         console.log(err, err.stack)
-        reject()
+        reject(err)
       } else {
         console.log(data)
-        resolve()
+        resolve(data)
       }
     })
   })
@@ -190,7 +181,7 @@ const createAvailability = async props => {
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for read
- * @returns {Promise.<boolean>}
+ * @returns {Promise.<object>}
  */
 const readAvailability = async props => {
   // Check properties
@@ -238,10 +229,73 @@ const readAvailability = async props => {
     ddb.query(params, (err, data) => {
       if (err) {
         console.log(err, err.stack)
-        reject()
+        reject(err)
       } else {
         console.log(JSON.stringify(data))
-        resolve()
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return op1
+    } else {
+      return false
+    }
+  })
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Promise.<boolean>}
+ */
+const updateAvailability = async props => {
+  // Check properties
+  const propKeys = Object.keys(props)
+  let correctProps = true
+
+  const requiredPropKeys = [...requiredPropKeysForUpdate]
+
+  propKeys.forEach(key => {
+    if (!possiblePropKeys.includes(key)) {
+      correctProps = false
+    } else {
+      const index = requiredPropKeys.indexOf(key)
+      requiredPropKeys.splice(index, 1)
+    }
+  })
+
+  if (requiredPropKeys.length > 0) {
+    correctProps = false
+  }
+
+  if (!correctProps) {
+    return false
+  }
+
+  // Create API payload and call
+  const obj = generateObj(props)
+  if (!obj) {
+    return false
+  }
+
+  const { availabilityAvailability } = obj
+
+  const op1 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...availabilityAvailability
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
       }
     })
   })
@@ -258,5 +312,6 @@ const readAvailability = async props => {
 module.exports = {
   generateAvailabilityObject: generateObj,
   createAvailability,
-  readAvailability
+  readAvailability,
+  updateAvailability
 }

@@ -1,9 +1,13 @@
-const { createAvailability, readAvailability } = require("../availability")
+const {
+  createAvailability,
+  readAvailability,
+  updateAvailability
+} = require("../availability")
 
 const test1 = {
-  pKey: "abc",
+  pKey: "abc123",
   sKey: "def",
-  catalogueId: "cat",
+  catalogueId: "cat1",
   date: "1",
   time: "1",
   slot: "1",
@@ -11,7 +15,21 @@ const test1 = {
   active: true
 }
 
+createAvailability(test1)
+  .then(res => {
+    console.log("res")
+    console.log(res)
+  })
+  .catch(err => console.log(err))
+
 readAvailability(test1)
+  .then(res => {
+    console.log("res")
+    console.log(res)
+  })
+  .catch(err => console.log(err))
+
+updateAvailability(test1)
   .then(res => {
     console.log("res")
     console.log(res)
