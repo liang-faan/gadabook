@@ -1,7 +1,13 @@
-const { createUser, readUser, updateUser, deleteUser } = require("../user")
+const {
+  createUser,
+  readUser,
+  updateUser,
+  deleteUser,
+  readUserlist
+} = require("../user")
 
 const test1 = {
-  pKey: "abc123",
+  pKey: "abc1234",
   sKey: "def",
   role: "cat1",
   username: "1",
@@ -22,12 +28,12 @@ const test1 = {
 //   })
 //   .catch(err => console.log(err))
 
-readUser(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+// readUser(test1)
+//   .then(res => {
+//     console.log("res")
+//     console.log(res)
+//   })
+//   .catch(err => console.log(err))
 
 //   updateUser(test1)
 //   .then(res => {
@@ -42,3 +48,10 @@ readUser(test1)
 //     console.log(res)
 //   })
 //   .catch(err => console.log(err))
+
+readUserlist({})
+  .then(res => {
+    console.log("res")
+    console.log(res)
+  })
+  .catch(err => console.log(err))

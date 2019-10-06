@@ -118,7 +118,16 @@ const generateObj = props => {
     }
   }
 
-  return { userUser }
+  const userlistUser = {
+    pKey: {
+      S: "Userlist"
+    },
+    sKey: {
+      S: props.pKey
+    }
+  }
+
+  return { userUser, userlistUser }
 }
 
 /**
@@ -155,7 +164,7 @@ const createUser = async props => {
     return false
   }
 
-  const { userUser } = obj
+  const { userUser, userlistUser } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -175,7 +184,25 @@ const createUser = async props => {
     })
   })
 
-  return Promise.all([op1]).then((res, err) => {
+  const op2 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...userlistUser
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1, op2]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -348,7 +375,7 @@ const deleteUser = async props => {
     return false
   }
 
-  const { userUser } = obj
+  const { userUser, userlistUser } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -373,7 +400,30 @@ const deleteUser = async props => {
     })
   })
 
-  return Promise.all([op1]).then((res, err) => {
+  const op2 = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: userlistUser.pKey.S
+        },
+        sKey: {
+          S: userlistUser.sKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1, op2]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -382,10 +432,46 @@ const deleteUser = async props => {
   })
 }
 
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
+ * @returns {Promise.<object>}
+ */
+const readUserlist = async props => {
+  const op1 = await new Promise((resolve, reject) => {
+    var params = {
+      ExpressionAttributeValues: {
+        ":v1": {
+          S: "Userlist"
+        }
+      },
+      KeyConditionExpression: "pKey = :v1",
+      TableName: tableName
+    }
+
+    ddb.query(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(JSON.stringify(data))
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return op1
+    } else {
+      return false
+    }
+  })
+}
 module.exports = {
   generateUserObject: generateObj,
   createUser,
   readUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  readUserlist
 }
