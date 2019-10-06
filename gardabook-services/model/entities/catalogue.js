@@ -137,7 +137,16 @@ const generateObj = props => {
     }
   }
 
-  return { catalogueCatalogue, tagCatalogue }
+  const enrollmentCatalogue = {
+    pKey: {
+      S: props.enrollmentId
+    },
+    sKey: {
+      S: props.pKey
+    }
+  }
+
+  return { catalogueCatalogue, tagCatalogue, enrollmentCatalogue }
 }
 
 /**
@@ -212,7 +221,25 @@ const createCatalogue = async props => {
     })
   })
 
-  return Promise.all([op1, op2]).then((res, err) => {
+  const op3 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...enrollmentCatalogue
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
+      } else {
+        console.log(data)
+        resolve()
+      }
+    })
+  })
+
+  return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -385,7 +412,7 @@ const deleteCatalogue = async props => {
     return false
   }
 
-  const { catalogueCatalogue, tagCatalogue } = obj
+  const { catalogueCatalogue, tagCatalogue, enrollmentCatalogue } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -433,7 +460,30 @@ const deleteCatalogue = async props => {
     })
   })
 
-  return Promise.all([op1, op2]).then((res, err) => {
+  const op3 = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: enrollmentCatalogue.pKey.S
+        },
+        sKey: {
+          S: enrollmentCatalogue.sKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
       return true
     } else {
