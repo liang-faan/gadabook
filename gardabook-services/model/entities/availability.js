@@ -188,7 +188,7 @@ const readAvailability = async props => {
   const propKeys = Object.keys(props)
   let correctProps = true
 
-  const requiredPropKeys = [...requiredPropKeysForCreate]
+  const requiredPropKeys = [...requiredPropKeysForRead]
 
   propKeys.forEach(key => {
     if (!possiblePropKeys.includes(key)) {
@@ -318,7 +318,7 @@ const deleteAvailability = async props => {
   const propKeys = Object.keys(props)
   let correctProps = true
 
-  const requiredPropKeys = [...requiredPropKeysForUpdate]
+  const requiredPropKeys = [...requiredPropKeysForDelete]
 
   propKeys.forEach(key => {
     if (!possiblePropKeys.includes(key)) {
