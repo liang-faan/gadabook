@@ -31,7 +31,11 @@ module.exports.authorize = (event, context, cb) => {
   console.log('Auth function invoked');
   if (event.authorizationToken) {
     // Remove 'Bearer ' from token:
-    const token = event.authorizationToken.substring(7);
+    var token =  event.authorizationToken;
+    if(token.startsWith("Bearer")||token.startsWith("bearer")){
+      token= token.substring(6).trim();
+    }
+    
     console.log(token);
     // Make a request to the iss + .well-known/jwks.json URL:
     request(
