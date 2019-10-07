@@ -1,7 +1,13 @@
   
-var AWS = require('aws-sdk');
-var dynamodb = new AWS.DynamoDB();
-var _ = require('lodash');
+const { 
+  generateBookingObject, 
+  createBooking, 
+  readBooking, 
+  updateBooking, 
+  deleteBooking 
+} = require("../model/entities/booking")
+
+var _ = require('lodash')
 
 /**
  * Find booking history by user id
@@ -11,30 +17,15 @@ var _ = require('lodash');
  * userId Long ID of user
  * returns Booking
  **/
-exports.bookingGET = function(xIntRole,userId) {
+exports.bookingGET = function(xIntRole, userId) {
 
   var params = {
-    TableName: "gardabook-develop",
-    KeyConditionExpression: "#p = :id and #s begins_with :b",
-    ExpressionAttributeNames: {
-        "#p": "partitionKey",
-        "#s": "sortKey"
-    },
-    ExpressionAttributeValues: {
-      ":id": res.userId,
-      ":b": "Booking_",
-    },
-    ReturnConsumedCapacity: "TOTAL"  
-  };
+    pKey: userId,
+    sKey: userId
+  }
 
-  var promise = dynamodb.getItem(params, function(err, data) {
-      if (err) {
-          console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-      } else {
-          console.log("Query succeeded.");
-          res.json({ data: booking });
-      }
-  });
+  return readBooking(params)
+
   // return new Promise(function(resolve, reject) {
 //     var examples = {};
 //     examples['application/json'] = {

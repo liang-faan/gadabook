@@ -41,22 +41,22 @@ const generateObj = props => {
 
   const bookingBooking = {
     pKey: {
-      S: props.pKey
+      S: String(props.pKey)
     },
     sKey: {
-      S: props.sKey
+      S: String(props.sKey)
     }
   }
 
   if (props.userId) {
     bookingBooking.userId = {
-      S: props.userId
+      S: String(props.userId)
     }
   }
 
   if (props.availabilityId) {
     bookingBooking.availabilityId = {
-      S: props.availabilityId
+      S: String(props.availabilityId)
     }
   }
 
@@ -252,14 +252,17 @@ const readBooking = async props => {
 
   const { bookingBooking } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
+  const op1 = new Promise((resolve, reject) => {
     var params = {
       ExpressionAttributeValues: {
         ":v1": {
           S: bookingBooking.pKey.S
+        },
+        ":s1": {
+          S: "Booking_"
         }
       },
-      KeyConditionExpression: "pKey = :v1",
+      KeyConditionExpression: "pKey = :v1 and begins_with(sKey, :s1)",
       TableName: tableName
     }
 
