@@ -16,7 +16,9 @@ const possiblePropKeys = [
   "dob",
   "gender",
   "address",
-  "status"
+  "status",
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForCreate = [
@@ -31,12 +33,14 @@ const requiredPropKeysForCreate = [
   "dob",
   "gender",
   "address",
-  "status"
+  "status",
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForRead = ["pKey"]
 
-const requiredPropKeysForUpdate = ["pKey", "sKey"]
+const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
 const requiredPropKeysForDelete = ["pKey", "sKey"]
 
@@ -149,7 +153,7 @@ const createUser = async props => {
       requiredPropKeys.splice(index, 1)
     }
   })
-
+  console.log(requiredPropKeys)
   if (requiredPropKeys.length > 0) {
     correctProps = false
   }

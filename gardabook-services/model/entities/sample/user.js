@@ -18,40 +18,35 @@ const test1 = {
   dob: "cat1",
   gender: "cat1",
   address: "cat1",
-  status: "cat1"
+  status: "cat1",
+  createdAt: "123",
+  updatedAt: "123"
 }
 
-// createUser(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+const test = async () => {
+  console.log("\nCREATE")
+  let create1 = await createUser(test1)
+  console.log(create1)
 
-// readUser(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD")
+  let read1 = await readUser(test1)
+  console.log(read1)
 
-//   updateUser(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nUPDATE")
+  let update1 = await updateUser(test1)
+  console.log(update1)
 
-// deleteUser(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD: ")
+  let read2 = await readUser(test1)
+  console.log(read2)
 
-readUserlist({})
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+  console.log("\nDELETE")
+  let delete1 = await deleteUser(test1)
+  console.log(delete1)
+
+  console.log("\nLIST")
+  let list1 = await readUserlist({})
+  console.log(list1)
+}
+
+test()
