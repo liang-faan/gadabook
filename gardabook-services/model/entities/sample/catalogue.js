@@ -20,40 +20,35 @@ const test1 = {
   venue: "1",
   type: "1",
   city: "1",
-  address: "1"
+  address: "1",
+  createdAt: "d",
+  updatedAt: "d"
 }
 
-// createCatalogue(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+const test = async () => {
+  console.log("\nCREATE")
+  let create1 = await createCatalogue(test1)
+  console.log(create1)
 
-// readCatalogue(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD")
+  let read1 = await readCatalogue(test1)
+  console.log(read1)
 
-//   updateCatalogue(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nUPDATE")
+  let update1 = await updateCatalogue(test1)
+  console.log(update1)
 
-// deleteCatalogue(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD: ")
+  let read2 = await readCatalogue(test1)
+  console.log(read2)
 
-readCataloguelist({})
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+  console.log("\nDELETE")
+  let delete1 = await deleteCatalogue(test1)
+  console.log(delete1)
+
+  console.log("\nLIST")
+  let list1 = await readCataloguelist({})
+  console.log(list1)
+}
+
+test()

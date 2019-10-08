@@ -28,7 +28,7 @@ const requiredPropKeysForCreate = [
 
 const requiredPropKeysForRead = ["pKey"]
 
-const requiredPropKeysForUpdate = ["pKey", "sKey"]
+const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
 const requiredPropKeysForDelete = ["pKey", "sKey"]
 
