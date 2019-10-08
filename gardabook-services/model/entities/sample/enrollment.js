@@ -10,33 +10,32 @@ const test1 = {
   sKey: "def",
   userId: "cat1",
   catalogueId: "1",
-  fee: "1"
+  expiryDate: "d",
+  fee: "1",
+  createdAt: "af",
+  updatedAt: "af"
 }
 
-// createEnrollment(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+const test = async () => {
+  console.log("\nCREATE")
+  let create1 = await createEnrollment(test1)
+  console.log(create1)
 
-readEnrollment(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+  console.log("\nREAD")
+  let read1 = await readEnrollment(test1)
+  console.log(read1)
 
-//   updateEnrollment(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nUPDATE")
+  let update1 = await updateEnrollment(test1)
+  console.log(update1)
 
-// deleteEnrollment(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD: ")
+  let read2 = await readEnrollment(test1)
+  console.log(read2)
+
+  console.log("\nDELETE")
+  let delete1 = await deleteEnrollment(test1)
+  console.log(delete1)
+}
+
+test()
