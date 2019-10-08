@@ -12,33 +12,31 @@ const test1 = {
   availabilityId: "1",
   startTime: "1",
   endTime: "1",
-  amount: "1"
+  amount: "1",
+  createdAt: "1",
+  updatedAt: "1"
 }
 
-// createBooking(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+const test = async () => {
+  console.log("\nCREATE")
+  let create1 = await createBooking(test1)
+  console.log(create1)
 
-readBooking(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+  console.log("\nREAD")
+  let read1 = await readBooking(test1)
+  console.log(read1)
 
-//   updateBooking(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nUPDATE")
+  let update1 = await updateBooking(test1)
+  console.log(update1)
 
-// deleteBooking(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD: ")
+  let read2 = await readBooking(test1)
+  console.log(read2)
+
+  console.log("\nDELETE")
+  let delete1 = await deleteBooking(test1)
+  console.log(delete1)
+}
+
+test()
