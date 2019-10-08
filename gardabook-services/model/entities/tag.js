@@ -4,13 +4,27 @@ const { validateProps } = require("./validators/tagValidator")
 // Specify properties available to each operation
 // Modifications should also be updated in generateObj
 
-const possiblePropKeys = ["pKey", "sKey", "description", "catalogueId"]
+const possiblePropKeys = [
+  "pKey",
+  "sKey",
+  "description",
+  "catalogueId",
+  "createdAt",
+  "updatedAt"
+]
 
-const requiredPropKeysForCreate = ["pKey", "sKey", "description", "catalogueId"]
+const requiredPropKeysForCreate = [
+  "pKey",
+  "sKey",
+  "description",
+  "catalogueId",
+  "createdAt",
+  "updatedAt"
+]
 
 const requiredPropKeysForRead = ["pKey"]
 
-const requiredPropKeysForUpdate = ["pKey", "sKey"]
+const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
 const requiredPropKeysForDelete = ["pKey", "sKey"]
 
@@ -41,6 +55,18 @@ const generateObj = props => {
   if (props.catalogueId) {
     tagTag.catalogueId = {
       S: props.catalogueId
+    }
+  }
+
+  if (props.createdAt) {
+    tagTag.createdAt = {
+      S: props.createdAt
+    }
+  }
+
+  if (props.updatedAt) {
+    tagTag.updatedAt = {
+      S: props.updatedAt
     }
   }
 
@@ -90,7 +116,7 @@ const createTag = async props => {
     return false
   }
 
-  const { tagTag, catalogueTag, tagCatalogue } = obj
+  const { tagTag, catalogueTag } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
