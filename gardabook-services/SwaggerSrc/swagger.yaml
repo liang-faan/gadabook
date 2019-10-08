@@ -275,12 +275,12 @@ paths:
         description: "book for the facility"
         required: true
         schema:
-          $ref: '#/definitions/Booking'
+          $ref: '#/definitions/NewBooking'
       responses:
         200:
           description: "successful operation"
           schema:
-            $ref: '#/definitions/Booking'
+            $ref: '#/definitions/NewBooking'
         400:
           description: "Invalid Order"
       security:
@@ -648,6 +648,29 @@ securityDefinitions:
     in: "header"
     description: "Jwt token authentication from AWS Cognito"
 definitions:
+  NewBooking:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+        description: "user id"
+      availabilityId:
+        type: "string"
+        description: "availability id"
+      date:
+        type: "string"
+        format: "date-time"
+      slot:
+        type: "integer"
+        format: "int64"
+      startTime:
+        type: "string"
+        format: "date-time"
+      endTime:
+        type: "string"
+        format: "date-time"
+    xml:
+      name: "NewBooking"
   Booking:
     type: "object"
     properties:

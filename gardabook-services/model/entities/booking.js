@@ -92,25 +92,25 @@ const generateObj = props => {
 
   if (props.amount) {
     bookingBooking.amount = {
-      S: props.amount
+      S: String(props.amount)
     }
   }
 
   const userBooking = {
     pKey: {
-      S: props.userId
+      S: String(props.userId)
     },
     sKey: {
-      S: props.pKey
+      S: String(props.pKey)
     }
   }
 
   const availabilityBooking = {
     pKey: {
-      S: props.availabilityId
+      S: String(props.availabilityId)
     },
     sKey: {
-      S: props.pKey
+      S: String(props.pKey)
     }
   }
 

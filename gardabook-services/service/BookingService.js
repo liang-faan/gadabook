@@ -7,6 +7,8 @@ const {
   deleteBooking 
 } = require("../model/entities/booking")
 
+const { newUuid } = require("../utils/uuidGenerator")
+
 var _ = require('lodash')
 
 /**
@@ -25,101 +27,34 @@ exports.bookingGET = function(xIntRole, userId) {
   }
 
   return readBooking(params)
+}
 
-  // return new Promise(function(resolve, reject) {
-//     var examples = {};
-//     examples['application/json'] = {
-//   "amount" : 6.02745618307040320615897144307382404804229736328125,
-//   "submitDate" : "2000-01-23T04:56:07.000+00:00",
-//   "bookingDate" : "2000-01-23T04:56:07.000+00:00",
-//   "availability" : {
-//     "date" : "2000-01-23",
-//     "availablityId" : 0,
-//     "catalogue" : {
-//       "venue" : "venue",
-//       "catalogueId" : 0,
-//       "address" : "address",
-//       "city" : "city",
-//       "rateUnit" : "Minute",
-//       "remark" : "remark",
-//       "provider" : {
-//         "firstName" : "firstName",
-//         "lastName" : "lastName",
-//         "userStatus" : 5,
-//         "phone" : "phone",
-//         "userId" : 1,
-//         "email" : "email",
-//         "username" : "username"
-//       },
-//       "rate" : 5.63737665663332876420099637471139430999755859375,
-//       "terms" : "terms",
-//       "name" : "NUS ISS Meeting Room#5",
-//       "currency" : "SGD",
-//       "tag" : [ {
-//         "tagId" : 6,
-//         "descritpion" : "descritpion",
-//         "status" : "Active"
-//       }, {
-//         "tagId" : 6,
-//         "descritpion" : "descritpion",
-//         "status" : "Active"
-//       } ],
-//       "status" : "Open"
-//     }
-//   },
-//   "paymentDate" : "2000-01-23T04:56:07.000+00:00",
-//   "complete" : false,
-//   "user" : {
-//     "firstName" : "firstName",
-//     "lastName" : "lastName",
-//     "userStatus" : 5,
-//     "phone" : "phone",
-//     "userId" : 1,
-//     "email" : "email",
-//     "username" : "username"
-//   },
-//   "bookingId" : 0,
-//   "catalogue" : {
-//     "venue" : "venue",
-//     "catalogueId" : 0,
-//     "address" : "address",
-//     "city" : "city",
-//     "rateUnit" : "Minute",
-//     "remark" : "remark",
-//     "provider" : {
-//       "firstName" : "firstName",
-//       "lastName" : "lastName",
-//       "userStatus" : 5,
-//       "phone" : "phone",
-//       "userId" : 1,
-//       "email" : "email",
-//       "username" : "username"
-//     },
-//     "rate" : 5.63737665663332876420099637471139430999755859375,
-//     "terms" : "terms",
-//     "name" : "NUS ISS Meeting Room#5",
-//     "currency" : "SGD",
-//     "tag" : [ {
-//       "tagId" : 6,
-//       "descritpion" : "descritpion",
-//       "status" : "Active"
-//     }, {
-//       "tagId" : 6,
-//       "descritpion" : "descritpion",
-//       "status" : "Active"
-//     } ],
-//     "status" : "Open"
-//   },
-//   "createDate" : "2000-01-23T04:56:07.000+00:00",
-//   "status" : "New"
-// };
-//     if (Object.keys(examples).length > 0) {
-//       resolve(examples[Object.keys(examples)[0]]);
-//     } else {
-//       resolve();
-//     }
-//   });
-};
+/**
+ * Place an booking
+ * 
+ *
+ * xIntRole String 
+ * body Booking book for the facility
+ * returns Booking
+ **/
+exports.submitBooking = function(xIntRole, body) {
+
+  var bookingId = newUuid("Booking_")
+  
+  var params = {
+    pKey: bookingId,
+    sKey: body.userId,
+    userId: body.userId,
+    availabilityId: body.availabilityId,
+    date: body.date,
+    slot: body.slot,
+    startTime: body.startTime,
+    endTime: body.endTime,
+    amount: body.amount
+  }
+
+  return createBooking(params)
+}
 
 
 /**
@@ -132,10 +67,9 @@ exports.bookingGET = function(xIntRole, userId) {
  **/
 exports.deleteBooking = function(xIntRole,bookingId) {
   return new Promise(function(resolve, reject) {
-    resolve();
-  });
+    resolve()
+  })
 }
-
 
 /**
  * Find booking by ID
@@ -240,110 +174,5 @@ exports.getOrderById = function(xIntRole,bookingId) {
 //       resolve();
 //     }
 //   });
-}
-
-
-/**
- * Place an booking
- * 
- *
- * xIntRole String 
- * body Booking book for the facility
- * returns Booking
- **/
-exports.submitBooking = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "amount" : 6.02745618307040320615897144307382404804229736328125,
-  "submitDate" : "2000-01-23T04:56:07.000+00:00",
-  "bookingDate" : "2000-01-23T04:56:07.000+00:00",
-  "availability" : {
-    "date" : "2000-01-23",
-    "availablityId" : 0,
-    "catalogue" : {
-      "venue" : "venue",
-      "catalogueId" : 0,
-      "address" : "address",
-      "city" : "city",
-      "rateUnit" : "Minute",
-      "remark" : "remark",
-      "provider" : {
-        "firstName" : "firstName",
-        "lastName" : "lastName",
-        "userStatus" : 5,
-        "phone" : "phone",
-        "userId" : 1,
-        "email" : "email",
-        "username" : "username"
-      },
-      "rate" : 5.63737665663332876420099637471139430999755859375,
-      "terms" : "terms",
-      "name" : "NUS ISS Meeting Room#5",
-      "currency" : "SGD",
-      "tag" : [ {
-        "tagId" : 6,
-        "descritpion" : "descritpion",
-        "status" : "Active"
-      }, {
-        "tagId" : 6,
-        "descritpion" : "descritpion",
-        "status" : "Active"
-      } ],
-      "status" : "Open"
-    }
-  },
-  "paymentDate" : "2000-01-23T04:56:07.000+00:00",
-  "complete" : false,
-  "user" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "bookingId" : 0,
-  "catalogue" : {
-    "venue" : "venue",
-    "catalogueId" : 0,
-    "address" : "address",
-    "city" : "city",
-    "rateUnit" : "Minute",
-    "remark" : "remark",
-    "provider" : {
-      "firstName" : "firstName",
-      "lastName" : "lastName",
-      "userStatus" : 5,
-      "phone" : "phone",
-      "userId" : 1,
-      "email" : "email",
-      "username" : "username"
-    },
-    "rate" : 5.63737665663332876420099637471139430999755859375,
-    "terms" : "terms",
-    "name" : "NUS ISS Meeting Room#5",
-    "currency" : "SGD",
-    "tag" : [ {
-      "tagId" : 6,
-      "descritpion" : "descritpion",
-      "status" : "Active"
-    }, {
-      "tagId" : 6,
-      "descritpion" : "descritpion",
-      "status" : "Active"
-    } ],
-    "status" : "Open"
-  },
-  "createDate" : "2000-01-23T04:56:07.000+00:00",
-  "status" : "New"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
