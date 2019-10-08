@@ -29,22 +29,23 @@ function generateAllData(
     var props = {
       pKey: uuid,
       sKey: uuid,
-      role: "normal",
-      username: faker.internet.userName(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      email: faker.internet.email(),
-      phone: faker.phone.phoneNumber(),
+      address: faker.address.streetAddress(),
       dob: faker.random
         .number({
           min: currentEpochTime - secondsInADay * 365 * 40,
           max: currentEpochTime - secondsInADay * 365 * 18
         })
         .toString(),
+      email: faker.internet.email(),
+      firstName: faker.name.firstName(),
       gender: "Male",
-      address: faker.address.streetAddress(),
+      lastName: faker.name.lastName(),
+      phone: faker.phone.phoneNumber(),
+      role: "normal",
       status: "ok",
-      active: true
+      username: faker.internet.userName(),
+      createdAt: faker.date.recent().toISOString(),
+      updatedAt: faker.date.recent().toISOString()
     }
 
     var { userUser } = generateUserObject(props)
