@@ -4,19 +4,27 @@ const { validateProps } = require("./validators/sessionValidator")
 // Specify properties available to each operation
 // Modifications should also be updated in generateObj
 
-const possiblePropKeys = ["pKey", "sKey", "userId", "csrfToken", "createTime"]
+const possiblePropKeys = [
+  "pKey",
+  "sKey",
+  "userId",
+  "csrfToken",
+  "createdAt",
+  "updatedAt"
+]
 
 const requiredPropKeysForCreate = [
   "pKey",
   "sKey",
   "userId",
   "csrfToken",
-  "createTime"
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForRead = ["pKey"]
 
-const requiredPropKeysForUpdate = ["pKey", "sKey"]
+const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
 const requiredPropKeysForDelete = ["pKey", "sKey"]
 
@@ -50,9 +58,15 @@ const generateObj = props => {
     }
   }
 
-  if (props.createTime) {
-    sessionSession.createTime = {
-      S: props.createTime
+  if (props.createdAt) {
+    sessionSession.createdAt = {
+      S: props.createdAt
+    }
+  }
+
+  if (props.updatedAt) {
+    sessionSession.updatedAt = {
+      S: props.updatedAt
     }
   }
 

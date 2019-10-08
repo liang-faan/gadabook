@@ -10,33 +10,30 @@ const test1 = {
   sKey: "def",
   userId: "cat1",
   csrfToken: "1",
-  createTime: "1"
+  createdAt: "1",
+  updatedAt: "1"
 }
 
-// createSession(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+const test = async () => {
+  console.log("\nCREATE")
+  let create1 = await createSession(test1)
+  console.log(create1)
 
-readSession(test1)
-  .then(res => {
-    console.log("res")
-    console.log(res)
-  })
-  .catch(err => console.log(err))
+  console.log("\nREAD")
+  let read1 = await readSession(test1)
+  console.log(read1)
 
-//   updateSession(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nUPDATE")
+  let update1 = await updateSession(test1)
+  console.log(update1)
 
-// deleteSession(test1)
-//   .then(res => {
-//     console.log("res")
-//     console.log(res)
-//   })
-//   .catch(err => console.log(err))
+  console.log("\nREAD: ")
+  let read2 = await readSession(test1)
+  console.log(read2)
+
+  console.log("\nDELETE")
+  let delete1 = await deleteSession(test1)
+  console.log(delete1)
+}
+
+test()
