@@ -122,6 +122,18 @@ const generateObj = props => {
     }
   }
 
+  if (props.createdAt) {
+    userUser.createdAt = {
+      S: props.createdAt
+    }
+  }
+
+  if (props.updatedAt) {
+    userUser.updatedAt = {
+      S: props.updatedAt
+    }
+  }
+
   const userlistUser = {
     pKey: {
       S: "Userlist"

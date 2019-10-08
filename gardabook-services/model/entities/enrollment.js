@@ -10,7 +10,9 @@ const possiblePropKeys = [
   "userId",
   "catalogueId",
   "expiryDate",
-  "fee"
+  "fee",
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForCreate = [
@@ -19,12 +21,14 @@ const requiredPropKeysForCreate = [
   "userId",
   "catalogueId",
   "expiryDate",
-  "fee"
+  "fee",
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForRead = ["pKey"]
 
-const requiredPropKeysForUpdate = ["pKey", "sKey"]
+const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
 const requiredPropKeysForDelete = ["pKey", "sKey"]
 
@@ -67,6 +71,18 @@ const generateObj = props => {
   if (props.fee) {
     enrollmentEnrollment.fee = {
       S: props.fee
+    }
+  }
+
+  if (props.createdAt) {
+    enrollmentEnrollment.createdAt = {
+      S: props.createdAt
+    }
+  }
+
+  if (props.updatedAt) {
+    enrollmentEnrollment.updatedAt = {
+      S: props.updatedAt
     }
   }
 

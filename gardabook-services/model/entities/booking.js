@@ -11,7 +11,9 @@ const possiblePropKeys = [
   "availabilityId",
   "startTime",
   "endTime",
-  "amount"
+  "amount",
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForCreate = [
@@ -21,12 +23,14 @@ const requiredPropKeysForCreate = [
   "availabilityId",
   "startTime",
   "endTime",
-  "amount"
+  "amount",
+  "createdAt",
+  "updatedAt"
 ]
 
 const requiredPropKeysForRead = ["pKey"]
 
-const requiredPropKeysForUpdate = ["pKey", "sKey"]
+const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
 const requiredPropKeysForDelete = ["pKey", "sKey"]
 
@@ -93,6 +97,18 @@ const generateObj = props => {
   if (props.amount) {
     bookingBooking.amount = {
       S: String(props.amount)
+    }
+  }
+
+  if (props.createdAt) {
+    bookingBooking.createdAt = {
+      S: props.createdAt
+    }
+  }
+
+  if (props.updatedAt) {
+    bookingBooking.updatedAt = {
+      S: props.updatedAt
     }
   }
 
