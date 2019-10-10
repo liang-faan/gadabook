@@ -42,15 +42,16 @@ exports.submitBooking = function(xIntRole, body) {
   var bookingId = newUuid("Booking_")
   
   var params = {
-    pKey: bookingId,
-    sKey: body.userId,
-    userId: body.userId,
-    availabilityId: body.availabilityId,
-    date: body.date,
-    slot: body.slot,
-    startTime: body.startTime,
-    endTime: body.endTime,
-    amount: body.amount
+    pKey: String(bookingId),
+    sKey: String(body.userId),
+    userId: String(body.userId),
+    availabilityId: String(body.availabilityId),
+    slot: String(body.slot),
+    startTime: String(new  Date(body.startTime).getTime()),
+    endTime: String(new  Date(body.endTime).getTime()),
+    amount: String(body.amount),
+    createdAt: String(Date.now()),
+    updatedAt: String(Date.now())
   }
 
   return createBooking(params)

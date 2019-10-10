@@ -12,6 +12,7 @@ const possiblePropKeys = [
   "startTime",
   "endTime",
   "amount",
+  "slot",
   "createdAt",
   "updatedAt"
 ]
@@ -23,6 +24,7 @@ const requiredPropKeysForCreate = [
   "availabilityId",
   "startTime",
   "endTime",
+  "slot",
   "amount",
   "createdAt",
   "updatedAt"
