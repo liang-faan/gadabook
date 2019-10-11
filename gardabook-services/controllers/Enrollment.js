@@ -1,7 +1,9 @@
 'use strict';
-
+var swagger = require("../utils/swaggerTools");
 var utils = require('../utils/writer.js');
 var Enrollment = require('../service/EnrollmentService');
+
+swagger.swaggerInitial();
 
 module.exports.createEnrollment = function createEnrollment (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
@@ -16,6 +18,7 @@ module.exports.createEnrollment = function createEnrollment (req, res, next) {
 };
 
 module.exports.getEnrollmentByProviderId = function getEnrollmentByProviderId (req, res, next) {
+
   var xIntRole = req.swagger.params['x-int-role'].value;
   var providerId = req.swagger.params['providerId'].value;
   Enrollment.getEnrollmentByProviderId(xIntRole,providerId)

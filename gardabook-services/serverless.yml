@@ -1,0 +1,327 @@
+
+service: gadabook-services
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: ap-southeast-1
+
+functions:
+  # publicEndpoint:
+  #   handler: handler.publicEndpoint
+  #   events:
+  #     - http:
+  #         path: api/public
+  #         method: get
+  #         integration: lambda
+  #         cors: true
+  auth:
+    handler: security/auth.authorize
+  # privateEndpoint:
+  #   handler: handler.privateEndpoint
+  #   events:
+  #     - http:
+  #         path: api/private
+  #         method: get
+  #         authorizer: auth
+  #         cors:
+  #           origins:
+  #             - '*'
+  #           headers:
+  #             - Content-Type
+  #             - X-Amz-Date
+  #             - Authorization
+  #             - X-Api-Key
+  #             - X-Amz-Security-Token
+  getBookingByUserId:
+    handler: service/BookingService.bookingGET
+    events:
+      - http:
+          path: v1/booking/getBookingByUserId
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  submitBooking:
+    handler: service/BookingService.submitBooking
+    events:
+      - http:
+          path: v1/booking/submitBooking
+          method: post
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  deleteBooking:
+    handler: service/BookingService.deleteBooking
+    events:
+      - http:
+          path: v1/booking/deleteBooking
+          method: post
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  addCatalogue:
+    handler: service/CatalogueService.addCatalogue
+    events:
+      - http:
+          path: v1/catalogue/addCatalogue
+          method: post
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  deleteCatalogue:
+    handler: service/CatalogueService.deleteCatalogue
+    events:
+      - http:
+          path: v1/catalogue/deleteCatalogue
+          method: post
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  findCatalogueByTagId:
+    handler: service/CatalogueService.findByTags
+    events:
+      - http:
+          path: v1/catalogue/findCatalogueByTagId
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  getAvailabilityByCatalogueId:
+    handler: service/CatalogueService.getAvailabilityByCatalogueId
+    events:
+      - http:
+          path: v1/catalogue/getAvailabilityByCatalogueId
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  getCatalogueById:
+    handler: service/CatalogueService.getCatalogueById
+    events:
+      - http:
+          path: v1/catalogue/getCatalogueById
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  updateCatalgoue:
+    handler: service/CatalogueService.updateCatalgoue
+    events:
+      - http:
+          path: v1/catalogue/updateCatalgoue
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  createEnrollment:
+    handler: service/EnrollmentService.createEnrollment
+    events:
+      - http:
+          path: v1/enrollment/createEnrollment
+          method: post
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  getEnrollmentByProviderId:
+    handler: service/EnrollmentService.getEnrollmentByProviderId
+    events:
+      - http:
+          path: v1/enrollment/getEnrollmentByProviderId
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  createUser:
+    handler: service/UserService.createUser
+    events:
+      - http:
+          path: v1/user/createUser
+          method: post
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  deleteUser:
+    handler: service/UserService.deleteUser
+    events:
+      - http:
+          path: v1/user/eleteUser
+          method: delete
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  getUserByName:
+    handler: service/UserService.getUserByName
+    events:
+      - http:
+          path: v1/user/getUserByName
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  updateUser:
+    handler: service/UserService.updateUser
+    events:
+      - http:
+          path: v1/user/updateUser
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  userLogin:
+    handler: service/UserService.userLogin
+    events:
+      - http:
+          path: v1/user/userLogin
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  userLogout:
+    handler: service/UserService.userLogout
+    events:
+      - http:
+          path: v1/user/userLogout
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+
+

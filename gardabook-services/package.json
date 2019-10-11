@@ -17,6 +17,9 @@
     "connect": "^3.7.0",
     "js-yaml": "^3.13.1",
     "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^1.2.6",
+    "request": "^2.82.0",
+    "serverless": "^1.54.0",
     "swagger-tools": "0.10.4"
   }
 }
