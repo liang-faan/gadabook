@@ -70,7 +70,7 @@ function login() {
       imgElement.src = obj.imageUrl
       imgElement.style.visibility = 'visible'
       document.querySelector('#feedback').innerHTML =
-        'Hi, ' + obj.displayName + ', ' + obj.email
+        'Hi, ' + obj.displayName + ', ' + obj.email + JSON.stringify(obj)
     },
     function(msg: Object) {
       document.querySelector('#feedback').innerHTML = 'error: ' + msg
