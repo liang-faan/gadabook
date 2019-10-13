@@ -51,6 +51,31 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <img id="image" style="position:absolute; top:10px; left:10px" src="" />
+
+    <h1>Google+</h1>
+
+    <div id="deviceready" class="blink">
+      <p class="event listening">Connecting to Device</p>
+      <p class="event received">Device is Ready</p>
+
+      <p id="feedback">not logged in</p>
+      <button onclick="isAvailable()">Available?</button>
+      <br /><br />
+      <button onclick="login()">Login with Google+</button>
+      <br /><br />
+      <button onclick="trySilentLogin()">Try silent login with Google+</button>
+      <br /><br />
+      <button onclick="logout()">Logout</button>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button onclick="disconnect()">Disconnect</button>
+      <br /><br />
+      <button
+        onclick="window.plugins.googleplus.getSigningCertificateFingerprint(function(res){alert(res)}, function(res){alert(res)})"
+      >
+        get cert fingerprint (Android)
+      </button>
+    </div>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -62,5 +87,70 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script type="text/javascript">
+      app.initialize()
+      function isAvailable() {
+        window.plugins.googleplus.isAvailable(function(avail) {
+          alert(avail)
+        })
+      }
+      function login() {
+        window.plugins.googleplus.login(
+          {},
+          function(obj) {
+            document.querySelector('#image').src = obj.imageUrl
+            document.querySelector('#image').style.visibility = 'visible'
+            document.querySelector('#feedback').innerHTML =
+              'Hi, ' + obj.displayName + ', ' + obj.email
+          },
+          function(msg) {
+            document.querySelector('#feedback').innerHTML = 'error: ' + msg
+          }
+        )
+      }
+      function trySilentLogin() {
+        window.plugins.googleplus.trySilentLogin(
+          {},
+          function(obj) {
+            document.querySelector('#image').src = obj.imageUrl
+            document.querySelector('#image').style.visibility = 'visible'
+            document.querySelector('#feedback').innerHTML =
+              'Silent hi, ' + obj.displayName + ', ' + obj.email
+          },
+          function(msg) {
+            document.querySelector('#feedback').innerHTML = 'error: ' + msg
+          }
+        )
+      }
+      function logout() {
+        window.plugins.googleplus.logout(
+          function(msg) {
+            document.querySelector('#image').style.visibility = 'hidden'
+            document.querySelector('#feedback').innerHTML = msg
+          },
+          function(msg) {
+            document.querySelector('#feedback').innerHTML = msg
+          }
+        )
+      }
+      function disconnect() {
+        window.plugins.googleplus.disconnect(
+          function(msg) {
+            document.querySelector('#image').style.visibility = 'hidden'
+            document.querySelector('#feedback').innerHTML = msg
+          },
+          function(msg) {
+            document.querySelector('#feedback').innerHTML = msg
+          }
+        )
+      }
+      window.onerror = function(what, line, file) {
+        alert(what + '; ' + line + '; ' + file)
+      }
+      function handleOpenURL(url) {
+        document.querySelector('#feedback').innerHTML =
+          'App was opened by URL: ' + url
+      }
+    </script>
   </body>
 </html>
