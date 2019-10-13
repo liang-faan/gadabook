@@ -26,15 +26,17 @@ interface Obj {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware()))
 
-const reactApp = () => deviceReady()
-ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
-  </Provider>,
-  document.getElementById('root')
-)
+const reactApp = () => {
+  deviceReady()
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>,
+    document.getElementById('root')
+  )
+}
 
 // @ts-ignore
 if (window.cordova) {
