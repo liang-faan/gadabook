@@ -16,6 +16,10 @@
     },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.gardabook.mobileapp"
+    },
+    "cordova-plugin-googleplus": {
+      "PLAY_SERVICES_VERSION": "15.0.1",
+      "PACKAGE_NAME": "com.gardabook.mobileapp"
     }
   },
   "dependent_plugins": {}
