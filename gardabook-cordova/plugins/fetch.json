@@ -26,11 +26,11 @@
   "cordova-plugin-googleplus": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-googleplus"
+      "id": "cordova-plugin-googleplus@8.1.2"
     },
     "is_top_level": true,
     "variables": {
-      "REVERSED_CLIENT_ID": "com.googleusercontent.apps.1008100519812-0tusqst8sqrr0of61ot30u8muh04lc6t",
+      "REVERSED_CLIENT_ID": "com.googleusercontent.apps.761641708289-ttd7sc03mjkrno4b4vk6m1tru9iiog3i",
       "WEB_APPLICATION_CLIENT_ID": "mywebapplicationclientid"
     }
   }

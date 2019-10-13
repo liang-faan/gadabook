@@ -28,9 +28,8 @@
       "cordova-plugin-camera": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.1008100519812-0tusqst8sqrr0of61ot30u8muh04lc6t",
-        "WEB_APPLICATION_CLIENT_ID": "mywebapplicationclientid",
-        "PLAY_SERVICES_VERSION": "15.0.1"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.761641708289-ttd7sc03mjkrno4b4vk6m1tru9iiog3i",
+        "WEB_APPLICATION_CLIENT_ID": "mywebapplicationclientid"
       }
     },
     "platforms": [
