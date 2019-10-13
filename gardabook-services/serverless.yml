@@ -51,6 +51,9 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
+          response:
+            headers:
+              Access-Control-Allow-Origin: "'*'"
   submitBooking:
     handler: service/BookingService.submitBooking
     events:
@@ -68,6 +71,9 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
+          response:
+            headers:
+              Access-Control-Allow-Origin: "'*'"
   deleteBooking:
     handler: service/BookingService.deleteBooking
     events:
