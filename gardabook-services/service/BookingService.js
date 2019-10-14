@@ -22,8 +22,7 @@ var _ = require('lodash')
 exports.bookingGET = function(xIntRole, userId) {
 
   var params = {
-    pKey: userId,
-    sKey: userId
+    userId: userId,
   }
 
   return readBooking(params)
