@@ -1,5 +1,5 @@
 const { ddb, tableName } = require("./ddb")
-const { validateProps } = require("./validators/availabilityValidator")
+const { validateProps } = require("./validators/bookingValidator")
 
 // Specify properties available to each operation
 // Modifications should also be updated in generateObj
@@ -268,13 +268,13 @@ const readBooking = async props => {
     return false
   }
 
-  const { bookingBooking } = obj
+  const { userBooking } = obj
 
-  const op1 = new Promise((resolve, reject) => {
+  const b = await new Promise((resolve, reject) => {
     var params = {
       ExpressionAttributeValues: {
         ":v1": {
-          S: bookingBooking.pKey.S
+          S: userBooking.pKey.S
         },
         ":s1": {
           S: "Booking_"
@@ -295,13 +295,45 @@ const readBooking = async props => {
     })
   })
 
-  return Promise.all([op1]).then((res, err) => {
-    if (!err) {
-      return op1
-    } else {
-      return false
-    }
+  let bookings = []
+
+  b.Items.forEach(function (item, index) {
+    const booking = new Promise((resolve, reject) => {
+      var params = {
+        ExpressionAttributeValues: {
+          ":v1": {
+            S: item.sKey.S
+          },
+          ":s1": {
+            S: item.pKey.S
+          }
+        },
+        KeyConditionExpression: "pKey = :v1 and sKey = :s1",
+        TableName: tableName
+      }
+
+      ddb.query(params, (err, data) => {
+        if (err) {
+          console.log(err, err.stack)
+          reject(err)
+        } else {
+          console.log(JSON.stringify(data))
+          resolve(data)
+        }
+      })
+    })
+
+    bookings.push(booking)
   })
+
+  const result = await Promise.all(bookings).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log('Error in promises ${error}')
+  })
+
+  return result
 }
 
 /**
