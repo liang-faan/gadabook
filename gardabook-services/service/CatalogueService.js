@@ -1,5 +1,14 @@
 'use strict';
 
+const { 
+  createCatalogue,
+  readCatalogue,
+  updateCatalogue,
+  deleteCatalogue,
+  readCataloguelist
+} = require("../model/entities/catalogue")
+
+const { newUuid } = require("../utils/uuidGenerator")
 
 /**
  * Add a new catalogue to GardaBook
@@ -10,9 +19,27 @@
  * no response value expected for this operation
  **/
 exports.addCatalogue = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+  var catalogueId = newUuid("Catalogue_")
+
+  var params = {
+    pKey: String(catalogueId),
+    sKey: String(catalogueId),
+    name: String(body.name),
+    currency: String(body.currency),
+    tnc: String(body.tnc),
+    rate: String(body.rate),
+    unit: String(body.unit),
+    remark: String(body.remark),
+    tagId: String(body.tagId),
+    venue: String(body.venue),
+    type: String(body.type),
+    city: String(body.city),
+    address: String(body.address),
+    createdAt: String(Date.now()),
+    updatedAt: String(Date.now())
+  }
+
+  return createCatalogue(params)
 }
 
 

@@ -1,77 +1,62 @@
-'use strict';
+const {
+  createUser,
+  readUser,
+  deleteUser,
+  updateUser
+} = require('../model/entities/user')
 
+const { newUuid } = require('../utils/uuidGenerator')
 
-/**
- * Create user
- * This can only be done by the logged in user.
- *
- * xIntRole String 
- * body User Created user object
- * no response value expected for this operation
- **/
-exports.createUser = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+var _ = require('lodash')
+
+exports.createUser = function (xIntRole, body) {
+
+  var userId = newUuid("User_")
+
+  var params = {
+    pKey: String(userId),
+    sKey: String(userId),
+    userId: String(userId),
+    role: String(body.role),
+    username: String(body.username),
+    password: String(body.password),
+    email: String(body.email),
+    phone: String(body.phone),
+    dob: String(body.dob),
+    gender: String(body.gender),
+    address: String(body.address),
+    status: String(body.status),
+    createdAt: String(Date.now()),
+    updatedAt: String(Date.now()),
+  }
+
+  return createUser(params)
 }
 
 
-/**
- * Delete user
- * This can only be done by the logged in user.
- *
- * xIntRole String 
- * username String The name that needs to be deleted
- * no response value expected for this operation
- **/
-exports.deleteUser = function(xIntRole,username) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+exports.deleteUser = function (xIntRole, userId) {
+
+  var params = {
+    pKey: String(userId),
+    sKey: String(userId)
+  }
+
+  return deleteUser(params)
+
+}
+
+exports.readUser = function (xIntRole, username) {
+
+  var params = {
+    username: username,
+  }
+
+  return readUser(params)
 }
 
 
-/**
- * Get user by user name
- * 
- *
- * xIntRole String 
- * username String The name that needs to be fetched. Use user1 for testing. 
- * returns User
- **/
-exports.getUserByName = function(xIntRole,username) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "firstName" : "firstName",
-  "lastName" : "lastName",
-  "userStatus" : 5,
-  "phone" : "phone",
-  "userId" : 1,
-  "email" : "email",
-  "username" : "username"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+exports.updateUser = function (xIntRole, body) {
 
-
-/**
- * Updated user
- * This can only be done by the logged in user.
- *
- * xIntRole String 
- * body User Updated user object
- * no response value expected for this operation
- **/
-exports.updateUser = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -84,8 +69,8 @@ exports.updateUser = function(xIntRole,body) {
  * password String The password for login in clear text
  * returns String
  **/
-exports.userLogin = function(xIntRole,username,password) {
-  return new Promise(function(resolve, reject) {
+exports.userLogin = function (xIntRole, username, password) {
+  return new Promise(function (resolve, reject) {
     var examples = {};
     examples['application/json'] = "";
     if (Object.keys(examples).length > 0) {
@@ -104,8 +89,8 @@ exports.userLogin = function(xIntRole,username,password) {
  * xIntRole String 
  * no response value expected for this operation
  **/
-exports.userLogout = function(xIntRole) {
-  return new Promise(function(resolve, reject) {
+exports.userLogout = function (xIntRole) {
+  return new Promise(function (resolve, reject) {
     resolve();
   });
 }

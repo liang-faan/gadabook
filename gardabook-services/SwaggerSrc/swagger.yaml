@@ -167,8 +167,7 @@ paths:
         in: "path"
         description: "ID of catalogue to return"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -205,8 +204,7 @@ paths:
         in: "path"
         description: "Catalogue id to delete"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         400:
           description: "Invalid ID supplied"
@@ -237,8 +235,7 @@ paths:
         in: "path"
         description: "ID of catalogue"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -260,7 +257,7 @@ paths:
       - "booking"
       summary: "Place an booking"
       description: ""
-      operationId: "submitBooking"
+      operationId: "createUserBooking"
       produces:
       - "application/xml"
       - "application/json"
@@ -305,8 +302,7 @@ paths:
         in: "query"
         description: "ID of user"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -320,13 +316,13 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "read:booking"
-  /booking/{bookingId}:
+  /booking/{userId}:
     get:
       tags:
       - "booking"
       summary: "Find booking by ID"
       description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
-      operationId: "getOrderById"
+      operationId: "getBooking"
       produces:
       - "application/xml"
       - "application/json"
@@ -336,14 +332,11 @@ paths:
         type: "string"
         default: "retrieve"
         required: true
-      - name: "bookingId"
+      - name: "userId"
         in: "path"
         description: "ID of booking that needs to be fetched"
         required: true
-        type: "integer"
-        maximum: 10.0
-        minimum: 1.0
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -376,9 +369,7 @@ paths:
         in: "path"
         description: "ID of the order that needs to be deleted"
         required: true
-        type: "integer"
-        minimum: 1.0
-        format: "int64"
+        type: "string"
       responses:
         400:
           description: "Invalid ID supplied"
@@ -654,9 +645,9 @@ definitions:
       userId:
         type: "string"
         description: "user id"
-      availabilityId:
+      catalogueId:
         type: "string"
-        description: "availability id"
+        description: "catalogue id"
       date:
         type: "string"
         format: "date-time"
@@ -675,8 +666,7 @@ definitions:
     type: "object"
     properties:
       bookingId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       user:
         $ref: '#/definitions/User'
       catalogue:
@@ -714,8 +704,7 @@ definitions:
     type: "object"
     properties:
       availablityId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       catalogue:
         $ref: "#/definitions/Catalogue"
       date: 
@@ -727,8 +716,7 @@ definitions:
     type: "object"
     properties:
       userId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       username:
         type: "string"
       firstName:
@@ -749,8 +737,7 @@ definitions:
     type: "object"
     properties:
       tagId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       descritpion:
         type: "string"
       status: 
@@ -770,8 +757,7 @@ definitions:
     - "rateUnit"
     properties:
       catalogueId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       tag:
         type: "array"
         xml:
@@ -831,8 +817,7 @@ definitions:
     type: "object"
     properties:
       enrollmentId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       provider:
         $ref: '#/definitions/User'
       catalogue: 

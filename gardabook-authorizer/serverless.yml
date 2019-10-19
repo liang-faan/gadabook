@@ -1,5 +1,5 @@
 
-service: gadabook-authorizer
+service: gardabook-authorizer
 
 provider:
   name: aws

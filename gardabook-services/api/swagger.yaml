@@ -173,8 +173,7 @@ paths:
         in: "path"
         description: "ID of catalogue to return"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -212,8 +211,7 @@ paths:
         in: "path"
         description: "Catalogue id to delete"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         400:
           description: "Invalid ID supplied"
@@ -245,8 +243,7 @@ paths:
         in: "path"
         description: "ID of catalogue"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -269,7 +266,7 @@ paths:
       - "booking"
       summary: "Find booking history by user id"
       description: "Returns booking list of user's"
-      operationId: "bookingGET"
+      operationId: "getUserBooking"
       produces:
       - "application/xml"
       - "application/json"
@@ -283,8 +280,7 @@ paths:
         in: "query"
         description: "ID of user"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -304,7 +300,7 @@ paths:
       - "booking"
       summary: "Place an booking"
       description: ""
-      operationId: "submitBooking"
+      operationId: "createUserBooking"
       produces:
       - "application/xml"
       - "application/json"
@@ -339,7 +335,7 @@ paths:
       summary: "Find booking by ID"
       description: "For valid response try integer IDs with value >= 1 and <= 10.\
         \         Other values will generated exceptions"
-      operationId: "getOrderById"
+      operationId: "getBooking"
       produces:
       - "application/xml"
       - "application/json"
@@ -353,10 +349,7 @@ paths:
         in: "path"
         description: "ID of booking that needs to be fetched"
         required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -391,9 +384,7 @@ paths:
         in: "path"
         description: "ID of the order that needs to be deleted"
         required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
+        type: "string"
       responses:
         400:
           description: "Invalid ID supplied"
@@ -675,7 +666,7 @@ definitions:
     properties:
       userId:
         type: "string"
-      availabilityId:
+      catalogueId:
         type: "string"
       date:
         type: "string"
@@ -695,7 +686,7 @@ definitions:
       name: "NewBooking"
     example:
       userId: "User_1111"
-      availabilityId: "AvailabilityId_111"
+      catalogueId: "Catalogue_111"
       date: "2000-01-23T04:56:07.000+00:00"
       slot: 1
       startTime: "2000-01-23T04:56:07.000+00:00"
@@ -705,8 +696,7 @@ definitions:
     type: "object"
     properties:
       bookingId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       user:
         $ref: "#/definitions/User"
       catalogue:
@@ -759,7 +749,7 @@ definitions:
             lastName: "lastName"
             userStatus: 5
             phone: "phone"
-            userId: 1
+            userId: "1"
             email: "email"
             username: "username"
           rate: 5.63737665663332876420099637471139430999755859375
@@ -781,7 +771,7 @@ definitions:
         lastName: "lastName"
         userStatus: 5
         phone: "phone"
-        userId: 1
+        userId: "1"
         email: "email"
         username: "username"
       bookingId: 0
@@ -797,7 +787,7 @@ definitions:
           lastName: "lastName"
           userStatus: 5
           phone: "phone"
-          userId: 1
+          userId: "1"
           email: "email"
           username: "username"
         rate: 5.63737665663332876420099637471139430999755859375
@@ -818,8 +808,7 @@ definitions:
     type: "object"
     properties:
       availablityId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       catalogue:
         $ref: "#/definitions/Catalogue"
       date:
@@ -842,7 +831,7 @@ definitions:
           lastName: "lastName"
           userStatus: 5
           phone: "phone"
-          userId: 1
+          userId: "1"
           email: "email"
           username: "username"
         rate: 5.63737665663332876420099637471139430999755859375
@@ -861,8 +850,7 @@ definitions:
     type: "object"
     properties:
       userId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       username:
         type: "string"
       firstName:
@@ -884,15 +872,14 @@ definitions:
       lastName: "lastName"
       userStatus: 5
       phone: "phone"
-      userId: 1
+      userId: "1"
       email: "email"
       username: "username"
   Tag:
     type: "object"
     properties:
       tagId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       descritpion:
         type: "string"
       status:
@@ -916,8 +903,7 @@ definitions:
     - "venue"
     properties:
       catalogueId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       tag:
         type: "array"
         xml:
@@ -980,7 +966,7 @@ definitions:
         lastName: "lastName"
         userStatus: 5
         phone: "phone"
-        userId: 1
+        userId: "1"
         email: "email"
         username: "username"
       rate: 5.63737665663332876420099637471139430999755859375
@@ -999,8 +985,7 @@ definitions:
     type: "object"
     properties:
       enrollmentId:
-        type: "integer"
-        format: "int64"
+        type: "string"
       provider:
         $ref: "#/definitions/User"
       catalogue:
@@ -1030,7 +1015,7 @@ definitions:
         lastName: "lastName"
         userStatus: 5
         phone: "phone"
-        userId: 1
+        userId: "1"
         email: "email"
         username: "username"
       startTime: "2000-01-23T04:56:07.000+00:00"
@@ -1047,7 +1032,7 @@ definitions:
           lastName: "lastName"
           userStatus: 5
           phone: "phone"
-          userId: 1
+          userId: "1"
           email: "email"
           username: "username"
         rate: 5.63737665663332876420099637471139430999755859375

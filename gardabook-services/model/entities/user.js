@@ -1,49 +1,6 @@
 const { ddb, tableName } = require("./ddb")
 const { validateProps } = require("./validators/userValidator")
 
-// Specify properties available to each operation
-// Modifications should also be updated in generateObj
-
-const possiblePropKeys = [
-  "pKey",
-  "sKey",
-  "role",
-  "username",
-  "firstName",
-  "lastName",
-  "email",
-  "phone",
-  "dob",
-  "gender",
-  "address",
-  "status",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForCreate = [
-  "pKey",
-  "sKey",
-  "role",
-  "username",
-  "firstName",
-  "lastName",
-  "email",
-  "phone",
-  "dob",
-  "gender",
-  "address",
-  "status",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForRead = ["pKey"]
-
-const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
-
-const requiredPropKeysForDelete = ["pKey", "sKey"]
-
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
