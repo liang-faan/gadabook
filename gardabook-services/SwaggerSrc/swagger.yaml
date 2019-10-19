@@ -316,7 +316,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - "read:booking"
-  /booking/{bookingId}:
+  /booking/{userId}:
     get:
       tags:
       - "booking"
@@ -332,7 +332,7 @@ paths:
         type: "string"
         default: "retrieve"
         required: true
-      - name: "bookingId"
+      - name: "userId"
         in: "path"
         description: "ID of booking that needs to be fetched"
         required: true
@@ -645,9 +645,9 @@ definitions:
       userId:
         type: "string"
         description: "user id"
-      availabilityId:
+      catalogueId:
         type: "string"
-        description: "availability id"
+        description: "catalogue id"
       date:
         type: "string"
         format: "date-time"

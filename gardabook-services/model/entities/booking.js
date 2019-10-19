@@ -8,7 +8,8 @@ const possiblePropKeys = [
   "pKey",
   "sKey",
   "userId",
-  "availabilityId",
+  "transactionId",
+  "catalogueId",
   "startTime",
   "endTime",
   "amount",
@@ -21,7 +22,8 @@ const requiredPropKeysForCreate = [
   "pKey",
   "sKey",
   "userId",
-  "availabilityId",
+  "transactionId",
+  "catalogueId",
   "startTime",
   "endTime",
   "slot",
@@ -34,7 +36,7 @@ const requiredPropKeysForRead = ["pKey"]
 
 const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
 
-const requiredPropKeysForDelete = ["pKey", "sKey"]
+const requiredPropKeysForDelete = ["pKey"]
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
@@ -59,10 +61,16 @@ const generateObj = props => {
       S: String(props.userId)
     }
   }
+  
+  if (props.transactionId) {
+    bookingBooking.transactionId = {
+      S: String(props.transactionId)
+    }
+  }
 
-  if (props.availabilityId) {
-    bookingBooking.availabilityId = {
-      S: String(props.availabilityId)
+  if (props.catalogueId) {
+    bookingBooking.catalogueId = {
+      S: String(props.catalogueId)
     }
   }
 
@@ -123,16 +131,16 @@ const generateObj = props => {
     }
   }
 
-  const availabilityBooking = {
+  const catalogueBooking = {
     pKey: {
-      S: String(props.availabilityId)
+      S: String(props.catalogueId)
     },
     sKey: {
       S: String(props.pKey)
     }
   }
 
-  return { bookingBooking, userBooking, availabilityBooking }
+  return { bookingBooking, userBooking, catalogueBooking }
 }
 
 /**
@@ -169,7 +177,7 @@ const createBooking = async props => {
     return false
   }
 
-  const { bookingBooking, userBooking, availabilityBooking } = obj
+  const { bookingBooking, userBooking, catalogueBooking } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -210,7 +218,7 @@ const createBooking = async props => {
   const op3 = await new Promise((resolve, reject) => {
     const params = {
       Item: {
-        ...availabilityBooking
+        ...catalogueBooking
       },
       TableName: tableName
     }
@@ -273,14 +281,14 @@ const readBooking = async props => {
   const b = await new Promise((resolve, reject) => {
     var params = {
       ExpressionAttributeValues: {
-        ":v1": {
+        ":p1": {
           S: userBooking.pKey.S
         },
         ":s1": {
           S: "Booking_"
         }
       },
-      KeyConditionExpression: "pKey = :v1 and begins_with(sKey, :s1)",
+      KeyConditionExpression: "pKey = :p1 and begins_with(sKey, :s1)",
       TableName: tableName
     }
 
@@ -301,14 +309,14 @@ const readBooking = async props => {
     const booking = new Promise((resolve, reject) => {
       var params = {
         ExpressionAttributeValues: {
-          ":v1": {
+          ":p1": {
             S: item.sKey.S
           },
           ":s1": {
-            S: item.pKey.S
+            S: item.sKey.S
           }
         },
-        KeyConditionExpression: "pKey = :v1 and sKey = :s1",
+        KeyConditionExpression: "pKey = :p1 and sKey = :s1",
         TableName: tableName
       }
 
@@ -433,9 +441,9 @@ const deleteBooking = async props => {
     return false
   }
 
-  const { bookingBooking, userBooking, availabilityBooking } = obj
+  const { bookingBooking } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
+  const bookingBookingResult = await new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
@@ -458,14 +466,14 @@ const deleteBooking = async props => {
     })
   })
 
-  const op2 = await new Promise((resolve, reject) => {
+  const userBookingResult = new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
-          S: userBooking.pKey.S
+          S: bookingBookingResult.userId.S
         },
         sKey: {
-          S: userBooking.sKey.S
+          S: bookingBooking.pKey.S
         }
       },
       TableName: tableName
@@ -481,14 +489,14 @@ const deleteBooking = async props => {
     })
   })
 
-  const op3 = await new Promise((resolve, reject) => {
+  const catalogueBookingResult = new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
-          S: availabilityBooking.pKey.S
+          S: bookingBookingResult.catalogueId.S
         },
         sKey: {
-          S: availabilityBooking.sKey.S
+          S: bookingBooking.pKey.S
         }
       },
       TableName: tableName
@@ -504,7 +512,7 @@ const deleteBooking = async props => {
     })
   })
 
-  return Promise.all([op1, op2]).then((res, err) => {
+  return await Promise.all([userBookingResult, catalogueBookingResult]).then((res, err) => {
     if (!err) {
       return true
     } else {

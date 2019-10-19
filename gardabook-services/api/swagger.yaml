@@ -666,7 +666,7 @@ definitions:
     properties:
       userId:
         type: "string"
-      availabilityId:
+      catalogueId:
         type: "string"
       date:
         type: "string"
@@ -686,7 +686,7 @@ definitions:
       name: "NewBooking"
     example:
       userId: "User_1111"
-      availabilityId: "AvailabilityId_111"
+      catalogueId: "Catalogue_111"
       date: "2000-01-23T04:56:07.000+00:00"
       slot: 1
       startTime: "2000-01-23T04:56:07.000+00:00"

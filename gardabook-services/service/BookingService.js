@@ -39,12 +39,14 @@ exports.bookingGET = function(xIntRole, userId) {
 exports.submitBooking = function(xIntRole, body) {
 
   var bookingId = newUuid("Booking_")
+  var transactionId = newUuid("Transaction_")
   
   var params = {
     pKey: String(bookingId),
-    sKey: String(body.userId),
+    sKey: String(bookingId),
     userId: String(body.userId),
-    availabilityId: String(body.availabilityId),
+    catalogueId: String(body.catalogueId),
+    transactionId: String(transactionId),
     slot: String(body.slot),
     startTime: String(new  Date(body.startTime).getTime()),
     endTime: String(new  Date(body.endTime).getTime()),
@@ -65,10 +67,13 @@ exports.submitBooking = function(xIntRole, body) {
  * bookingId Long ID of the order that needs to be deleted
  * no response value expected for this operation
  **/
-exports.deleteBooking = function(xIntRole,bookingId) {
-  return new Promise(function(resolve, reject) {
-    resolve()
-  })
+exports.deleteBooking = function(xIntRole, bookingId) {
+  var params = {
+    pKey: String(bookingId),
+    sKey: String(bookingId)
+  }
+
+  return deleteBooking(params)
 }
 
 /**
