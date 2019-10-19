@@ -143,3 +143,45 @@ export default connect(
   mapStateToProps,
   {}
 )(injectSheet(styles)(SignIn))
+
+
+// function isAvailable() {
+//   window.plugins.googleplus.isAvailable(function (avail: Object) {
+//     alert(avail)
+//   })
+// }
+
+// function trySilentLogin() {
+//   window.plugins.googleplus.trySilentLogin(
+//     {},
+//     function (obj: Obj) {
+//       const imgElement = document.querySelector('#image') as HTMLImageElement
+//       imgElement.src = obj.imageUrl
+//       imgElement.style.visibility = 'visible'
+//       document.querySelector('#feedback').innerHTML =
+//         'Silent hi, ' + obj.displayName + ', ' + obj.email
+//     },
+//     function (msg: String) {
+//       document.querySelector('#feedback').innerHTML = 'error: ' + msg
+//     }
+//   )
+// }
+// function disconnect() {
+//   window.plugins.googleplus.disconnect(
+//     function (msg: string) {
+//       const imgElement = document.querySelector('#image') as HTMLImageElement
+//       imgElement.style.visibility = 'hidden'
+//       document.querySelector('#feedback').innerHTML = msg
+//     },
+//     function (msg: string) {
+//       document.querySelector('#feedback').innerHTML = msg
+//     }
+//   )
+// }
+// window.onerror = function (what, line, file) {
+//   alert(what + '; ' + line + '; ' + file)
+// }
+// function handleOpenURL(url: String) {
+//   document.querySelector('#feedback').innerHTML =
+//     'App was opened by URL: ' + url
+// }

@@ -1,6 +1,8 @@
 import 'core-js'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Amplify from 'aws-amplify'
+import { withAuthenticator } from 'aws-amplify-react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { HashRouter as Router } from 'react-router-dom'
@@ -9,6 +11,31 @@ import 'normalize.css'
 
 import App from './components/App'
 import rootReducer from './reducers'
+
+Amplify.configure({
+  Auth: {
+    // REQUIRED - Amazon Cognito Region
+    region: 'ap-southeast-1',
+
+    // OPTIONAL - Amazon Cognito User Pool ID
+    userPoolId: 'ap-southeast-1_Yc1XAOUfh',
+
+    // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
+    userPoolWebClientId: '29llvpvj8sqhh8k5o1781p81k1',
+
+    // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
+    mandatorySignIn: false,
+
+    // OPTIONAL - Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
+    authenticationFlowType: 'USER_PASSWORD_AUTH'
+  }
+});
+
+const federated = {
+  google_client_id: '', // Enter your google_client_id here
+  facebook_app_id: '686536215202827', // Enter your facebook_app_id here
+  amazon_client_id: '' // Enter your amazon_client_id here
+};
 
 declare global {
   interface Window {
@@ -27,13 +54,17 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware()))
 
 const reactApp = () => {
-  deviceReady()
-  ReactDOM.render(
-    <Provider store={store}>
+  const _App = () => {
+    return <Provider store={store}>
       <Router>
         <App />
       </Router>
-    </Provider>,
+    </Provider>
+  }
+  deviceReady()
+  const AppWithAuth = withAuthenticator(_App);
+
+  ReactDOM.render(<AppWithAuth federated={federated} />,
     document.getElementById('root')
   )
 }
@@ -55,59 +86,4 @@ function deviceReady() {
   //I get called when everything's ready for the plugin to be called!
   console.log('Device is ready!')
   // login()
-}
-
-function isAvailable() {
-  window.plugins.googleplus.isAvailable(function(avail: Object) {
-    alert(avail)
-  })
-}
-
-function trySilentLogin() {
-  window.plugins.googleplus.trySilentLogin(
-    {},
-    function(obj: Obj) {
-      const imgElement = document.querySelector('#image') as HTMLImageElement
-      imgElement.src = obj.imageUrl
-      imgElement.style.visibility = 'visible'
-      document.querySelector('#feedback').innerHTML =
-        'Silent hi, ' + obj.displayName + ', ' + obj.email
-    },
-    function(msg: String) {
-      document.querySelector('#feedback').innerHTML = 'error: ' + msg
-    }
-  )
-}
-function logout() {
-  window.plugins.googleplus.logout(
-    function(msg: string) {
-      const imgElement = document.querySelector('#image') as HTMLImageElement
-      const feedbackElement = document.querySelector('#feedback')
-      imgElement.style.visibility = 'hidden'
-      feedbackElement.innerHTML = msg
-    },
-    function(msg: string) {
-      const feedbackElement = document.querySelector('#feedback')
-      feedbackElement.innerHTML = msg
-    }
-  )
-}
-function disconnect() {
-  window.plugins.googleplus.disconnect(
-    function(msg: string) {
-      const imgElement = document.querySelector('#image') as HTMLImageElement
-      imgElement.style.visibility = 'hidden'
-      document.querySelector('#feedback').innerHTML = msg
-    },
-    function(msg: string) {
-      document.querySelector('#feedback').innerHTML = msg
-    }
-  )
-}
-window.onerror = function(what, line, file) {
-  alert(what + '; ' + line + '; ' + file)
-}
-function handleOpenURL(url: String) {
-  document.querySelector('#feedback').innerHTML =
-    'App was opened by URL: ' + url
 }
