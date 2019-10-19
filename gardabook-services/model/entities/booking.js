@@ -453,6 +453,7 @@ const deleteBooking = async props => {
           S: bookingBooking.sKey.S
         }
       },
+      ReturnValues: "ALL_OLD",
       TableName: tableName
     }
     ddb.deleteItem(params, (err, data) => {
@@ -466,11 +467,13 @@ const deleteBooking = async props => {
     })
   })
 
+  let ops = []
+
   const userBookingResult = new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
-          S: bookingBookingResult.userId.S
+          S: bookingBookingResult.Attributes.userId.S
         },
         sKey: {
           S: bookingBooking.pKey.S
@@ -493,7 +496,7 @@ const deleteBooking = async props => {
     const params = {
       Key: {
         pKey: {
-          S: bookingBookingResult.catalogueId.S
+          S: bookingBookingResult.Attributes.catalogueId.S
         },
         sKey: {
           S: bookingBooking.pKey.S
