@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons'
 import { faFacebookSquare, faGoogle } from '@fortawesome/free-brands-svg-icons'
 
+import { webClientId } from '../settings'
 import styles from './styles/SignIn'
 import { Props, State } from './datatypes/SignIn'
 import logoIcon from './images/logo-icon.png'
@@ -14,7 +15,8 @@ class SignIn extends Component<Props, State> {
   onClickGoogleLogin = () => {
     const params = {
       scopes: 'profile email',
-      webClientId: '761641708289-pg9crt5nlegplum9d82rbfn4vb643iks.apps.googleusercontent.com'
+      webClientId: webClientId,
+      offline: true
     }
     const onSuccess = (data: Object) => {
       console.log('SUCCESSFUL LOGIN')
@@ -24,8 +26,21 @@ class SignIn extends Component<Props, State> {
       console.log('FAILED LOGIN')
       console.log(msg)
     }
-    window.plugins.googleplus.trySilentLogin(params, onSuccess, onFailure)
-    // window.plugins.googleplus.login(params, onSuccess, onFailure)
+    // window.plugins.googleplus.trySilentLogin(params, onSuccess, onFailure)
+    window.plugins.googleplus.login(params, onSuccess, onFailure)
+  }
+
+
+  onClickGoogleLogout = () => {
+    const onSuccess = (data: Object) => {
+      console.log('SUCCESSFUL LOGIN')
+      console.log(JSON.stringify(data))
+    }
+    const onFailure = (msg: Object) => {
+      console.log('FAILED LOGIN')
+      console.log(msg)
+    }
+    window.plugins.googleplus.logout(onSuccess, onFailure)
   }
 
   render() {
@@ -99,7 +114,7 @@ class SignIn extends Component<Props, State> {
 
     const SignUp = () => {
       return (
-        <div>
+        <div onClick={this.onClickGoogleLogout}>
           No account yet?&nbsp;
           <span className={classes.link}>SIGN UP</span>
         </div>
