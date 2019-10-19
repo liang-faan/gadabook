@@ -1,49 +1,12 @@
 const { ddb, tableName } = require("./ddb")
-const { validateProps } = require("./validators/bookingValidator")
-
-// Specify properties available to each operation
-// Modifications should also be updated in generateObj
-
-const possiblePropKeys = [
-  "pKey",
-  "sKey",
-  "userId",
-  "transactionId",
-  "catalogueId",
-  "startTime",
-  "endTime",
-  "amount",
-  "slot",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForCreate = [
-  "pKey",
-  "sKey",
-  "userId",
-  "transactionId",
-  "catalogueId",
-  "startTime",
-  "endTime",
-  "slot",
-  "amount",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForRead = ["pKey"]
-
-const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
-
-const requiredPropKeysForDelete = ["pKey"]
+const { validateProps, requiredPropKeyEnum } = require("./validators/bookingValidator")
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
  */
-const generateObj = props => {
-  if (!validateProps(props)) {
+const generateObj = (props, requiredPropKeys) => {
+  if (!validateProps(props, requiredPropKeys)) {
     return false
   }
 
@@ -148,31 +111,7 @@ const generateObj = props => {
  * @returns {Promise.<boolean>}
  */
 const createBooking = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForCreate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.CREATE)
   if (!obj) {
     return false
   }
@@ -247,31 +186,7 @@ const createBooking = async props => {
  * @returns {Promise.<object>}
  */
 const readBooking = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForRead]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
     return false
   }
@@ -349,31 +264,7 @@ const readBooking = async props => {
  * @returns {Promise.<boolean>}
  */
 const updateBooking = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForUpdate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.UPADTE)
   if (!obj) {
     return false
   }
@@ -412,31 +303,100 @@ const updateBooking = async props => {
  * @returns {Promise.<boolean>}
  */
 const deleteBooking = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForDelete]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
+  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
+  if (!obj) {
     return false
   }
 
-  // Create API payload and call
-  const obj = generateObj(props)
+  const { bookingBooking } = obj
+
+  const bookingBookingResult = await new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: bookingBooking.pKey.S
+        },
+        sKey: {
+          S: bookingBooking.sKey.S
+        }
+      },
+      ReturnValues: "ALL_OLD",
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  let ops = []
+
+  const userBookingResult = new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: bookingBookingResult.Attributes.userId.S
+        },
+        sKey: {
+          S: bookingBooking.pKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  const catalogueBookingResult = new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: bookingBookingResult.Attributes.catalogueId.S
+        },
+        sKey: {
+          S: bookingBooking.pKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return await Promise.all([userBookingResult, catalogueBookingResult]).then((res, err) => {
+    if (!err) {
+      return true
+    } else {
+      return false
+    }
+  })
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for update
+ * @returns {Promise.<boolean>}
+ */
+const deleteUserBooking = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
   if (!obj) {
     return false
   }
@@ -529,5 +489,6 @@ module.exports = {
   createBooking,
   readBooking,
   updateBooking,
-  deleteBooking
+  deleteBooking,
+  deleteUserBooking
 }

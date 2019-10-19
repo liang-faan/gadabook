@@ -35,7 +35,7 @@ functions:
   #             - X-Api-Key
   #             - X-Amz-Security-Token
   getBookingByUserId:
-    handler: service/BookingService.bookingGET
+    handler: service/BookingService.getUserBooking
     events:
       - http:
           path: v1/booking/getBookingByUserId
@@ -54,11 +54,11 @@ functions:
           response:
             headers:
               Access-Control-Allow-Origin: "'*'"
-  submitBooking:
-    handler: service/BookingService.submitBooking
+  createUserBooking:
+    handler: service/BookingService.createUserBooking
     events:
       - http:
-          path: v1/booking/submitBooking
+          path: v1/booking/createUserBooking
           method: post
           # authorizer: auth
           integration: lambda

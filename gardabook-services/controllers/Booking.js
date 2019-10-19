@@ -3,10 +3,10 @@
 var utils = require('../utils/writer.js');
 var Booking = require('../service/BookingService');
 
-module.exports.bookingGET = function bookingGET (req, res, next) {
+module.exports.getUserBooking = function getUserBooking (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var userId = req.swagger.params['userId'].value;
-  Booking.bookingGET(xIntRole,userId)
+  Booking.getUserBooking(xIntRole,userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -39,10 +39,10 @@ module.exports.getOrderById = function getOrderById (req, res, next) {
     });
 };
 
-module.exports.submitBooking = function submitBooking (req, res, next) {
+module.exports.createUserBooking = function createUserBooking (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var body = req.swagger.params['body'].value;
-  Booking.submitBooking(xIntRole,body)
+  Booking.createUserBooking(xIntRole,body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

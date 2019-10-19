@@ -257,7 +257,7 @@ paths:
       - "booking"
       summary: "Place an booking"
       description: ""
-      operationId: "submitBooking"
+      operationId: "createUserBooking"
       produces:
       - "application/xml"
       - "application/json"
