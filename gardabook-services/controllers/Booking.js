@@ -27,10 +27,10 @@ module.exports.deleteBooking = function deleteBooking (req, res, next) {
     });
 };
 
-module.exports.getOrderById = function getOrderById (req, res, next) {
+module.exports.getBooking = function getBooking (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var bookingId = req.swagger.params['bookingId'].value;
-  Booking.getOrderById(xIntRole,bookingId)
+  Booking.getBooking(xIntRole,bookingId)
     .then(function (response) {
       utils.writeJson(res, response);
     })

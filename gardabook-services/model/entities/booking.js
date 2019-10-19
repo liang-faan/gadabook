@@ -5,8 +5,8 @@ const { validateProps, requiredPropKeyEnum } = require("./validators/bookingVali
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
  */
-const generateObj = (props, requiredPropKeys) => {
-  if (!validateProps(props, requiredPropKeys)) {
+const generateObj = (props, validateOption) => {
+  if (!validateProps(props, validateOption)) {
     return false
   }
 
@@ -185,7 +185,7 @@ const createBooking = async props => {
  * @param {Object.<string, any>} props An object containing the relevant properties for read
  * @returns {Promise.<object>}
  */
-const readBooking = async props => {
+const readUserBooking = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
     return false
@@ -253,7 +253,54 @@ const readBooking = async props => {
     return data
   })
   .catch(error => {
-    console.log('Error in promises ${error}')
+    console.log(error)
+  })
+
+  return result
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
+ * @returns {Promise.<object>}
+ */
+const readBooking = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
+  if (!obj) {
+    return false
+  }
+
+  const { bookingBooking } = obj
+
+  const bookingResult = new Promise((resolve, reject) => {
+    const params = {
+      ExpressionAttributeValues: {
+        ":p1": {
+          S: bookingBooking.pKey.S
+        },
+        ":s1": {
+          S: bookingBooking.sKey.S
+        }
+      },
+      KeyConditionExpression: "pKey = :p1 and sKey = :s1",
+      TableName: tableName
+    }
+
+    ddb.query(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(JSON.stringify(data))
+        resolve(data)
+      }
+    })
+  })
+
+  const result = await Promise.all([bookingResult]).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log(error)
   })
 
   return result
@@ -391,104 +438,11 @@ const deleteBooking = async props => {
   })
 }
 
-/**
- * @param {Object.<string, any>} props An object containing the relevant properties for update
- * @returns {Promise.<boolean>}
- */
-const deleteUserBooking = async props => {
-  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
-  if (!obj) {
-    return false
-  }
-
-  const { bookingBooking } = obj
-
-  const bookingBookingResult = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: bookingBooking.pKey.S
-        },
-        sKey: {
-          S: bookingBooking.sKey.S
-        }
-      },
-      ReturnValues: "ALL_OLD",
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
-  let ops = []
-
-  const userBookingResult = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: bookingBookingResult.Attributes.userId.S
-        },
-        sKey: {
-          S: bookingBooking.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
-  const catalogueBookingResult = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: bookingBookingResult.Attributes.catalogueId.S
-        },
-        sKey: {
-          S: bookingBooking.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
-  return await Promise.all([userBookingResult, catalogueBookingResult]).then((res, err) => {
-    if (!err) {
-      return true
-    } else {
-      return false
-    }
-  })
-}
-
 module.exports = {
   generateBookingObject: generateObj,
   createBooking,
+  readUserBooking,
   readBooking,
   updateBooking,
-  deleteBooking,
-  deleteUserBooking
+  deleteBooking
 }
