@@ -11,6 +11,23 @@ import { Props, State } from './datatypes/SignIn'
 import logoIcon from './images/logo-icon.png'
 
 class SignIn extends Component<Props, State> {
+  onClickGoogleLogin = () => {
+    const params = {
+      scopes: 'profile email',
+      webClientId: '761641708289-pg9crt5nlegplum9d82rbfn4vb643iks.apps.googleusercontent.com'
+    }
+    const onSuccess = (data: Object) => {
+      console.log('SUCCESSFUL LOGIN')
+      console.log(JSON.stringify(data))
+    }
+    const onFailure = (msg: Object) => {
+      console.log('FAILED LOGIN')
+      console.log(msg)
+    }
+    window.plugins.googleplus.trySilentLogin(params, onSuccess, onFailure)
+    // window.plugins.googleplus.login(params, onSuccess, onFailure)
+  }
+
   render() {
     const { classes } = this.props
 
@@ -72,7 +89,7 @@ class SignIn extends Component<Props, State> {
             <FontAwesomeIcon icon={faFacebookSquare} size={'2x'} />
             <div className={classes.signInText}>SIGN IN WITH FACEBOOK</div>
           </div> */}
-          <div className={classes.google}>
+          <div className={classes.google} onClick={this.onClickGoogleLogin}>
             <FontAwesomeIcon icon={faGoogle} size={'2x'} />
             <div className={classes.signInText}>SIGN IN WITH GOOGLE</div>
           </div>
@@ -95,8 +112,8 @@ class SignIn extends Component<Props, State> {
           <Logo />
           <SignInForm />
           <ForgetPassword />
-          <SignInButtons />
-          <SignUp />
+          {window.plugins && window.plugins.googleplus && <SignInButtons />}
+          {window.plugins && window.plugins.googleplus && <SignUp />}
         </div>
       </div>
     )

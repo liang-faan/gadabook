@@ -54,7 +54,7 @@ if (window.cordova) {
 function deviceReady() {
   //I get called when everything's ready for the plugin to be called!
   console.log('Device is ready!')
-  login()
+  // login()
 }
 
 function isAvailable() {
@@ -62,21 +62,7 @@ function isAvailable() {
     alert(avail)
   })
 }
-function login() {
-  window.plugins.googleplus.login(
-    {},
-    function(obj: Obj) {
-      const imgElement = document.querySelector('#image') as HTMLImageElement
-      imgElement.src = obj.imageUrl
-      imgElement.style.visibility = 'visible'
-      document.querySelector('#feedback').innerHTML =
-        'Hi, ' + obj.displayName + ', ' + obj.email + JSON.stringify(obj)
-    },
-    function(msg: Object) {
-      document.querySelector('#feedback').innerHTML = 'error: ' + msg
-    }
-  )
-}
+
 function trySilentLogin() {
   window.plugins.googleplus.trySilentLogin(
     {},
