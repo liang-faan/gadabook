@@ -1,11 +1,9 @@
   const { 
-  generateBookingObject, 
   createBooking, 
   readUserBooking,
   readBooking, 
   updateBooking, 
   deleteBooking,
-  deleteUserBooking
 } = require("../model/entities/booking")
 
 const { newUuid } = require("../utils/uuidGenerator")

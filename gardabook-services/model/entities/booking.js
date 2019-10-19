@@ -439,7 +439,6 @@ const deleteBooking = async props => {
 }
 
 module.exports = {
-  generateBookingObject: generateObj,
   createBooking,
   readUserBooking,
   readBooking,
