@@ -210,11 +210,28 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  getEnrollmentByProviderId:
-    handler: service/EnrollmentService.getEnrollmentByProviderId
+  getUserEnrollment:
+    handler: service/EnrollmentService.getUserEnrollment
     events:
       - http:
-          path: v1/enrollment/getEnrollmentByProviderId
+          path: v1/enrollment/getUserEnrollment
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+  getEnrollment:
+    handler: service/EnrollmentService.getEnrollment
+    events:
+      - http:
+          path: v1/enrollment/getEnrollment
           method: get
           # authorizer: auth
           integration: lambda

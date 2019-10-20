@@ -581,10 +581,44 @@ paths:
       - "read:user"
       x-swagger-router-controller: "User"
   /enrollment:
+    get:
+      tags:
+      - "enrollment"
+      summary: "Find enrollment by user id"
+      description: "Returns enrollment list of te user"
+      operationId: "getUserEnrollment"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "x-int-role"
+        in: "header"
+        required: true
+        type: "string"
+        default: "retrieve"
+      - name: "userId"
+        in: "query"
+        description: "ID of user"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Enrollment"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Enrollment not found"
+      security:
+      - Bearer: []
+      x-security-scopes:
+      - "read:enrollment"
+      x-swagger-router-controller: "Enrollment"
     post:
       tags:
       - "enrollment"
-      summary: "Create an enrollemnt"
+      summary: "Create an enrollment"
       description: "This can only be done by the enrolled user."
       operationId: "createEnrollment"
       produces:
@@ -610,13 +644,13 @@ paths:
       x-security-scopes:
       - "write:enrollment"
       x-swagger-router-controller: "Enrollment"
-  /enrollment/{providerId}:
+  /enrollment/{enrollmentId}:
     get:
       tags:
       - "enrollment"
-      summary: "get enrollemnt by providerId"
-      description: "This can only be done by the enrolled user."
-      operationId: "getEnrollmentByProviderId"
+      summary: "get enrollemnt by enrollment Id"
+      description: ""
+      operationId: "getEnrollment"
       produces:
       - "application/xml"
       - "application/json"
@@ -626,9 +660,9 @@ paths:
         required: true
         type: "string"
         default: "retrieve"
-      - name: "providerId"
+      - name: "enrollmentId"
         in: "path"
-        description: "the provider id of enrollment"
+        description: "the user id of enrollment"
         required: true
         type: "string"
       responses:

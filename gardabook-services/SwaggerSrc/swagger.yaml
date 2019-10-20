@@ -568,10 +568,43 @@ paths:
         - "write:user"
         - "read:user"
   /enrollment:
+  get:
+      tags:
+      - "enrollment"
+      summary: "Find enrollment by user id"
+      description: "Returns enrollment list of te user"
+      operationId: "getUserEnrollment"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "x-int-role"
+        in: "header"
+        required: true
+        type: "string"
+        default: "retrieve"
+      - name: "userId"
+        in: "query"
+        description: "ID of user"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Enrollment"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Enrollment not found"
+      security:
+      - Bearer: []
+      x-security-scopes:
+      - "read:enrollment"
     post:
       tags:
       - "enrollment"
-      summary: "Create an enrollemnt"
+      summary: "Create an enrollment"
       description: "This can only be done by the enrolled user."
       operationId: "createEnrollment"
       produces:
@@ -597,27 +630,27 @@ paths:
       x-security-scopes:
         - "write:enrollment"
         # - "read:enrollment"
-  /enrollment/{providerId}:
-    get: 
+  /enrollment/{enrollmentId}:
+    get:
       tags:
       - "enrollment"
-      summary: "get enrollemnt by providerId"
-      description: "This can only be done by the enrolled user."
-      operationId: "getEnrollmentByProviderId"
+      summary: "get enrollemnt by enrollment Id"
+      description: ""
+      operationId: "getEnrollment"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "retrieve"
+      - name: "enrollmentId"
+        in: "path"
+        description: "the user id of enrollment"
         required: true
-      - in: "path"
         type: "string"
-        name: "providerId"
-        description: "the provider id of enrollment"
-        required: true
       responses:
         200:
           description: "successful operation"
@@ -625,13 +658,13 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Enrollment"
-        404: 
+        404:
           description: "No enrollment found on current provider"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:enrollment"
-        - "read:enrollment"  
+      - "write:enrollment"
+      - "read:enrollment"
 securityDefinitions:
   Bearer:
     type: "apiKey"

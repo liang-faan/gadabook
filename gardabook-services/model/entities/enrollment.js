@@ -163,46 +163,25 @@ const createEnrollment = async props => {
  * @param {Object.<string, any>} props An object containing the relevant properties for read
  * @returns {Promise.<object>}
  */
-const readEnrollment = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForRead]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+const readUserEnrollment = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
     return false
   }
 
-  const { enrollmentEnrollment } = obj
+  const { userEnrollment } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
+  const b = await new Promise((resolve, reject) => {
     var params = {
       ExpressionAttributeValues: {
-        ":v1": {
-          S: enrollmentEnrollment.pKey.S
+        ":p1": {
+          S: userEnrollment.pKey.S
+        },
+        ":s1": {
+          S: "Enrollment_"
         }
       },
-      KeyConditionExpression: "pKey = :v1",
+      KeyConditionExpression: "pKey = :p1 and begins_with(sKey, :s1)",
       TableName: tableName
     }
 
@@ -217,13 +196,92 @@ const readEnrollment = async props => {
     })
   })
 
-  return Promise.all([op1]).then((res, err) => {
-    if (!err) {
-      return op1
-    } else {
-      return false
-    }
+  let enrollments = []
+
+  b.Items.forEach(function (item, index) {
+    const enrollment = new Promise((resolve, reject) => {
+      var params = {
+        ExpressionAttributeValues: {
+          ":p1": {
+            S: item.sKey.S
+          },
+          ":s1": {
+            S: item.sKey.S
+          }
+        },
+        KeyConditionExpression: "pKey = :p1 and sKey = :s1",
+        TableName: tableName
+      }
+
+      ddb.query(params, (err, data) => {
+        if (err) {
+          console.log(err, err.stack)
+          reject(err)
+        } else {
+          console.log(JSON.stringify(data))
+          resolve(data)
+        }
+      })
+    })
+
+    enrollments.push(enrollment)
   })
+
+  const result = await Promise.all(enrollments).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+  return result
+}
+
+/**
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
+ * @returns {Promise.<object>}
+ */
+const readEnrollment = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
+  if (!obj) {
+    return false
+  }
+
+  const { enrollmentEnrollment } = obj
+
+  const enrollmentResult = new Promise((resolve, reject) => {
+    const params = {
+      ExpressionAttributeValues: {
+        ":p1": {
+          S: enrollmentEnrollment.pKey.S
+        },
+        ":s1": {
+          S: enrollmentEnrollment.sKey.S
+        }
+      },
+      KeyConditionExpression: "pKey = :p1 and sKey = :s1",
+      TableName: tableName
+    }
+
+    ddb.query(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(JSON.stringify(data))
+        resolve(data)
+      }
+    })
+  })
+
+  const result = await Promise.all([enrollmentResult]).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+  return result
 }
 
 /**
@@ -382,6 +440,7 @@ const deleteEnrollment = async props => {
 
 module.exports = {
   createEnrollment,
+  readUserEnrollment,
   readEnrollment,
   updateEnrollment,
   deleteEnrollment
