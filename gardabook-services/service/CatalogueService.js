@@ -3,6 +3,7 @@
 const { 
   createCatalogue,
   readCatalogues,
+  readCatalogue,
   updateCatalogue,
   deleteCatalogue,
   readCataloguelist
@@ -60,7 +61,7 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
 
 
 /**
- * Finds catalogue by tags or providers
+ * Finds catalogue by tags
  * Multiple tag values can be provided with comma separated strings
  *
  * xIntRole String 
@@ -69,7 +70,7 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * returns List
  **/
 exports.readCatalogueByTags = function(xIntRole, tags) {
-  return readCatalogueWithFilter(tags)
+  return readCatalogueByGsiKeys(tags)
 }
 
 
@@ -82,11 +83,11 @@ exports.readCatalogueByTags = function(xIntRole, tags) {
  * returns List
  **/
 exports.readCatalogueByAvailabilityId = function(xIntRole, availabilityId) {
-  return readCatalogueWithFilter(availabilityId)
+  return readCatalogueByGsiKeys(availabilityId)
 }
 
-const readCatalogueWithFilter = (filters) => {
-  var list = String(filters).split(',');
+const readCatalogueByGsiKeys = (keys) => {
+  var list = String(keys).split(',');
 
   var results = []
 
@@ -115,46 +116,13 @@ const readCatalogueWithFilter = (filters) => {
  * catalogueId Long ID of catalogue to return
  * returns Catalogue
  **/
-exports.getCatalogueById = function(xIntRole,catalogueId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "venue" : "venue",
-  "catalogueId" : 0,
-  "address" : "address",
-  "city" : "city",
-  "rateUnit" : "Minute",
-  "remark" : "remark",
-  "provider" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "rate" : 5.63737665663332876420099637471139430999755859375,
-  "terms" : "terms",
-  "name" : "NUS ISS Meeting Room#5",
-  "currency" : "SGD",
-  "tag" : [ {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  }, {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  } ],
-  "status" : "Open"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.readCatalogue = function(xIntRole, catalogueId) {
+  var params = {
+    pKey: String(catalogueId),
+    sKey: String(catalogueId),
+  }
+
+  return readCatalogue(params)
 }
 
 

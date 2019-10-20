@@ -52,10 +52,10 @@ module.exports.readCatalogueByAvailabilityId = function readCatalogueByAvailabil
     });
 };
 
-module.exports.getCatalogueById = function getCatalogueById (req, res, next) {
+module.exports.readCatalogue = function readCatalogue (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var catalogueId = req.swagger.params['catalogueId'].value;
-  Catalogue.getCatalogueById(xIntRole,catalogueId)
+  Catalogue.readCatalogue(xIntRole,catalogueId)
     .then(function (response) {
       utils.writeJson(res, response);
     })

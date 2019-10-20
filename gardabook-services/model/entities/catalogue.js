@@ -281,6 +281,53 @@ const readCatalogues = async props => {
 }
 
 /**
+ * @param {Object.<string, any>} props An object containing the relevant properties for read
+ * @returns {Promise.<object>}
+ */
+const readCatalogue = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
+  if (!obj) {
+    return false
+  }
+
+  const { keyCatalogue } = obj
+
+  const op1 = new Promise((resolve, reject) => {
+    const params = {
+      ExpressionAttributeValues: {
+        ":p1": {
+          S: keyCatalogue.pKey.S
+        },
+        ":s1": {
+          S: keyCatalogue.sKey.S
+        }
+      },
+      KeyConditionExpression: "pKey = :p1 and sKey = :s1",
+      TableName: tableName
+    }
+
+    ddb.query(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(JSON.stringify(data))
+        resolve(data)
+      }
+    })
+  })
+
+  const result = await Promise.all([op1]).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+  return result
+}
+
+/**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Promise.<boolean>}
  */
@@ -524,6 +571,7 @@ const readCataloguelist = async props => {
 module.exports = {
   createCatalogue,
   readCatalogues,
+  readCatalogue,
   updateCatalogue,
   deleteCatalogue,
   readCataloguelist
