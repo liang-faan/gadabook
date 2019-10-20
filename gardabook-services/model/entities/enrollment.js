@@ -1,44 +1,21 @@
 const { ddb, tableName } = require("./ddb")
-const { validateProps } = require("./validators/enrollmentValidator")
-
-// Specify properties available to each operation
-// Modifications should also be updated in generateObj
-
-const possiblePropKeys = [
-  "pKey",
-  "sKey",
-  "userId",
-  "catalogueId",
-  "expiryDate",
-  "fee",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForCreate = [
-  "pKey",
-  "sKey",
-  "userId",
-  "catalogueId",
-  "expiryDate",
-  "fee",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForRead = ["pKey"]
-
-const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
-
-const requiredPropKeysForDelete = ["pKey", "sKey"]
+const { validateProps, requiredPropKeyEnum } = require("./validators/enrollmentValidator")
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
  */
-const generateObj = props => {
-  if (!validateProps(props)) {
+const generateObj = (props, validateOption) => {
+  if (!validateProps(props, validateOption)) {
     return false
+  }
+  const keyEnrollment = {
+    pKey: {
+      S: props.pKey
+    },
+    sKey: {
+      S: props.sKey
+    }
   }
 
   const enrollmentEnrollment = {
@@ -95,7 +72,16 @@ const generateObj = props => {
     }
   }
 
-  return { enrollmentEnrollment, userEnrollment }
+  const catalogueEnrollment = {
+    pKey: {
+      S: props.catalogueId
+    },
+    sKey: {
+      S: props.pKey
+    }
+  }
+
+  return { enrollmentEnrollment, userEnrollment, catalogueEnrollment, keyEnrollment }
 }
 
 /**
@@ -103,36 +89,12 @@ const generateObj = props => {
  * @returns {Promise.<boolean>}
  */
 const createEnrollment = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForCreate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.CREATE)
   if (!obj) {
     return false
   }
 
-  const { enrollmentEnrollment, userEnrollment, enrollmentCatalogue } = obj
+  const { enrollmentEnrollment, userEnrollment, catalogueEnrollment } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -170,7 +132,25 @@ const createEnrollment = async props => {
     })
   })
 
-  return Promise.all([op1, op2]).then((res, err) => {
+  const op3 = await new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...catalogueEnrollment
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
+      } else {
+        console.log(data)
+        resolve()
+      }
+    })
+  })
+
+  return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -401,7 +381,6 @@ const deleteEnrollment = async props => {
 }
 
 module.exports = {
-  generateEnrollmentObject: generateObj,
   createEnrollment,
   readEnrollment,
   updateEnrollment,

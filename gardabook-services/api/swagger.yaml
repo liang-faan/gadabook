@@ -601,7 +601,7 @@ paths:
         description: "Created enrollement object"
         required: true
         schema:
-          $ref: "#/definitions/Enrollment"
+          $ref: "#/definitions/NewEnrollment"
       responses:
         default:
           description: "successful operation"
@@ -1102,6 +1102,26 @@ definitions:
         descritpion: "descritpion"
         status: "Active"
       status: "Open"
+  NewEnrollment:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+      catalogueId:
+        type: "string"
+      expiryDate:
+        type: "string"
+        format: "date"
+      fee:
+        type: "number"
+        format: "currency"
+    xml:
+      name: "NewEnrollment"
+    example:
+      expiryDate: "2000-01-23"
+      userId: "User_111"
+      catalogueId: "Catalogue_111"
+      fee: 1.5
   Enrollment:
     type: "object"
     properties:
