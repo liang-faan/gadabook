@@ -32,8 +32,8 @@ Amplify.configure({
 });
 
 const federated = {
-  google_client_id: '', // Enter your google_client_id here
-  facebook_app_id: '686536215202827', // Enter your facebook_app_id here
+  google_client_id: '761641708289-ttd7sc03mjkrno4b4vk6m1tru9iiog3i.apps.googleusercontent.com', // Enter your google_client_id here
+  // facebook_app_id: '686536215202827', // Enter your facebook_app_id here
   amazon_client_id: '' // Enter your amazon_client_id here
 };
 
@@ -64,7 +64,10 @@ const reactApp = () => {
   deviceReady()
   const AppWithAuth = withAuthenticator(_App);
 
-  ReactDOM.render(<AppWithAuth federated={federated} />,
+  // ReactDOM.render(<AppWithAuth federated={federated} />,
+  //   document.getElementById('root')
+  // )
+  ReactDOM.render(<_App />,
     document.getElementById('root')
   )
 }

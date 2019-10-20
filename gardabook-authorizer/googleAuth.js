@@ -1,11 +1,10 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
+const jwk = require('jsonwebtoken');
 const jwkToPem = require('jwk-to-pem');
 const request = require('request');
 
-// For AWS Cognito: https://cognito-idp.<region>.amazonaws.com/<user pool id>
-const iss = 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_aBjWtf10v';
+const allowedOidcDiscoveryUrls = ['https://accounts.google.com/.well-known/openid-configuration']
 
 // Generate policy to allow this user on this API:
 const generatePolicy = (principalId, effect, resource) => {
@@ -57,7 +56,7 @@ module.exports.authorize = (event, context, cb) => {
         const pem = jwkToPem(jwkArray);
 
         // Verify the token:
-        jwt.verify(token, pem, { issuer: iss }, (err, decoded) => {
+        jwk.verify(token, pem, { issuer: iss }, (err, decoded) => {
           if (err) {
             console.log('Unauthorized user:', err.message);
             cb('Unauthorized Access');

@@ -1,0 +1,13 @@
+{
+  "sub": "63b1f468-bb63-4fd2-b53d-0bc0c2a92c96",
+  "event_id": "bb14677c-fa5d-485e-9ebb-017bd6535178",
+  "token_use": "access",
+  "scope": "aws.cognito.signin.user.admin",
+  "auth_time": 1571572388,
+  "iss": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_Yc1XAOUfh",
+  "exp": 1571575988,
+  "iat": 1571572388,
+  "jti": "3b5382b7-d45d-475b-9abd-3d3e870127ed",
+  "client_id": "29llvpvj8sqhh8k5o1781p81k1",
+  "username": "asdf"
+}
