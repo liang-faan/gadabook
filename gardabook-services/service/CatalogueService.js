@@ -69,7 +69,7 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * returns List
  **/
 exports.readCatalogueByTags = function(xIntRole, tags) {
-  return readCatalogueWithList(tags)
+  return readCatalogueWithFilter(tags)
 }
 
 
@@ -82,10 +82,10 @@ exports.readCatalogueByTags = function(xIntRole, tags) {
  * returns List
  **/
 exports.readCatalogueByAvailabilityId = function(xIntRole, availabilityId) {
-  return readCatalogueWithList(availabilityId)
+  return readCatalogueWithFilter(availabilityId)
 }
 
-const readCatalogueWithList = (filters) => {
+const readCatalogueWithFilter = (filters) => {
   var list = String(filters).split(',');
 
   var results = []
