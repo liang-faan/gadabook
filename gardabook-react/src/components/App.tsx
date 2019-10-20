@@ -63,7 +63,7 @@ class App extends Component<Props & RouteProps, State> {
                 >
                   <Switch location={location}>
                     {/* <Splash /> */}
-                    {/* <SignIn /> */}
+                    <SignIn />
                     {/* <SignUp /> */}
                     {/* <SignUpSuccess /> */}
 

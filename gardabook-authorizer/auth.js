@@ -1,6 +1,6 @@
 'use strict';
 
-const jwk = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const jwkToPem = require('jwk-to-pem');
 const request = require('request');
 
@@ -31,11 +31,11 @@ module.exports.authorize = (event, context, cb) => {
   console.log('Auth function invoked');
   if (event.authorizationToken) {
     // Remove 'Bearer ' from token:
-    var token =  event.authorizationToken;
-    if(token.startsWith("Bearer")||token.startsWith("bearer")){
-      token= token.substring(6).trim();
+    var token = event.authorizationToken;
+    if (token.startsWith("Bearer") || token.startsWith("bearer")) {
+      token = token.substring(6).trim();
     }
-    
+
     console.log(token);
     // Make a request to the iss + .well-known/jwks.json URL:
     request(
@@ -57,7 +57,7 @@ module.exports.authorize = (event, context, cb) => {
         const pem = jwkToPem(jwkArray);
 
         // Verify the token:
-        jwk.verify(token, pem, { issuer: iss }, (err, decoded) => {
+        jwt.verify(token, pem, { issuer: iss }, (err, decoded) => {
           if (err) {
             console.log('Unauthorized user:', err.message);
             cb('Unauthorized Access');
