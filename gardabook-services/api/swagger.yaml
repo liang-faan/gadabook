@@ -106,7 +106,7 @@ paths:
         description: "Catalogue object that needs to be added to the system"
         required: true
         schema:
-          $ref: "#/definitions/Catalogue"
+          $ref: "#/definitions/NewCatalogue"
       responses:
         405:
           description: "Invalid input"
@@ -894,6 +894,67 @@ definitions:
       tagId: 6
       descritpion: "descritpion"
       status: "Active"
+  NewCatalogue:
+    type: "object"
+    required:
+    - "name"
+    - "currency"
+    - "rate"
+    - "unit"
+    - "tagId"
+    - "availabilityId"
+    properties:
+      availabilityId:
+        type: "string"
+      tagId:
+        type: "string"
+      name:
+        type: "string"
+        example: "NUS ISS Meeting Room#5"
+      currency:
+        type: "string"
+        description: "catalogue currency"
+        enum:
+        - "SGD"
+        - "USD"
+        - "MYR"
+      rate:
+        type: "number"
+        format: "currency"
+      unit:
+        type: "string"
+        description: "the unit of rate"
+        enum:
+        - "Minute"
+        - "Hour"
+        - "Day"
+        - "Week"
+        - "Month"
+        - "Year"
+      remark:
+        type: "string"
+      tnc:
+        type: "string"
+      venue:
+        type: "string"
+      city:
+        type: "string"
+      address:
+        type: "string"
+    xml:
+      name: "Catalogue"
+    example:
+      venue: "venue"
+      availabilityId: "AvailabilityId_111"
+      tagId: "Tag_111"
+      address: "address"
+      city: "city"
+      unit: "Minute"
+      remark: "remark"
+      rate: 5.6
+      tnc: "terms"
+      name: "NUS ISS Meeting Room#5"
+      currency: "SGD"
   Catalogue:
     type: "object"
     required:

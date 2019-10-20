@@ -19,9 +19,15 @@ const generateObj = (props, validateOption) => {
     }
   }
 
-  if (props.enrollmentId) {
-    catalogueCatalogue.enrollmentId = {
-      S: props.enrollmentId
+  if (props.tagId) {
+    catalogueCatalogue.tagId = {
+      S: props.tagId
+    }
+  }
+
+  if (props.availabilityId) {
+    catalogueCatalogue.availabilityId = {
+      S: props.availabilityId
     }
   }
 
@@ -67,12 +73,6 @@ const generateObj = (props, validateOption) => {
     }
   }
 
-  if (props.type) {
-    catalogueCatalogue.type = {
-      S: props.type
-    }
-  }
-
   if (props.city) {
     catalogueCatalogue.city = {
       S: props.city
@@ -94,18 +94,9 @@ const generateObj = (props, validateOption) => {
     }
   }
 
-  const enrollmentCatalogue = {
+  const availabilityCatalogue = {
     pKey: {
-      S: props.enrollmentId
-    },
-    sKey: {
-      S: props.pKey
-    }
-  }
-
-  const cataloguelistCatalogue = {
-    pKey: {
-      S: "Cataloguelist"
+      S: props.availabilityId
     },
     sKey: {
       S: props.pKey
@@ -115,8 +106,7 @@ const generateObj = (props, validateOption) => {
   return {
     catalogueCatalogue,
     tagCatalogue,
-    enrollmentCatalogue,
-    cataloguelistCatalogue
+    availabilityCatalogue,
   }
 }
 
