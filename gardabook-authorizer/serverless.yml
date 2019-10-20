@@ -1,4 +1,3 @@
-
 service: gardabook-authorizer
 
 provider:

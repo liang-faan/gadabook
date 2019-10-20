@@ -1,0 +1,17 @@
+{
+  "name": "gardabook-authorizer",
+  "version": "1.0.0",
+  "description": "Authorize API Gateway with either Cognito RS256 tokens.",
+  "license": "gardbook.com",
+  "dependencies": {
+    "amazon-cognito-identity-js": "^3.1.2",
+    "aws-sdk": "^2.553.0",
+    "axios": "^0.19.0",
+    "form-data": "^2.5.1",
+    "googleapis": "^44.0.0",
+    "jsonwebtoken": "^7.1.9",
+    "jwk-to-pem": "^1.2.6",
+    "request": "^2.82.0"
+  },
+  "author": "liangfaan"
+}
