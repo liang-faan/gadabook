@@ -121,10 +121,13 @@ const createCatalogue = async props => {
   }
 
   const {
-    catalogueCatalogue
+    catalogueCatalogue,
+    tagCatalogue,
+    availabilityCatalogue
   } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
+  //TODO: need to roll if fail
+  const op1 = new Promise((resolve, reject) => {
     const params = {
       Item: {
         ...catalogueCatalogue
@@ -142,7 +145,43 @@ const createCatalogue = async props => {
     })
   })
 
-  return Promise.all([op1]).then((res, err) => {
+  const op2 = new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...tagCatalogue
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
+      } else {
+        console.log(data)
+        resolve()
+      }
+    })
+  })
+
+  const op3 = new Promise((resolve, reject) => {
+    const params = {
+      Item: {
+        ...availabilityCatalogue
+      },
+      TableName: tableName
+    }
+    ddb.putItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject()
+      } else {
+        console.log(data)
+        resolve()
+      }
+    })
+  })
+
+  return await Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
       return true
     } else {
