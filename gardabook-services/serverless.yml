@@ -126,7 +126,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   findCatalogueByTagId:
-    handler: service/CatalogueService.findByTags
+    handler: service/CatalogueService.readCatalogueByTags
     events:
       - http:
           path: v1/catalogue/findCatalogueByTagId

@@ -28,10 +28,10 @@ module.exports.deleteCatalogue = function deleteCatalogue (req, res, next) {
     });
 };
 
-module.exports.findByTags = function findByTags (req, res, next) {
+module.exports.readCatalogueByTags = function readCatalogueByTags (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var tags = req.swagger.params['tags'].value;
-  Catalogue.findByTags(xIntRole,tags)
+  Catalogue.readCatalogueByTags(xIntRole,tags)
     .then(function (response) {
       utils.writeJson(res, response);
     })

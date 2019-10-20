@@ -43,7 +43,7 @@ paths:
       - "catalogue"
       summary: "Finds catalogue by tags or providers"
       description: "Multiple tag values can be provided with comma separated strings"
-      operationId: "findByTags"
+      operationId: "readCatalogueByTags"
       produces:
       - "application/xml"
       - "application/json"

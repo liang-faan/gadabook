@@ -68,7 +68,7 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * providerName List Providers of the catalogue (optional)
  * returns List
  **/
-exports.findByTags = function(xIntRole,tags) {
+exports.readCatalogueByTags = function(xIntRole,tags) {
   var tagList = String(tags).split(',');
 
   var results = []
