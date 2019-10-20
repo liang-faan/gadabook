@@ -74,7 +74,7 @@ paths:
       - "catalogue"
       summary: "Update an existing catalogue item"
       description: ""
-      operationId: "updateCatalgoue"
+      operationId: "updateCatalogue"
       consumes:
       - "application/json"
       - "application/xml"
@@ -108,9 +108,9 @@ paths:
     get:
       tags:
       - "catalogue"
-      summary: "Finds catalogue by tags or providers"
+      summary: "Finds catalogue by tags"
       description: "Multiple tag values can be provided with comma separated strings"
-      operationId: "findByTags"
+      operationId: "readCatalogueByTags"
       produces:
       - "application/xml"
       - "application/json"
@@ -153,7 +153,7 @@ paths:
       - "catalogue"
       summary: "Find Catalogue by ID"
       description: "Returns a single Catalogue"
-      operationId: "getCatalogueById"
+      operationId: "readCatalogue"
       produces:
       - "application/xml"
       - "application/json"
@@ -215,13 +215,13 @@ paths:
       x-security-scopes:
         - "read:catalogue"
         - "write:catalogue"
-  /catalogue/availability/{catalogueId}:
+  /catalogue/availability/{availabilityId}:
     get:
       tags:
       - "catalogue"
-      summary: "Find availability by catalogue ID"
-      description: "Returns list of availability of catalogue"
-      operationId: "getAvailabilityByCatalogueId"
+      summary: "Find catalogues with availability ID"
+      description: "Returns list of catalogues with the availability ID"
+      operationId: "readCatalogueByAvailabilityId"
       produces:
       - "application/xml"
       - "application/json"
@@ -231,9 +231,9 @@ paths:
         type: "string"
         default: "retrieve"
         required: true
-      - name: "catalogueId"
+      - name: "availabilityId"
         in: "path"
-        description: "ID of catalogue"
+        description: "ID of Availability"
         required: true
         type: "string"
       responses:

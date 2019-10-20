@@ -28,11 +28,10 @@ module.exports.deleteCatalogue = function deleteCatalogue (req, res, next) {
     });
 };
 
-module.exports.findByTags = function findByTags (req, res, next) {
+module.exports.readCatalogueByTags = function readCatalogueByTags (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
-  var tag = req.swagger.params['tag'].value;
-  var providerName = req.swagger.params['providerName'].value;
-  Catalogue.findByTags(xIntRole,tag,providerName)
+  var tags = req.swagger.params['tags'].value;
+  Catalogue.readCatalogueByTags(xIntRole,tags)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -41,10 +40,22 @@ module.exports.findByTags = function findByTags (req, res, next) {
     });
 };
 
-module.exports.getAvailabilityByCatalogueId = function getAvailabilityByCatalogueId (req, res, next) {
+module.exports.readCatalogueByAvailabilityId = function readCatalogueByAvailabilityId (req, res, next) {
+  var xIntRole = req.swagger.params['x-int-role'].value;
+  var availabilityId = req.swagger.params['availabilityId'].value;
+  Catalogue.readCatalogueByAvailabilityId(xIntRole,availabilityId)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.readCatalogue = function readCatalogue (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var catalogueId = req.swagger.params['catalogueId'].value;
-  Catalogue.getAvailabilityByCatalogueId(xIntRole,catalogueId)
+  Catalogue.readCatalogue(xIntRole,catalogueId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -53,22 +64,10 @@ module.exports.getAvailabilityByCatalogueId = function getAvailabilityByCatalogu
     });
 };
 
-module.exports.getCatalogueById = function getCatalogueById (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
-  var catalogueId = req.swagger.params['catalogueId'].value;
-  Catalogue.getCatalogueById(xIntRole,catalogueId)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.updateCatalgoue = function updateCatalgoue (req, res, next) {
+module.exports.updateCatalogue = function updateCatalogue (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var body = req.swagger.params['body'].value;
-  Catalogue.updateCatalgoue(xIntRole,body)
+  Catalogue.updateCatalogue(xIntRole,body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

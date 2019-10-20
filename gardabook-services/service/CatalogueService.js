@@ -2,10 +2,10 @@
 
 const { 
   createCatalogue,
+  readCatalogues,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue,
-  readCataloguelist
+  deleteCatalogue
 } = require("../model/entities/catalogue")
 
 const { newUuid } = require("../utils/uuidGenerator")
@@ -31,8 +31,8 @@ exports.addCatalogue = function(xIntRole,body) {
     unit: String(body.unit),
     remark: String(body.remark),
     tagId: String(body.tagId),
+    availabilityId: String(body.availabilityId),
     venue: String(body.venue),
-    type: String(body.type),
     city: String(body.city),
     address: String(body.address),
     createdAt: String(Date.now()),
@@ -53,14 +53,17 @@ exports.addCatalogue = function(xIntRole,body) {
  * no response value expected for this operation
  **/
 exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+  var params = {
+    pKey: String(catalogueId),
+    sKey: String(catalogueId)
+  }
+
+  return deleteCatalogue(params)
 }
 
 
 /**
- * Finds catalogue by tags or providers
+ * Finds catalogue by tags
  * Multiple tag values can be provided with comma separated strings
  *
  * xIntRole String 
@@ -68,165 +71,42 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * providerName List Providers of the catalogue (optional)
  * returns List
  **/
-exports.findByTags = function(xIntRole,tag,providerName) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "venue" : "venue",
-  "catalogueId" : 0,
-  "address" : "address",
-  "city" : "city",
-  "rateUnit" : "Minute",
-  "remark" : "remark",
-  "provider" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "rate" : 5.63737665663332876420099637471139430999755859375,
-  "terms" : "terms",
-  "name" : "NUS ISS Meeting Room#5",
-  "currency" : "SGD",
-  "tag" : [ {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  }, {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  } ],
-  "status" : "Open"
-}, {
-  "venue" : "venue",
-  "catalogueId" : 0,
-  "address" : "address",
-  "city" : "city",
-  "rateUnit" : "Minute",
-  "remark" : "remark",
-  "provider" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "rate" : 5.63737665663332876420099637471139430999755859375,
-  "terms" : "terms",
-  "name" : "NUS ISS Meeting Room#5",
-  "currency" : "SGD",
-  "tag" : [ {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  }, {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  } ],
-  "status" : "Open"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.readCatalogueByTags = function(xIntRole, tags) {
+  return readCatalogueByGsiKeys(tags)
 }
 
 
 /**
- * Find availability by catalogue ID
- * Returns list of availability of catalogue
+ * Find catalogue by availabilityID
+ * Returns list of catalogues with the availability Id
  *
  * xIntRole String 
  * catalogueId Long ID of catalogue
  * returns List
  **/
-exports.getAvailabilityByCatalogueId = function(xIntRole,catalogueId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "date" : "2000-01-23",
-  "availablityId" : 0,
-  "catalogue" : {
-    "venue" : "venue",
-    "catalogueId" : 0,
-    "address" : "address",
-    "city" : "city",
-    "rateUnit" : "Minute",
-    "remark" : "remark",
-    "provider" : {
-      "firstName" : "firstName",
-      "lastName" : "lastName",
-      "userStatus" : 5,
-      "phone" : "phone",
-      "userId" : 1,
-      "email" : "email",
-      "username" : "username"
-    },
-    "rate" : 5.63737665663332876420099637471139430999755859375,
-    "terms" : "terms",
-    "name" : "NUS ISS Meeting Room#5",
-    "currency" : "SGD",
-    "tag" : [ {
-      "tagId" : 6,
-      "descritpion" : "descritpion",
-      "status" : "Active"
-    }, {
-      "tagId" : 6,
-      "descritpion" : "descritpion",
-      "status" : "Active"
-    } ],
-    "status" : "Open"
-  }
-}, {
-  "date" : "2000-01-23",
-  "availablityId" : 0,
-  "catalogue" : {
-    "venue" : "venue",
-    "catalogueId" : 0,
-    "address" : "address",
-    "city" : "city",
-    "rateUnit" : "Minute",
-    "remark" : "remark",
-    "provider" : {
-      "firstName" : "firstName",
-      "lastName" : "lastName",
-      "userStatus" : 5,
-      "phone" : "phone",
-      "userId" : 1,
-      "email" : "email",
-      "username" : "username"
-    },
-    "rate" : 5.63737665663332876420099637471139430999755859375,
-    "terms" : "terms",
-    "name" : "NUS ISS Meeting Room#5",
-    "currency" : "SGD",
-    "tag" : [ {
-      "tagId" : 6,
-      "descritpion" : "descritpion",
-      "status" : "Active"
-    }, {
-      "tagId" : 6,
-      "descritpion" : "descritpion",
-      "status" : "Active"
-    } ],
-    "status" : "Open"
-  }
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+exports.readCatalogueByAvailabilityId = function(xIntRole, availabilityId) {
+  return readCatalogueByGsiKeys(availabilityId)
+}
+
+const readCatalogueByGsiKeys = (keys) => {
+  var list = String(keys).split(',');
+
+  var results = []
+
+  list.forEach((item, index) => {
+    var params = {
+      pKey: String(item),
+      sKey: String(item)
     }
-  });
+    results.push(readCatalogues(params))
+  })
+
+  return Promise.all(results).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log(error)
+  })
 }
 
 
@@ -238,46 +118,13 @@ exports.getAvailabilityByCatalogueId = function(xIntRole,catalogueId) {
  * catalogueId Long ID of catalogue to return
  * returns Catalogue
  **/
-exports.getCatalogueById = function(xIntRole,catalogueId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "venue" : "venue",
-  "catalogueId" : 0,
-  "address" : "address",
-  "city" : "city",
-  "rateUnit" : "Minute",
-  "remark" : "remark",
-  "provider" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "rate" : 5.63737665663332876420099637471139430999755859375,
-  "terms" : "terms",
-  "name" : "NUS ISS Meeting Room#5",
-  "currency" : "SGD",
-  "tag" : [ {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  }, {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  } ],
-  "status" : "Open"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.readCatalogue = function(xIntRole, catalogueId) {
+  var params = {
+    pKey: String(catalogueId),
+    sKey: String(catalogueId),
+  }
+
+  return readCatalogue(params)
 }
 
 
@@ -289,9 +136,25 @@ exports.getCatalogueById = function(xIntRole,catalogueId) {
  * body Catalogue Catalogue object that needs to be update into the system
  * no response value expected for this operation
  **/
-exports.updateCatalgoue = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+exports.updateCatalogue = function(xIntRole, body) {
+  var params = {
+    pKey: String(body.catalogueId),
+    sKey: String(body.catalogueId),
+    name: String(body.name),
+    currency: String(body.currency),
+    tnc: String(body.tnc),
+    rate: String(body.rate),
+    unit: String(body.unit),
+    remark: String(body.remark),
+    tagId: String(body.tagId),
+    availabilityId: String(body.availabilityId),
+    venue: String(body.venue),
+    city: String(body.city),
+    address: String(body.address),
+    createdAt: String(Date.now()),
+    updatedAt: String(Date.now())
+  }
+
+  return updateCatalogue(params)
 }
 

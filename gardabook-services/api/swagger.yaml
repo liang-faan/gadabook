@@ -41,9 +41,9 @@ paths:
     get:
       tags:
       - "catalogue"
-      summary: "Finds catalogue by tags or providers"
+      summary: "Finds catalogue by tags"
       description: "Multiple tag values can be provided with comma separated strings"
-      operationId: "findByTags"
+      operationId: "readCatalogueByTags"
       produces:
       - "application/xml"
       - "application/json"
@@ -53,18 +53,10 @@ paths:
         required: true
         type: "string"
         default: "retrieve"
-      - name: "tag"
+      - name: "tags"
         in: "query"
         description: "Status values that need to be considered for filter"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      - name: "providerName"
-        in: "query"
-        description: "Providers of the catalogue"
-        required: false
+        required: true
         type: "array"
         items:
           type: "string"
@@ -106,7 +98,7 @@ paths:
         description: "Catalogue object that needs to be added to the system"
         required: true
         schema:
-          $ref: "#/definitions/Catalogue"
+          $ref: "#/definitions/NewCatalogue"
       responses:
         405:
           description: "Invalid input"
@@ -121,7 +113,7 @@ paths:
       - "catalogue"
       summary: "Update an existing catalogue item"
       description: ""
-      operationId: "updateCatalgoue"
+      operationId: "updateCatalogue"
       consumes:
       - "application/json"
       - "application/xml"
@@ -139,7 +131,7 @@ paths:
         description: "Catalogue object that needs to be update into the system"
         required: true
         schema:
-          $ref: "#/definitions/Catalogue"
+          $ref: "#/definitions/UpdateCatalogue"
       responses:
         400:
           description: "Invalid ID supplied"
@@ -159,7 +151,7 @@ paths:
       - "catalogue"
       summary: "Find Catalogue by ID"
       description: "Returns a single Catalogue"
-      operationId: "getCatalogueById"
+      operationId: "readCatalogue"
       produces:
       - "application/xml"
       - "application/json"
@@ -223,13 +215,13 @@ paths:
       - "read:catalogue"
       - "write:catalogue"
       x-swagger-router-controller: "Catalogue"
-  /catalogue/availability/{catalogueId}:
+  /catalogue/availability/{availabilityId}:
     get:
       tags:
       - "catalogue"
-      summary: "Find availability by catalogue ID"
-      description: "Returns list of availability of catalogue"
-      operationId: "getAvailabilityByCatalogueId"
+      summary: "Find catalogues by availability ID"
+      description: "Returns list of catalogues with the availability ID"
+      operationId: "readCatalogueByAvailabilityId"
       produces:
       - "application/xml"
       - "application/json"
@@ -239,9 +231,9 @@ paths:
         required: true
         type: "string"
         default: "retrieve"
-      - name: "catalogueId"
+      - name: "availabilityId"
         in: "path"
-        description: "ID of catalogue"
+        description: "ID of availability"
         required: true
         type: "string"
       responses:
@@ -609,7 +601,7 @@ paths:
         description: "Created enrollement object"
         required: true
         schema:
-          $ref: "#/definitions/Enrollment"
+          $ref: "#/definitions/NewEnrollment"
       responses:
         default:
           description: "successful operation"
@@ -894,6 +886,135 @@ definitions:
       tagId: 6
       descritpion: "descritpion"
       status: "Active"
+  NewCatalogue:
+    type: "object"
+    required:
+    - "name"
+    - "currency"
+    - "rate"
+    - "unit"
+    - "tagId"
+    - "availabilityId"
+    properties:
+      availabilityId:
+        type: "string"
+      tagId:
+        type: "string"
+      name:
+        type: "string"
+        example: "NUS ISS Meeting Room#5"
+      currency:
+        type: "string"
+        description: "catalogue currency"
+        enum:
+        - "SGD"
+        - "USD"
+        - "MYR"
+      rate:
+        type: "number"
+        format: "currency"
+      unit:
+        type: "string"
+        description: "the unit of rate"
+        enum:
+        - "Minute"
+        - "Hour"
+        - "Day"
+        - "Week"
+        - "Month"
+        - "Year"
+      remark:
+        type: "string"
+      tnc:
+        type: "string"
+      venue:
+        type: "string"
+      city:
+        type: "string"
+      address:
+        type: "string"
+    xml:
+      name: "NewCatalogue"
+    example:
+      venue: "venue"
+      availabilityId: "AvailabilityId_111"
+      tagId: "Tag_111"
+      address: "address"
+      city: "city"
+      unit: "Minute"
+      remark: "remark"
+      rate: 5.6
+      tnc: "terms"
+      name: "NUS ISS Meeting Room#5"
+      currency: "SGD"
+  UpdateCatalogue:
+    type: "object"
+    required:
+    - "catalogueId"
+    - "name"
+    - "currency"
+    - "rate"
+    - "unit"
+    - "venue"
+    - "city"
+    - "address"
+    - "tagId"
+    - "availabilityId"
+    properties:
+      catalogueId:
+        type: "string"
+      tagId:
+        type: "string"
+      availabilityId:
+        type: "string"
+      name:
+        type: "string"
+        example: "NUS ISS Meeting Room#5"
+      currency:
+        type: "string"
+        description: "catalogue currency"
+        enum:
+        - "SGD"
+        - "USD"
+        - "MYR"
+      rate:
+        type: "number"
+        format: "currency"
+      unit:
+        type: "string"
+        description: "the unit of rate"
+        enum:
+        - "Minute"
+        - "Hour"
+        - "Day"
+        - "Week"
+        - "Month"
+        - "Year"
+      remark:
+        type: "string"
+      tnc:
+        type: "string"
+      venue:
+        type: "string"
+      city:
+        type: "string"
+      address:
+        type: "string"
+    xml:
+      name: "UpdateCatalogue"
+    example:
+      venue: "venue"
+      catalogueId: "Catalogue_111"
+      tagId: "Tag_111"
+      availabilityId: "Availability_111"
+      address: "address"
+      city: "city"
+      unit: "Minute"
+      remark: "remark"
+      rate: 5.6
+      tnc: "terms"
+      name: "NUS ISS Meeting Room#5"
+      currency: "SGD"
   Catalogue:
     type: "object"
     required:
@@ -981,6 +1102,26 @@ definitions:
         descritpion: "descritpion"
         status: "Active"
       status: "Open"
+  NewEnrollment:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+      catalogueId:
+        type: "string"
+      expiryDate:
+        type: "string"
+        format: "date"
+      fee:
+        type: "number"
+        format: "currency"
+    xml:
+      name: "NewEnrollment"
+    example:
+      expiryDate: "2000-01-23"
+      userId: "User_111"
+      catalogueId: "Catalogue_111"
+      fee: 1.5
   Enrollment:
     type: "object"
     properties:

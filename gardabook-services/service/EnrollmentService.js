@@ -1,5 +1,13 @@
 'use strict';
 
+const { 
+  createEnrollment,
+  readEnrollment,
+  updateEnrollment,
+  deleteEnrollment
+} = require("../model/entities/enrollment")
+
+const { newUuid } = require("../utils/uuidGenerator")
 
 /**
  * Create an enrollemnt
@@ -10,9 +18,20 @@
  * no response value expected for this operation
  **/
 exports.createEnrollment = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+  var enrollmentId = newUuid("Enrollment_")
+  
+  var params = {
+    pKey: String(enrollmentId),
+    sKey: String(enrollmentId),
+    fee: String(body.fee),
+    expiryDate: String(body.expiryDate),
+    userId: String(body.userId),
+    catalogueId: String(body.catalogueId),
+    createdAt: String(Date.now()),
+    updatedAt: String(Date.now())
+  }
+
+  return createEnrollment(params)
 }
 
 

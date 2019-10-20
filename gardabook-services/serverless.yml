@@ -126,7 +126,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   findCatalogueByTagId:
-    handler: service/CatalogueService.findByTags
+    handler: service/CatalogueService.readCatalogueByTags
     events:
       - http:
           path: v1/catalogue/findCatalogueByTagId
@@ -142,11 +142,11 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  getAvailabilityByCatalogueId:
-    handler: service/CatalogueService.getAvailabilityByCatalogueId
+  readCatalogueByAvailabilityId:
+    handler: service/CatalogueService.readCatalogueByAvailabilityId
     events:
       - http:
-          path: v1/catalogue/getAvailabilityByCatalogueId
+          path: v1/catalogue/readCatalogueByAvailabilityId
           method: get
           # authorizer: auth
           integration: lambda
@@ -159,11 +159,11 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  getCatalogueById:
-    handler: service/CatalogueService.getCatalogueById
+  readCatalogue:
+    handler: service/CatalogueService.readCatalogue
     events:
       - http:
-          path: v1/catalogue/getCatalogueById
+          path: v1/catalogue/readCatalogue
           method: get
           # authorizer: auth
           integration: lambda
@@ -176,11 +176,11 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  updateCatalgoue:
-    handler: service/CatalogueService.updateCatalgoue
+  updateCatalogue:
+    handler: service/CatalogueService.updateCatalogue
     events:
       - http:
-          path: v1/catalogue/updateCatalgoue
+          path: v1/catalogue/updateCatalogue
           method: get
           # authorizer: auth
           integration: lambda

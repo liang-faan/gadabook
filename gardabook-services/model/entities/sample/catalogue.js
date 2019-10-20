@@ -2,8 +2,7 @@ const {
   createCatalogue,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue,
-  readCataloguelist
+  deleteCatalogue
 } = require("../catalogue")
 
 const test1 = {
@@ -45,10 +44,6 @@ const test = async () => {
   console.log("\nDELETE")
   let delete1 = await deleteCatalogue(test1)
   console.log(delete1)
-
-  console.log("\nLIST")
-  let list1 = await readCataloguelist({})
-  console.log(list1)
 }
 
 test()
