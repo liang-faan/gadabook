@@ -42,3 +42,16 @@ module.exports.getEnrollment = function getEnrollment (req, res, next) {
       utils.writeJson(res, response);
     });
 };
+
+module.exports.deleteEnrollment = function deleteEnrollment (req, res, next) {
+
+  var xIntRole = req.swagger.params['x-int-role'].value;
+  var enrollmentId = req.swagger.params['enrollmentId'].value;
+  Enrollment.deleteEnrollment(xIntRole,enrollmentId)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};

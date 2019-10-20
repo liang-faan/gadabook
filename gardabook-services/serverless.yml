@@ -244,6 +244,23 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
+  deleteEnrollment:
+    handler: service/EnrollmentService.deleteEnrollment
+    events:
+      - http:
+          path: v1/enrollment/deleteEnrollment
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
   createUser:
     handler: service/UserService.createUser
     events:

@@ -60,3 +60,12 @@ exports.getEnrollment = function(xIntRole, enrollmentId) {
 
   return readEnrollment(params)
 }
+
+exports.deleteEnrollment = function(xIntRole, enrollmentId) {
+  var params = {
+    pKey: enrollmentId,
+    sKey: enrollmentId
+  }
+
+  return deleteEnrollment(params)
+}

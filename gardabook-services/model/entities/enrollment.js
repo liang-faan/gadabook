@@ -352,38 +352,14 @@ const updateEnrollment = async props => {
  * @returns {Promise.<boolean>}
  */
 const deleteEnrollment = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForDelete]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
   if (!obj) {
     return false
   }
 
-  const { enrollmentEnrollment, userEnrollment } = obj
+  const { enrollmentEnrollment } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
+  const enrollmentEnrollmentResult = await new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
@@ -393,6 +369,7 @@ const deleteEnrollment = async props => {
           S: enrollmentEnrollment.sKey.S
         }
       },
+      ReturnValues: "ALL_OLD",
       TableName: tableName
     }
     ddb.deleteItem(params, (err, data) => {
@@ -406,14 +383,14 @@ const deleteEnrollment = async props => {
     })
   })
 
-  const op2 = await new Promise((resolve, reject) => {
+  const userEnrollmentResult = new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
-          S: userEnrollment.pKey.S
+          S: enrollmentEnrollmentResult.Attributes.userId.S
         },
         sKey: {
-          S: userEnrollment.sKey.S
+          S: enrollmentEnrollment.pKey.S
         }
       },
       TableName: tableName
@@ -429,7 +406,30 @@ const deleteEnrollment = async props => {
     })
   })
 
-  return Promise.all([op1, op2]).then((res, err) => {
+  const catalogueEnrollmenResult = new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        pKey: {
+          S: enrollmentEnrollmentResult.Attributes.catalogueId.S
+        },
+        sKey: {
+          S: enrollmentEnrollment.pKey.S
+        }
+      },
+      TableName: tableName
+    }
+    ddb.deleteItem(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        reject(err)
+      } else {
+        console.log(data)
+        resolve(data)
+      }
+    })
+  })
+
+  return await Promise.all([userEnrollmentResult, catalogueEnrollmenResult]).then((res, err) => {
     if (!err) {
       return true
     } else {
