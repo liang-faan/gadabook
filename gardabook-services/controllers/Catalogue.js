@@ -30,9 +30,8 @@ module.exports.deleteCatalogue = function deleteCatalogue (req, res, next) {
 
 module.exports.findByTags = function findByTags (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
-  var tag = req.swagger.params['tag'].value;
-  var providerName = req.swagger.params['providerName'].value;
-  Catalogue.findByTags(xIntRole,tag,providerName)
+  var tags = req.swagger.params['tags'].value;
+  Catalogue.findByTags(xIntRole,tags)
     .then(function (response) {
       utils.writeJson(res, response);
     })

@@ -2,7 +2,7 @@
 
 const { 
   createCatalogue,
-  readCatalogue,
+  readCatalogueByTag,
   updateCatalogue,
   deleteCatalogue,
   readCataloguelist
@@ -68,76 +68,26 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * providerName List Providers of the catalogue (optional)
  * returns List
  **/
-exports.findByTags = function(xIntRole,tag,providerName) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "venue" : "venue",
-  "catalogueId" : 0,
-  "address" : "address",
-  "city" : "city",
-  "rateUnit" : "Minute",
-  "remark" : "remark",
-  "provider" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "rate" : 5.63737665663332876420099637471139430999755859375,
-  "terms" : "terms",
-  "name" : "NUS ISS Meeting Room#5",
-  "currency" : "SGD",
-  "tag" : [ {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  }, {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  } ],
-  "status" : "Open"
-}, {
-  "venue" : "venue",
-  "catalogueId" : 0,
-  "address" : "address",
-  "city" : "city",
-  "rateUnit" : "Minute",
-  "remark" : "remark",
-  "provider" : {
-    "firstName" : "firstName",
-    "lastName" : "lastName",
-    "userStatus" : 5,
-    "phone" : "phone",
-    "userId" : 1,
-    "email" : "email",
-    "username" : "username"
-  },
-  "rate" : 5.63737665663332876420099637471139430999755859375,
-  "terms" : "terms",
-  "name" : "NUS ISS Meeting Room#5",
-  "currency" : "SGD",
-  "tag" : [ {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  }, {
-    "tagId" : 6,
-    "descritpion" : "descritpion",
-    "status" : "Active"
-  } ],
-  "status" : "Open"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+exports.findByTags = function(xIntRole,tags) {
+  var tagList = String(tags).split(',');
+
+  var results = []
+
+  tagList.forEach((item, index) => {
+    var params = {
+      pKey: String(item),
+      sKey: String(item),
+      tagId: String(item)
     }
-  });
+    results.push(readCatalogueByTag(params))
+  })
+
+  return Promise.all(results).then(data => {
+    return data
+  })
+  .catch(error => {
+    console.log(error)
+  })
 }
 
 
