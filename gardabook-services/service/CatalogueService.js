@@ -5,8 +5,7 @@ const {
   readCatalogues,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue,
-  readCataloguelist
+  deleteCatalogue
 } = require("../model/entities/catalogue")
 
 const { newUuid } = require("../utils/uuidGenerator")
@@ -54,9 +53,12 @@ exports.addCatalogue = function(xIntRole,body) {
  * no response value expected for this operation
  **/
 exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+  var params = {
+    pKey: String(catalogueId),
+    sKey: String(catalogueId)
+  }
+
+  return deleteCatalogue(params)
 }
 
 
@@ -75,8 +77,8 @@ exports.readCatalogueByTags = function(xIntRole, tags) {
 
 
 /**
- * Find availability by catalogue ID
- * Returns list of availability of catalogue
+ * Find catalogue by availabilityID
+ * Returns list of catalogues with the availability Id
  *
  * xIntRole String 
  * catalogueId Long ID of catalogue
@@ -134,9 +136,25 @@ exports.readCatalogue = function(xIntRole, catalogueId) {
  * body Catalogue Catalogue object that needs to be update into the system
  * no response value expected for this operation
  **/
-exports.updateCatalgoue = function(xIntRole,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+exports.updateCatalogue = function(xIntRole, body) {
+  var params = {
+    pKey: String(body.catalogueId),
+    sKey: String(body.catalogueId),
+    name: String(body.name),
+    currency: String(body.currency),
+    tnc: String(body.tnc),
+    rate: String(body.rate),
+    unit: String(body.unit),
+    remark: String(body.remark),
+    tagId: String(body.tagId),
+    availabilityId: String(body.availabilityId),
+    venue: String(body.venue),
+    city: String(body.city),
+    address: String(body.address),
+    createdAt: String(Date.now()),
+    updatedAt: String(Date.now())
+  }
+
+  return updateCatalogue(params)
 }
 

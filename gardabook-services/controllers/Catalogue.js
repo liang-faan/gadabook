@@ -64,10 +64,10 @@ module.exports.readCatalogue = function readCatalogue (req, res, next) {
     });
 };
 
-module.exports.updateCatalgoue = function updateCatalgoue (req, res, next) {
+module.exports.updateCatalogue = function updateCatalogue (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
   var body = req.swagger.params['body'].value;
-  Catalogue.updateCatalgoue(xIntRole,body)
+  Catalogue.updateCatalogue(xIntRole,body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

@@ -176,11 +176,11 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  updateCatalgoue:
-    handler: service/CatalogueService.updateCatalgoue
+  updateCatalogue:
+    handler: service/CatalogueService.updateCatalogue
     events:
       - http:
-          path: v1/catalogue/updateCatalgoue
+          path: v1/catalogue/updateCatalogue
           method: get
           # authorizer: auth
           integration: lambda

@@ -332,31 +332,7 @@ const readCatalogue = async props => {
  * @returns {Promise.<boolean>}
  */
 const updateCatalogue = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForUpdate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.UPADTE)
   if (!obj) {
     return false
   }
@@ -395,43 +371,16 @@ const updateCatalogue = async props => {
  * @returns {Promise.<boolean>}
  */
 const deleteCatalogue = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForDelete]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
   if (!obj) {
     return false
   }
 
   const {
-    catalogueCatalogue,
-    tagCatalogue,
-    enrollmentCatalogue,
-    cataloguelistCatalogue
+    catalogueCatalogue
   } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
+  const catalogueResult = await new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
@@ -441,6 +390,7 @@ const deleteCatalogue = async props => {
           S: catalogueCatalogue.sKey.S
         }
       },
+      ReturnValues: "ALL_OLD",
       TableName: tableName
     }
     ddb.deleteItem(params, (err, data) => {
@@ -454,14 +404,16 @@ const deleteCatalogue = async props => {
     })
   })
 
-  const op2 = await new Promise((resolve, reject) => {
+  let ops = []
+
+  const op2 = new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
-          S: tagCatalogue.pKey.S
+          S: catalogueResult.Attributes.tagId.S
         },
         sKey: {
-          S: tagCatalogue.sKey.S
+          S: catalogueCatalogue.pKey.S
         }
       },
       TableName: tableName
@@ -477,14 +429,16 @@ const deleteCatalogue = async props => {
     })
   })
 
-  const op3 = await new Promise((resolve, reject) => {
+  ops.push(op2)
+
+  const op3 = new Promise((resolve, reject) => {
     const params = {
       Key: {
         pKey: {
-          S: enrollmentCatalogue.pKey.S
+          S: catalogueResult.Attributes.availabilityId.S
         },
         sKey: {
-          S: enrollmentCatalogue.sKey.S
+          S: catalogueCatalogue.pKey.S
         }
       },
       TableName: tableName
@@ -500,68 +454,11 @@ const deleteCatalogue = async props => {
     })
   })
 
-  const op4 = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: cataloguelistCatalogue.pKey.S
-        },
-        sKey: {
-          S: cataloguelistCatalogue.sKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  ops.push(op3)
 
-  return Promise.all([op1, op2, op3, op4]).then((res, err) => {
+  return Promise.all(ops).then((res, err) => {
     if (!err) {
       return true
-    } else {
-      return false
-    }
-  })
-}
-
-/**
- * @param {Object.<string, any>} props An object containing the relevant properties for read
- * @returns {Promise.<object>}
- */
-const readCataloguelist = async props => {
-  const op1 = await new Promise((resolve, reject) => {
-    var params = {
-      ExpressionAttributeValues: {
-        ":v1": {
-          S: "Cataloguelist"
-        }
-      },
-      KeyConditionExpression: "pKey = :v1",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
-
-  return Promise.all([op1]).then((res, err) => {
-    if (!err) {
-      return op1
     } else {
       return false
     }
@@ -573,6 +470,5 @@ module.exports = {
   readCatalogues,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue,
-  readCataloguelist
+  deleteCatalogue
 }
