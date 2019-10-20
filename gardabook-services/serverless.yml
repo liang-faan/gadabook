@@ -142,11 +142,11 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  getAvailabilityByCatalogueId:
-    handler: service/CatalogueService.getAvailabilityByCatalogueId
+  readCatalogueByAvailabilityId:
+    handler: service/CatalogueService.readCatalogueByAvailabilityId
     events:
       - http:
-          path: v1/catalogue/getAvailabilityByCatalogueId
+          path: v1/catalogue/readCatalogueByAvailabilityId
           method: get
           # authorizer: auth
           integration: lambda

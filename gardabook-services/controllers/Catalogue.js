@@ -40,10 +40,10 @@ module.exports.readCatalogueByTags = function readCatalogueByTags (req, res, nex
     });
 };
 
-module.exports.getAvailabilityByCatalogueId = function getAvailabilityByCatalogueId (req, res, next) {
+module.exports.readCatalogueByAvailabilityId = function readCatalogueByAvailabilityId (req, res, next) {
   var xIntRole = req.swagger.params['x-int-role'].value;
-  var catalogueId = req.swagger.params['catalogueId'].value;
-  Catalogue.getAvailabilityByCatalogueId(xIntRole,catalogueId)
+  var availabilityId = req.swagger.params['availabilityId'].value;
+  Catalogue.readCatalogueByAvailabilityId(xIntRole,availabilityId)
     .then(function (response) {
       utils.writeJson(res, response);
     })

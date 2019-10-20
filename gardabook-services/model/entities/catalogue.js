@@ -85,6 +85,15 @@ const generateObj = (props, validateOption) => {
     }
   }
 
+  const keyCatalogue = {
+    pKey: {
+      S: props.pKey
+    },
+    sKey: {
+      S: props.sKey
+    }
+  }
+
   const tagCatalogue = {
     pKey: {
       S: props.tagId
@@ -107,6 +116,7 @@ const generateObj = (props, validateOption) => {
     catalogueCatalogue,
     tagCatalogue,
     availabilityCatalogue,
+    keyCatalogue
   }
 }
 
@@ -194,21 +204,21 @@ const createCatalogue = async props => {
  * @param {Object.<string, any>} props An object containing the relevant properties for read
  * @returns {Promise.<object>}
  */
-const readCatalogueByTag = async props => {
+const readCatalogues = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
     return false
   }
 
   const {
-    tagCatalogue
+    keyCatalogue
   } = obj
 
   const c = await new Promise((resolve, reject) => {
     var params = {
       ExpressionAttributeValues: {
         ":p1": {
-          S: tagCatalogue.pKey.S
+          S: keyCatalogue.pKey.S
         },
         ":s1": {
           S: "Catalogue_"
@@ -513,7 +523,7 @@ const readCataloguelist = async props => {
 
 module.exports = {
   createCatalogue,
-  readCatalogueByTag,
+  readCatalogues,
   updateCatalogue,
   deleteCatalogue,
   readCataloguelist
