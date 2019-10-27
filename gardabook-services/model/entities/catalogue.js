@@ -1,5 +1,14 @@
-const { ddb, tableName } = require("./ddb")
-const { validateProps, requiredPropKeyEnum } = require("./validators/catalogueValidator")
+const { 
+  deleteWithKeys,
+  queryWithKeys,
+  queryGsi,
+  updateContent 
+} = require("./dbHelper")
+
+const { 
+  validateProps, 
+  requiredPropKeyEnum 
+} = require("./validators/catalogueValidator")
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
@@ -19,9 +28,9 @@ const generateObj = (props, validateOption) => {
     }
   }
 
-  if (props.tagId) {
-    catalogueCatalogue.tagId = {
-      S: props.tagId
+  if (props.tag) {
+    catalogueCatalogue.tag = {
+      S: props.tag
     }
   }
 
@@ -96,7 +105,7 @@ const generateObj = (props, validateOption) => {
 
   const tagCatalogue = {
     pKey: {
-      S: props.tagId
+      S: "Tag_" + props.tag
     },
     sKey: {
       S: props.pKey
@@ -137,63 +146,15 @@ const createCatalogue = async props => {
   } = obj
 
   //TODO: need to roll if fail
-  const op1 = new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...catalogueCatalogue
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = updateContent(catalogueCatalogue, false)
 
-  const op2 = new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...tagCatalogue
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
+  const op2 = updateContent(tagCatalogue, false)
 
-  const op3 = new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...availabilityCatalogue
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
+  const op3 = updateContent(availabilityCatalogue, false)
 
   return await Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return true
+      return catalogueCatalogue
     } else {
       return false
     }
@@ -214,59 +175,12 @@ const readCatalogues = async props => {
     keyCatalogue
   } = obj
 
-  const c = await new Promise((resolve, reject) => {
-    var params = {
-      ExpressionAttributeValues: {
-        ":p1": {
-          S: keyCatalogue.pKey.S
-        },
-        ":s1": {
-          S: "Catalogue_"
-        }
-      },
-      KeyConditionExpression: "pKey = :p1 and begins_with(sKey, :s1)",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const c = await queryGsi(keyCatalogue.pKey.S, "Catalogue_")
 
   let catalogues = []
 
   c.Items.forEach(function (item, index) {
-    const catalogue = new Promise((resolve, reject) => {
-      var params = {
-        ExpressionAttributeValues: {
-          ":p1": {
-            S: item.sKey.S
-          },
-          ":s1": {
-            S: item.sKey.S
-          }
-        },
-        KeyConditionExpression: "pKey = :p1 and sKey = :s1",
-        TableName: tableName
-      }
-
-      ddb.query(params, (err, data) => {
-        if (err) {
-          console.log(err, err.stack)
-          reject(err)
-        } else {
-          console.log(JSON.stringify(data))
-          resolve(data)
-        }
-      })
-    })
-
+    const catalogue = queryWithKeys(item.sKey.S, item.sKey.S)
     catalogues.push(catalogue)
   })
 
@@ -292,30 +206,7 @@ const readCatalogue = async props => {
 
   const { keyCatalogue } = obj
 
-  const op1 = new Promise((resolve, reject) => {
-    const params = {
-      ExpressionAttributeValues: {
-        ":p1": {
-          S: keyCatalogue.pKey.S
-        },
-        ":s1": {
-          S: keyCatalogue.sKey.S
-        }
-      },
-      KeyConditionExpression: "pKey = :p1 and sKey = :s1",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const op1 = queryWithKeys(keyCatalogue.pKey.S, keyCatalogue.sKey.S)
 
   const result = await Promise.all([op1]).then(data => {
     return data
@@ -337,29 +228,32 @@ const updateCatalogue = async props => {
     return false
   }
 
-  const { catalogueCatalogue } = obj
+  const { catalogueCatalogue, tagCatalogue, availabilityCatalogue} = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...catalogueCatalogue
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  let ops = []
 
-  return Promise.all([op1]).then((res, err) => {
+  const op1 = await updateContent(catalogueCatalogue, true)
+  ops.push(op1)
+
+  if (op1.Attributes.tag.S != catalogueCatalogue.tag.S) {
+    const op2 = await deleteWithKeys("Tag_" + op1.Attributes.tag.S, catalogueCatalogue.pKey.S, false)
+    ops.push(op2)
+
+    const op3 = await updateContent(tagCatalogue, false)
+    ops.push(op3)
+  }
+
+  if (op1.Attributes.availabilityId.S != catalogueCatalogue.availabilityId.S) {
+    const op4 = await deleteWithKeys(op1.Attributes.availabilityId.S, catalogueCatalogue.pKey.S, false)
+    ops.push(op4)
+
+    const op5 = await updateContent(availabilityCatalogue, false)
+    ops.push(op5)
+  }
+
+  return Promise.all(ops).then((res, err) => {
     if (!err) {
-      return true
+      return catalogueCatalogue
     } else {
       return false
     }
@@ -380,80 +274,14 @@ const deleteCatalogue = async props => {
     catalogueCatalogue
   } = obj
 
-  const catalogueResult = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: catalogueCatalogue.pKey.S
-        },
-        sKey: {
-          S: catalogueCatalogue.sKey.S
-        }
-      },
-      ReturnValues: "ALL_OLD",
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const catalogueResult = await deleteWithKeys(catalogueCatalogue.pKey.S, catalogueCatalogue.sKey.S, true)
 
   let ops = []
 
-  const op2 = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: catalogueResult.Attributes.tagId.S
-        },
-        sKey: {
-          S: catalogueCatalogue.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
+  const op2 = deleteWithKeys("Tag_" + catalogueResult.Attributes.tag.S, catalogueCatalogue.pKey.S, false)
   ops.push(op2)
 
-  const op3 = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: catalogueResult.Attributes.availabilityId.S
-        },
-        sKey: {
-          S: catalogueCatalogue.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
+  const op3 = deleteWithKeys(catalogueResult.Attributes.availabilityId.S, catalogueCatalogue.pKey.S, false)
   ops.push(op3)
 
   return Promise.all(ops).then((res, err) => {

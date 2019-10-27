@@ -958,12 +958,12 @@ definitions:
     - "currency"
     - "rate"
     - "unit"
-    - "tagId"
+    - "tag"
     - "availabilityId"
     properties:
       availabilityId:
         type: "string"
-      tagId:
+      tag:
         type: "string"
       name:
         type: "string"
@@ -1003,7 +1003,7 @@ definitions:
     example:
       venue: "venue"
       availabilityId: "AvailabilityId_111"
-      tagId: "Tag_111"
+      tag: "myTag"
       address: "address"
       city: "city"
       unit: "Minute"
@@ -1023,12 +1023,12 @@ definitions:
     - "venue"
     - "city"
     - "address"
-    - "tagId"
+    - "tag"
     - "availabilityId"
     properties:
       catalogueId:
         type: "string"
-      tagId:
+      tag:
         type: "string"
       availabilityId:
         type: "string"
@@ -1070,7 +1070,7 @@ definitions:
     example:
       venue: "venue"
       catalogueId: "Catalogue_111"
-      tagId: "Tag_111"
+      tag: "myTag"
       availabilityId: "Availability_111"
       address: "address"
       city: "city"

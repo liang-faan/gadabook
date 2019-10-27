@@ -30,7 +30,7 @@ exports.addCatalogue = function(xIntRole,body) {
     rate: String(body.rate),
     unit: String(body.unit),
     remark: String(body.remark),
-    tagId: String(body.tagId),
+    tag: String(body.tag),
     availabilityId: String(body.availabilityId),
     venue: String(body.venue),
     city: String(body.city),
@@ -72,7 +72,14 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * returns List
  **/
 exports.readCatalogueByTags = function(xIntRole, tags) {
-  return readCatalogueByGsiKeys(tags)
+
+  let tagIds = []
+
+  tags.forEach((item, index) => {
+    tagIds.push("Tag_" + item)
+  })
+
+  return readCatalogueByGsiKeys(tagIds)
 }
 
 
@@ -146,7 +153,7 @@ exports.updateCatalogue = function(xIntRole, body) {
     rate: String(body.rate),
     unit: String(body.unit),
     remark: String(body.remark),
-    tagId: String(body.tagId),
+    tag: String(body.tag),
     availabilityId: String(body.availabilityId),
     venue: String(body.venue),
     city: String(body.city),
