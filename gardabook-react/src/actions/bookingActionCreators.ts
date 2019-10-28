@@ -1,11 +1,13 @@
 import axios from 'axios'
 
 import { rootUrl } from '../settings'
-import { BOOKING_UPDATE_CURRENT_BOOKING } from './index'
+import { BOOKING_UPDATE_BOOKING_LIST } from './types'
 
-export const getBooking = () => dispatch => {
-  axios.get(`${rootUrl}/booking/1`).then(res => {
-    console.log(res.data)
-    // dispatch(res)
+export const getBookingList = () => dispatch => {
+  axios.get(`${rootUrl}/booking`).then(res => {
+    dispatch({
+      type: BOOKING_UPDATE_BOOKING_LIST,
+      payload: res.data.bookings,
+    })
   })
 }

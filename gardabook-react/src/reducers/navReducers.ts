@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { NAV_UPDATE_CURRENT_LOCATION } from '../actions'
+import { NAV_UPDATE_CURRENT_LOCATION } from '../actions/types'
 
 interface Action {
   type: String
@@ -16,7 +16,6 @@ const current = (state: String = EXPLORE, action: Action) => {
   switch (action.type) {
     case NAV_UPDATE_CURRENT_LOCATION:
       return action.payload
-      break
     default:
       return state
   }

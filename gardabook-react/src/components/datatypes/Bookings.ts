@@ -3,7 +3,12 @@ export interface Props {
     [key: string]: string
   }
   vh: number
-  getBooking: Function
+  getBookingList: Function
+  bookingList: Array<Booking>
+}
+
+interface Booking {
+  [key: string]: any
 }
 
 export interface State {}

@@ -125,4 +125,11 @@ export default (theme: any) => ({
     color: 'grey',
     fontSize: 12,
   },
+  tags: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  tag: {
+    paddingLeft: 3,
+  },
 })
