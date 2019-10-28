@@ -5,8 +5,9 @@ import Amplify from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
-import { HashRouter as Router } from 'react-router-dom'
-// import { BrowserRouter as Router } from 'react-router-dom'
+import thunk from 'redux-thunk'
+// import { HashRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import 'normalize.css'
 
 import App from './components/App'
@@ -27,15 +28,16 @@ Amplify.configure({
     mandatorySignIn: false,
 
     // OPTIONAL - Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
-    authenticationFlowType: 'USER_PASSWORD_AUTH'
-  }
-});
+    authenticationFlowType: 'USER_PASSWORD_AUTH',
+  },
+})
 
 const federated = {
-  google_client_id: '761641708289-ttd7sc03mjkrno4b4vk6m1tru9iiog3i.apps.googleusercontent.com', // Enter your google_client_id here
+  google_client_id:
+    '761641708289-ttd7sc03mjkrno4b4vk6m1tru9iiog3i.apps.googleusercontent.com', // Enter your google_client_id here
   // facebook_app_id: '686536215202827', // Enter your facebook_app_id here
-  amazon_client_id: '' // Enter your amazon_client_id here
-};
+  amazon_client_id: '', // Enter your amazon_client_id here
+}
 
 declare global {
   interface Window {
@@ -51,25 +53,25 @@ interface Obj {
 
 // import * as serviceWorker from './serviceWorker';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware()))
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 
 const reactApp = () => {
   const _App = () => {
-    return <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>
+    return (
+      <Provider store={store}>
+        <Router>
+          <App />
+        </Router>
+      </Provider>
+    )
   }
   deviceReady()
-  const AppWithAuth = withAuthenticator(_App);
+  const AppWithAuth = withAuthenticator(_App)
 
   // ReactDOM.render(<AppWithAuth federated={federated} />,
   //   document.getElementById('root')
   // )
-  ReactDOM.render(<_App />,
-    document.getElementById('root')
-  )
+  ReactDOM.render(<_App />, document.getElementById('root'))
 }
 
 // @ts-ignore

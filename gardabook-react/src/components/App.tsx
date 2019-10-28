@@ -63,7 +63,7 @@ class App extends Component<Props & RouteProps, State> {
                 >
                   <Switch location={location}>
                     {/* <Splash /> */}
-                    <SignIn />
+                    {/* <SignIn /> */}
                     {/* <SignUp /> */}
                     {/* <SignUpSuccess /> */}
 
@@ -73,7 +73,7 @@ class App extends Component<Props & RouteProps, State> {
                     <Route path="/List" component={List} />
                     <Route path="/Listings" component={Listings} />
                     <Route path="/Notifications" component={Notifications} />
-                    <Route render={() => <div>Not Found</div>} />
+                    {/* <Route render={() => <div>Not Found</div>} /> */}
                   </Switch>
                 </CSSTransition>
               </TransitionGroup>

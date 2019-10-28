@@ -2,16 +2,20 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import { faQrcode, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
+
 import styles from './styles/Bookings'
 import { Props, State } from './datatypes/Bookings'
-
 import Topbar from './Topbar'
 import BottomNav from './BottomNav'
+import { getBooking } from '../actions/bookingActionCreators'
 
 class Bookings extends Component<Props, State> {
+  componentDidMount() {
+    this.props.getBooking()
+  }
+
   render() {
     const { classes } = this.props
 
@@ -22,7 +26,7 @@ class Bookings extends Component<Props, State> {
             <input
               className={classes.searchBar}
               type="text"
-              placeholder="Search Catalog"
+              placeholder="Search Bookings"
             />
             <div className={classes.qrScanner}>
               <FontAwesomeIcon icon={faQrcode} size={'lg'} />
@@ -135,5 +139,5 @@ function mapStateToProps() {
 
 export default connect(
   mapStateToProps,
-  {}
+  { getBooking }
 )(injectSheet(styles)(Bookings))

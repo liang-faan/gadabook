@@ -1,8 +1,8 @@
-import { UPDATE_CURRENT_NAV_LOCATION } from './index'
+import { NAV_UPDATE_CURRENT_LOCATION } from './index'
 
 export const updateCurrentNavLocation = (navLocation: String) => {
   return {
-    type: UPDATE_CURRENT_NAV_LOCATION,
+    type: NAV_UPDATE_CURRENT_LOCATION,
     payload: navLocation,
   }
 }
