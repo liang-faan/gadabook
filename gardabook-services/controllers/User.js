@@ -3,10 +3,17 @@
 var utils = require('../utils/writer.js');
 var User = require('../service/UserService');
 
-module.exports.createUser = function createUser (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
-  var body = req.swagger.params['body'].value;
-  User.createUser(xIntRole,body)
+module.exports.createUser = function createUser(req, res, next) {
+  var xIntRole = '';
+  var body;
+  if (process.env.NODE_ENV == 'development') {
+    xIntRole = req.swagger.params['x-int-role'].value;
+    body = req.swagger.params['body'].value;
+  } else {
+    xIntRole = req.params['x-int-role'].value;
+    body = req.params['body'].value;
+  }
+  User.createUser(xIntRole, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -15,10 +22,17 @@ module.exports.createUser = function createUser (req, res, next) {
     });
 };
 
-module.exports.deleteUser = function deleteUser (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
-  var username = req.swagger.params['username'].value;
-  User.deleteUser(xIntRole,username)
+module.exports.deleteUser = function deleteUser(req, res, next) {
+  var xIntRole = '';
+  var username;
+  if (process.env.NODE_ENV == 'development') {
+    xIntRole = req.swagger.params['x-int-role'].value;
+    username = req.swagger.params['username'].value;
+  } else {
+    xIntRole = req.params['x-int-role'].value;
+    username = req.params['username'].value;
+  }
+  User.deleteUser(xIntRole, username)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -27,10 +41,17 @@ module.exports.deleteUser = function deleteUser (req, res, next) {
     });
 };
 
-module.exports.getUserByName = function getUserByName (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
-  var username = req.swagger.params['username'].value;
-  User.getUserByName(xIntRole,username)
+module.exports.getUserByName = function getUserByName(req, res, next) {
+  var xIntRole = '';
+  var username;
+  if (process.env.NODE_ENV == 'development') {
+    xIntRole = req.swagger.params['x-int-role'].value;
+    username = req.swagger.params['username'].value;
+  } else {
+    xIntRole = req.params['x-int-role'].value;
+    username = req.params['username'].value;
+  }
+  User.getUserByName(xIntRole, username)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -39,10 +60,17 @@ module.exports.getUserByName = function getUserByName (req, res, next) {
     });
 };
 
-module.exports.updateUser = function updateUser (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
-  var body = req.swagger.params['body'].value;
-  User.updateUser(xIntRole,body)
+module.exports.updateUser = function updateUser(req, res, next) {
+  var xIntRole = '';
+  var body;
+  if (process.env.NODE_ENV == 'development') {
+    xIntRole = req.swagger.params['x-int-role'].value;
+    body = req.swagger.params['body'].value;
+  } else {
+    xIntRole = req.params['x-int-role'].value;
+    body = req.params['body'].value;
+  }
+  User.updateUser(xIntRole, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -51,11 +79,22 @@ module.exports.updateUser = function updateUser (req, res, next) {
     });
 };
 
-module.exports.userLogin = function userLogin (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
-  var username = req.swagger.params['username'].value;
-  var password = req.swagger.params['password'].value;
-  User.userLogin(xIntRole,username,password)
+module.exports.userLogin = function userLogin(req, res, next) {
+
+  var xIntRole = '';
+  var username;
+  var password;
+  if (process.env.NODE_ENV == 'development') {
+    xIntRole = req.swagger.params['x-int-role'].value;
+    username = req.swagger.params['username'].value;
+    password = req.swagger.params['password'].value;
+  } else {
+    xIntRole = req.params['x-int-role'].value;
+    username = req.params['username'].value;
+    password = req.params['password'].value;
+  }
+
+  User.userLogin(xIntRole, username, password)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -64,8 +103,13 @@ module.exports.userLogin = function userLogin (req, res, next) {
     });
 };
 
-module.exports.userLogout = function userLogout (req, res, next) {
-  var xIntRole = req.swagger.params['x-int-role'].value;
+module.exports.userLogout = function userLogout(req, res, next) {
+  var xIntRole = '';
+  if (process.env.NODE_ENV == 'development') {
+    xIntRole = req.swagger.params['x-int-role'].value;
+  } else {
+    xIntRole = req.params['x-int-role'].value;
+  }
   User.userLogout(xIntRole)
     .then(function (response) {
       utils.writeJson(res, response);

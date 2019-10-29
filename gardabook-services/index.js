@@ -8,6 +8,8 @@ var jsyaml = require('js-yaml');
 // var auth = require("./api/helpers/auth");
 var serverPort = 8080;
 
+process.env.NODE_ENV='development'
+
 // swaggerRouter configuration
 var options = {
   swaggerUi: path.join(__dirname, '/swagger.json'),
