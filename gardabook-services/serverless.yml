@@ -35,7 +35,7 @@ functions:
   #             - X-Api-Key
   #             - X-Amz-Security-Token
   getBookingByUserId:
-    handler: service/BookingService.getUserBooking
+    handler: controllers/Booking.getUserBooking
     events:
       - http:
           path: v1/booking/getBookingByUserId
@@ -55,7 +55,7 @@ functions:
             headers:
               Access-Control-Allow-Origin: "'*'"
   createUserBooking:
-    handler: service/BookingService.createUserBooking
+    handler: controllers/Booking.createUserBooking
     events:
       - http:
           path: v1/booking/createUserBooking
@@ -75,7 +75,7 @@ functions:
             headers:
               Access-Control-Allow-Origin: "'*'"
   deleteBooking:
-    handler: service/BookingService.deleteBooking
+    handler: controllers/Booking.deleteBooking
     events:
       - http:
           path: v1/booking/deleteBooking
@@ -92,7 +92,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   addCatalogue:
-    handler: service/CatalogueService.addCatalogue
+    handler: controllers/Catalogue.addCatalogue
     events:
       - http:
           path: v1/catalogue/addCatalogue
@@ -109,7 +109,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   deleteCatalogue:
-    handler: service/CatalogueService.deleteCatalogue
+    handler: controllers/Catalogue.deleteCatalogue
     events:
       - http:
           path: v1/catalogue/deleteCatalogue
@@ -126,7 +126,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   findCatalogueByTagId:
-    handler: service/CatalogueService.readCatalogueByTags
+    handler: controllers/Catalogue.readCatalogueByTags
     events:
       - http:
           path: v1/catalogue/findCatalogueByTagId
@@ -143,7 +143,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   readCatalogueByAvailabilityId:
-    handler: service/CatalogueService.readCatalogueByAvailabilityId
+    handler: controllers/Catalogue.readCatalogueByAvailabilityId
     events:
       - http:
           path: v1/catalogue/readCatalogueByAvailabilityId
@@ -160,7 +160,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   readCatalogue:
-    handler: service/CatalogueService.readCatalogue
+    handler: controllers/Catalogue.readCatalogue
     events:
       - http:
           path: v1/catalogue/readCatalogue
@@ -177,7 +177,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   updateCatalogue:
-    handler: service/CatalogueService.updateCatalogue
+    handler: controllers/Catalogue.updateCatalogue
     events:
       - http:
           path: v1/catalogue/updateCatalogue
@@ -194,7 +194,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   createEnrollment:
-    handler: service/EnrollmentService.createEnrollment
+    handler: controllers/Enrollment.createEnrollment
     events:
       - http:
           path: v1/enrollment/createEnrollment
@@ -211,7 +211,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   getUserEnrollment:
-    handler: service/EnrollmentService.getUserEnrollment
+    handler: controllers/Enrollment.getUserEnrollment
     events:
       - http:
           path: v1/enrollment/getUserEnrollment
@@ -228,7 +228,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   getEnrollment:
-    handler: service/EnrollmentService.getEnrollment
+    handler: controllers/Enrollment.getEnrollment
     events:
       - http:
           path: v1/enrollment/getEnrollment
@@ -245,7 +245,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   deleteEnrollment:
-    handler: service/EnrollmentService.deleteEnrollment
+    handler: controllers/Enrollment.deleteEnrollment
     events:
       - http:
           path: v1/enrollment/deleteEnrollment
@@ -262,7 +262,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   createUser:
-    handler: service/UserService.createUser
+    handler: controllers/User.createUser
     events:
       - http:
           path: v1/user/createUser
@@ -279,7 +279,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   deleteUser:
-    handler: service/UserService.deleteUser
+    handler: controllers/User.deleteUser
     events:
       - http:
           path: v1/user/eleteUser
@@ -296,7 +296,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   getUserByName:
-    handler: service/UserService.getUserByName
+    handler: controllers/User.getUserByName
     events:
       - http:
           path: v1/user/getUserByName
@@ -313,7 +313,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   updateUser:
-    handler: service/UserService.updateUser
+    handler: controllers/User.updateUser
     events:
       - http:
           path: v1/user/updateUser
@@ -330,7 +330,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   userLogin:
-    handler: service/UserService.userLogin
+    handler: controllers/User.userLogin
     events:
       - http:
           path: v1/user/userLogin
@@ -347,7 +347,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
   userLogout:
-    handler: service/UserService.userLogout
+    handler: controllers/User.userLogout
     events:
       - http:
           path: v1/user/userLogout
