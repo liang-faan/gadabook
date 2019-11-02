@@ -5,8 +5,8 @@
       "Properties": {
         "TableName": "gardabook-develop",
         "ProvisionedThroughput": {
-          "ReadCapacityUnits": 1,
-          "WriteCapacityUnits": 1
+          "ReadCapacityUnits": 2,
+          "WriteCapacityUnits": 2
         },
         "KeySchema": [
           { "AttributeName": "pKey", "KeyType": "HASH" },

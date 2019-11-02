@@ -1,3 +1,4 @@
+---
 swagger: "2.0"
 info:
   description: "This is API design for GardaBook System"
@@ -37,6 +38,41 @@ schemes:
 - "http"
 paths:
   /catalogue:
+    get:
+      tags:
+      - "catalogue"
+      summary: "Finds catalogue by tags"
+      description: "Multiple tag values can be provided with comma separated strings"
+      operationId: "readCatalogueByTags"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "x-int-role"
+        in: "header"
+        required: true
+        type: "string"
+        default: "retrieve"
+      - name: "tags"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Catalogues"
+        400:
+          description: "Invalid status value"
+      security:
+      - Bearer: []
+      x-security-scopes:
+      - "read:catalogue"
+      x-swagger-router-controller: "Catalogue"
     post:
       tags:
       - "catalogue"
@@ -50,25 +86,31 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "create"
-        required: true
       - in: "body"
         name: "body"
         description: "Catalogue object that needs to be added to the system"
         required: true
         schema:
-          $ref: '#/definitions/Catalogue'
+          $ref: "#/definitions/NewCatalogue"
       responses:
-        405:
-          description: "Invalid input"
+        200:
+          description: "successful operation"
+          examples:
+            application/json:
+              catalogueId: "Catalogue_d298238e-59ec-4d35-9164-9bd0b929244a"
+        400:
+          description: "Invalid Order"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:catalogue"
-        - "read:catalogue"
+      - "write:catalogue"
+      - "read:catalogue"
+      x-swagger-router-controller: "Catalogue"
     put:
       tags:
       - "catalogue"
@@ -82,71 +124,31 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "update"
-        required: true
       - in: "body"
         name: "body"
         description: "Catalogue object that needs to be update into the system"
         required: true
         schema:
-          $ref: '#/definitions/Catalogue'
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Catalogue not found"
-        405:
-          description: "Validation exception"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - "write:catalogue"
-        - "read:catalogue"
-    get:
-      tags:
-      - "catalogue"
-      summary: "Finds catalogue by tags"
-      description: "Multiple tag values can be provided with comma separated strings"
-      operationId: "readCatalogueByTags"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "header"
-        name: "x-int-role"
-        type: "string"
-        default: "retrieve"
-        required: true
-      - name: "tag"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-      - name: "providerName"
-        in: "query"
-        description: "Providers of the catalogue"
-        required: false
-        type: "array"
-        items:
-          type: "string"
+          $ref: "#/definitions/UpdateCatalogue"
       responses:
         200:
           description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: '#/definitions/Catalogue'
+          examples:
+            application/json:
+              catalogueId: "Catalogue_d298238e-59ec-4d35-9164-9bd0b929244a"
         400:
-          description: "Invalid status value"
+          description: "Invalid Order"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "read:catalogue"
+      - "write:catalogue"
+      - "read:catalogue"
+      x-swagger-router-controller: "Catalogue"
   /catalogue/{catalogueId}:
     get:
       tags:
@@ -158,11 +160,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "retrieve"
-        required: true
       - name: "catalogueId"
         in: "path"
         description: "ID of catalogue to return"
@@ -172,15 +174,16 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: '#/definitions/Catalogue'
+            $ref: "#/definitions/Catalogues"
         400:
           description: "Invalid ID supplied"
         404:
           description: "Catalogue not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "read:catalogue"
+      - "read:catalogue"
+      x-swagger-router-controller: "Catalogue"
     delete:
       tags:
       - "catalogue"
@@ -191,11 +194,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "delete"
-        required: true
       - name: "api_key"
         in: "header"
         required: false
@@ -211,29 +214,30 @@ paths:
         404:
           description: "Catalogue not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "read:catalogue"
-        - "write:catalogue"
+      - "read:catalogue"
+      - "write:catalogue"
+      x-swagger-router-controller: "Catalogue"
   /catalogue/availability/{availabilityId}:
     get:
       tags:
       - "catalogue"
-      summary: "Find catalogues with availability ID"
+      summary: "Find catalogues by availability ID"
       description: "Returns list of catalogues with the availability ID"
       operationId: "readCatalogueByAvailabilityId"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "retrieve"
-        required: true
       - name: "availabilityId"
         in: "path"
-        description: "ID of Availability"
+        description: "ID of availability"
         required: true
         type: "string"
       responses:
@@ -248,10 +252,45 @@ paths:
         404:
           description: "No availability found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:catalogue"
+      - "write:catalogue"
+      x-swagger-router-controller: "Catalogue"
   /booking:
+    get:
+      tags:
+      - "booking"
+      summary: "Find booking history by user id"
+      description: "Returns booking list of user's"
+      operationId: "getUserBooking"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "x-int-role"
+        in: "header"
+        required: true
+        type: "string"
+        default: "retrieve"
+      - name: "userId"
+        in: "query"
+        description: "ID of user"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Bookings"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Booking not found"
+      security:
+      - Bearer: []
+      x-security-scopes:
+      - "read:booking"
+      x-swagger-router-controller: "Booking"
     post:
       tags:
       - "booking"
@@ -262,77 +301,48 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "create"
-        required: true
       - in: "body"
         name: "body"
         description: "book for the facility"
         required: true
         schema:
-          $ref: '#/definitions/NewBooking'
+          $ref: "#/definitions/NewBooking"
       responses:
         200:
           description: "successful operation"
-          schema:
-            $ref: '#/definitions/NewBooking'
+          examples:
+            application/json:
+              bookingId: "Booking_d298238e-59ec-4d35-9164-9bd0b929244a"
         400:
           description: "Invalid Order"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:booking"
-    get:
-      tags:
-      - "booking"
-      summary: "Find booking history by user id"
-      description: "Returns booking list of user's"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "header"
-        name: "x-int-role"
-        type: "string"
-        default: "retrieve"
-        required: true
-      - name: "userId"
-        in: "query"
-        description: "ID of user"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: '#/definitions/Booking'
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Booking not found"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - "read:booking"
-  /booking/{userId}:
+      - "write:booking"
+      x-swagger-router-controller: "Booking"
+  /booking/{bookingId}:
     get:
       tags:
       - "booking"
       summary: "Find booking by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
+      description: "For valid response try integer IDs with value >= 1 and <= 10.\
+        \         Other values will generated exceptions"
       operationId: "getBooking"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "retrieve"
-        required: true
-      - name: "userId"
+      - name: "bookingId"
         in: "path"
         description: "ID of booking that needs to be fetched"
         required: true
@@ -341,30 +351,32 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: '#/definitions/Booking'
+            $ref: "#/definitions/Booking"
         400:
           description: "Invalid ID supplied"
         404:
           description: "Order not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "read:booking"
+      - "read:booking"
+      x-swagger-router-controller: "Booking"
     delete:
       tags:
       - "booking"
       summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      description: "For valid response try integer IDs with positive integer value.\
+        \         Negative or non-integer values will generate API errors"
       operationId: "deleteBooking"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "delete"
-        required: true
       - name: "bookingId"
         in: "path"
         description: "ID of the order that needs to be deleted"
@@ -376,9 +388,10 @@ paths:
         404:
           description: "Order not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:booking"
+      - "write:booking"
+      x-swagger-router-controller: "Booking"
   /user:
     post:
       tags:
@@ -390,11 +403,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "create"
-        required: true
       - in: "body"
         name: "body"
         description: "Created user object"
@@ -405,9 +418,10 @@ paths:
         default:
           description: "successful operation"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:user"
+      - "write:user"
+      x-swagger-router-controller: "User"
     put:
       tags:
       - "user"
@@ -418,11 +432,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "update"
-        required: true
       - in: "body"
         name: "body"
         description: "Updated user object"
@@ -435,9 +449,10 @@ paths:
         404:
           description: "User not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:user"
+      - "write:user"
+      x-swagger-router-controller: "User"
   /user/login:
     put:
       tags:
@@ -449,11 +464,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "login"
-        required: true
       - name: "username"
         in: "query"
         description: "The user name for login"
@@ -467,9 +482,6 @@ paths:
       responses:
         200:
           description: "successful operation"
-          schema:
-            type: "string"
-            
           headers:
             X-Rate-Limit:
               type: "integer"
@@ -482,8 +494,11 @@ paths:
             X-Cookies:
               type: "string"
               description: "cookies to contains session id"
+          schema:
+            type: "string"
         400:
           description: "Invalid username/password supplied"
+      x-swagger-router-controller: "User"
   /user/logout:
     get:
       tags:
@@ -495,14 +510,15 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "logout"
-        required: true
       responses:
         default:
           description: "successful operation"
+      x-swagger-router-controller: "User"
   /user/{username}:
     get:
       tags:
@@ -514,11 +530,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "retrieve"
-        required: true
       - name: "username"
         in: "path"
         description: "The name that needs to be fetched. Use user1 for testing. "
@@ -534,9 +550,10 @@ paths:
         404:
           description: "User not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "read:user"
+      - "read:user"
+      x-swagger-router-controller: "User"
     delete:
       tags:
       - "user"
@@ -547,11 +564,11 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "delete"
-        required: true
       - name: "username"
         in: "path"
         description: "The name that needs to be deleted"
@@ -563,16 +580,17 @@ paths:
         404:
           description: "User not found"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:user"
-        - "read:user"
+      - "write:user"
+      - "read:user"
+      x-swagger-router-controller: "User"
   /enrollment:
-  get:
+    get:
       tags:
       - "enrollment"
       summary: "Find enrollment by user id"
-      description: "Returns enrollment list of te user"
+      description: "Returns enrollment list of the user"
       operationId: "getUserEnrollment"
       produces:
       - "application/xml"
@@ -592,7 +610,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Enrollment"
+            $ref: "#/definitions/Enrollments"
         400:
           description: "Invalid ID supplied"
         404:
@@ -601,6 +619,7 @@ paths:
       - Bearer: []
       x-security-scopes:
       - "read:enrollment"
+      x-swagger-router-controller: "Enrollment"
     post:
       tags:
       - "enrollment"
@@ -611,25 +630,30 @@ paths:
       - "application/xml"
       - "application/json"
       parameters:
-      - in: "header"
-        name: "x-int-role"
+      - name: "x-int-role"
+        in: "header"
+        required: true
         type: "string"
         default: "create"
-        required: true
       - in: "body"
         name: "body"
         description: "Created enrollement object"
         required: true
         schema:
-          $ref: "#/definitions/Enrollment"
+          $ref: "#/definitions/NewEnrollment"
       responses:
-        default:
+        200:
           description: "successful operation"
+          examples:
+            application/json:
+              enrollmentId: "Enrollment_d298238e-59ec-4d35-9164-9bd0b929244a"
+        400:
+          description: "Invalid Order"
       security:
-        - Bearer: []
+      - Bearer: []
       x-security-scopes:
-        - "write:enrollment"
-        # - "read:enrollment"
+      - "write:enrollment"
+      x-swagger-router-controller: "Enrollment"
   /enrollment/{enrollmentId}:
     get:
       tags:
@@ -655,9 +679,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Enrollment"
+            $ref: "#/definitions/Enrollment"
         404:
           description: "No enrollment found on current provider"
       security:
@@ -665,6 +687,7 @@ paths:
       x-security-scopes:
       - "write:enrollment"
       - "read:enrollment"
+      x-swagger-router-controller: "Enrollment"
     delete:
       tags:
       - "enrollment"
@@ -695,22 +718,21 @@ paths:
       - Bearer: []
       x-security-scopes:
       - "write:enrollment"
+      x-swagger-router-controller: "Enrollment"
 securityDefinitions:
   Bearer:
+    description: "Jwt token authentication from AWS Cognito"
     type: "apiKey"
     name: "Authorization"
     in: "header"
-    description: "Jwt token authentication from AWS Cognito"
 definitions:
   NewBooking:
     type: "object"
     properties:
       userId:
         type: "string"
-        description: "user id"
       catalogueId:
         type: "string"
-        description: "catalogue id"
       date:
         type: "string"
         format: "date-time"
@@ -723,46 +745,112 @@ definitions:
       endTime:
         type: "string"
         format: "date-time"
-    xml:
-      name: "NewBooking"
-  Booking:
-    type: "object"
-    properties:
-      bookingId:
-        type: "string"
-      user:
-        $ref: '#/definitions/User'
-      catalogue:
-        $ref: '#/definitions/Catalogue'
-      availability:
-        $ref: '#/definitions/Availability'
       amount:
         type: "number"
-        format: "currency"
-      createDate: 
-        type: "string"
-        format: "date-time"
-      bookingDate: 
-        type: "string"
-        format: "date-time"
-      submitDate: 
-        type: "string"
-        format: "date-time"
-      paymentDate: 
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "New"
-        - "Booked"
-        - "Rejected"
-      complete:
-        type: "boolean"
-        default: false
     xml:
-      name: "Booking"
+      name: "NewBooking"
+    example:
+      userId: "User_1111"
+      catalogueId: "Catalogue_111"
+      date: "2000-01-23T04:56:07.000+00:00"
+      slot: 1
+      startTime: "2000-01-23T04:56:07.000+00:00"
+      endTime: "2000-01-23T04:56:07.000+00:00"
+      amount: 111
+  Bookings:
+    type: array
+    items:
+      $ref: '#/definitions/Booking'
+    xml:
+      name: "bookings"
+    example:  
+      bookings:
+          - userId: 
+              S: "User_BD49B658-122B-44BE-8B2C-60846EC5864C"
+            transactionId: 
+              S: "Transaction_cafd1781-08ad-459a-81b5-aee14e230e7a"
+            catalogueId: 
+              S: "Catalogue_99088906-9357-4BA1-BB25-16F21306978E"
+            amount: 
+              S: "6.02"    
+            pKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            sKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            startTime: 
+              N: "1572662984404"
+            slot: 
+              N: "1572662984404"
+            createdAt: 
+              N: "1572662984404"
+            updatedAt: 
+              N: "1572662984404"
+          - userId: 
+              S: "User_BD49B658-122B-44BE-8B2C-60846EC5864C"
+            transactionId: 
+              S: "Transaction_cafd1781-08ad-459a-81b5-aee14e230e7a"
+            catalogueId: 
+              S: "Catalogue_99088906-9357-4BA1-BB25-16F21306978E"
+            amount: 
+              S: "6.02"    
+            pKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            sKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            startTime: 
+              N: "1572662984404"
+            slot: 
+              N: "1572662984404"
+            createdAt: 
+              N: "1572662984404"
+            updatedAt: 
+              N: "1572662984404"
+  Booking:
+    type: object
+    properties:
+      userId:
+        type: "string"
+      transactionId:
+        type: "string"
+      catalogueId:
+        type: "string"
+      amount:
+        type: "string"    
+      pKey:
+        type: "string"
+      sKey:
+        type: "string"
+      startTime:
+        type: "number"
+      slot:
+        type: "number"
+      createdAt:
+        type: "number"
+      updatedAt:
+        type: "number"
+    xml:
+      name: "booking"
+    example:
+      userId: 
+        S: "User_BD49B658-122B-44BE-8B2C-60846EC5864C"
+      transactionId: 
+        S:  "Transaction_cafd1781-08ad-459a-81b5-aee14e230e7a"
+      catalogueId: 
+        S:  "Catalogue_99088906-9357-4BA1-BB25-16F21306978E"
+      amount: 
+        S:  "6.02"    
+      pKey: 
+        S:  "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+      sKey: 
+        S:  "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+      startTime: 
+        N:  "1572662984404"
+      slot: 
+        N:  "1572662984404"
+      createdAt: 
+        N:  "1572662984404"
+      updatedAt: 
+        N:  "1572662984404"
   Availability:
     type: "object"
     properties:
@@ -770,11 +858,41 @@ definitions:
         type: "string"
       catalogue:
         $ref: "#/definitions/Catalogue"
-      date: 
+      date:
         type: "string"
         format: "date"
     xml:
       name: "Avalability"
+    example:
+      date: "2000-01-23"
+      availablityId: 0
+      catalogue:
+        venue: "venue"
+        catalogueId: 0
+        address: "address"
+        city: "city"
+        rateUnit: "Minute"
+        remark: "remark"
+        provider:
+          firstName: "firstName"
+          lastName: "lastName"
+          userStatus: 5
+          phone: "phone"
+          userId: "1"
+          email: "email"
+          username: "username"
+        rate: 5.63737665663332876420099637471139430999755859375
+        terms: "terms"
+        name: "NUS ISS Meeting Room#5"
+        currency: "SGD"
+        tag:
+        - tagId: 6
+          descritpion: "descritpion"
+          status: "Active"
+        - tagId: 6
+          descritpion: "descritpion"
+          status: "Active"
+        status: "Open"
   User:
     type: "object"
     properties:
@@ -796,6 +914,14 @@ definitions:
         description: "User Status"
     xml:
       name: "User"
+    example:
+      firstName: "firstName"
+      lastName: "lastName"
+      userStatus: 5
+      phone: "phone"
+      userId: "1"
+      email: "email"
+      username: "username"
   Tag:
     type: "object"
     properties:
@@ -803,47 +929,46 @@ definitions:
         type: "string"
       descritpion:
         type: "string"
-      status: 
+      status:
         type: "string"
-        enum: 
+        enum:
         - "Active"
         - "Deleted"
         - "Obsoloted"
     xml:
       name: "Tag"
-  Catalogue:
+    example:
+      tagId: 6
+      descritpion: "descritpion"
+      status: "Active"
+  NewCatalogue:
     type: "object"
     required:
     - "name"
-    - "venue"
+    - "currency"
     - "rate"
-    - "rateUnit"
+    - "unit"
+    - "tag"
+    - "availabilityId"
     properties:
-      catalogueId:
+      availabilityId:
         type: "string"
       tag:
-        type: "array"
-        xml:
-          name: "tag"
-          wrapped: true
-        items:
-          $ref: '#/definitions/Tag'
-      provider:
-        $ref: '#/definitions/User'
+        type: "string"
       name:
         type: "string"
         example: "NUS ISS Meeting Room#5"
-      currency: 
+      currency:
         type: "string"
         description: "catalogue currency"
         enum:
         - "SGD"
         - "USD"
         - "MYR"
-      rate: 
+      rate:
         type: "number"
         format: "currency"
-      rateUnit:
+      unit:
         type: "string"
         description: "the unit of rate"
         enum:
@@ -853,55 +978,310 @@ definitions:
         - "Week"
         - "Month"
         - "Year"
-      # availability:
-      #   type: "array"
-      #   items:
-      #     $ref: '#/definitions/Availability'
-      remark: 
+      remark:
         type: "string"
-      terms:
+      tnc:
         type: "string"
-      venue: 
+      venue:
         type: "string"
-      city: 
+      city:
         type: "string"
-      address: 
+      address:
         type: "string"
-      status:
+    xml:
+      name: "NewCatalogue"
+    example:
+      venue: "venue"
+      availabilityId: "AvailabilityId_111"
+      tag: "myTag"
+      address: "address"
+      city: "city"
+      unit: "Minute"
+      remark: "remark"
+      rate: 5.6
+      tnc: "terms"
+      name: "NUS ISS Meeting Room#5"
+      currency: "SGD"
+  UpdateCatalogue:
+    type: "object"
+    required:
+    - "catalogueId"
+    - "name"
+    - "currency"
+    - "rate"
+    - "unit"
+    - "venue"
+    - "city"
+    - "address"
+    - "tag"
+    - "availabilityId"
+    properties:
+      catalogueId:
         type: "string"
-        description: "Catalogue status in the system"
+      tag:
+        type: "string"
+      availabilityId:
+        type: "string"
+      name:
+        type: "string"
+        example: "NUS ISS Meeting Room#5"
+      currency:
+        type: "string"
+        description: "catalogue currency"
         enum:
-        - "Open"
-        - "Closed"
+        - "SGD"
+        - "USD"
+        - "MYR"
+      rate:
+        type: "number"
+        format: "currency"
+      unit:
+        type: "string"
+        description: "the unit of rate"
+        enum:
+        - "Minute"
+        - "Hour"
+        - "Day"
+        - "Week"
+        - "Month"
+        - "Year"
+      remark:
+        type: "string"
+      tnc:
+        type: "string"
+      venue:
+        type: "string"
+      city:
+        type: "string"
+      address:
+        type: "string"
+    xml:
+      name: "UpdateCatalogue"
+    example:
+      venue: "venue"
+      catalogueId: "Catalogue_111"
+      tag: "myTag"
+      availabilityId: "Availability_111"
+      address: "address"
+      city: "city"
+      unit: "Minute"
+      remark: "remark"
+      rate: 5.6
+      tnc: "terms"
+      name: "NUS ISS Meeting Room#5"
+      currency: "SGD"
+  Catalogues:
+    type: array
+    items:
+      $ref: '#/definitions/Catalogue'
+    xml:
+      name: "catalogues"
+    example:
+      catalogues:
+        - venue:
+            S: "venue"
+          address:
+            S: "address"
+          city:
+            S: "city"
+          tnc:
+            S: "Be careful"
+          remark:
+            S: "remark"
+          unit:
+            S: "Minute"
+          rate:
+            S: "5.6"
+          availabilityId:
+            S: "Availability_111"
+          name:
+            S: "NUS ISS Meeting Room#5"
+          sKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          currency:
+            S: "SGD"
+          pKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          tag:
+            S: "myTag"
+        - venue:
+            S: "venue"
+          address:
+            S: "address"
+          city:
+            S: "city"
+          tnc:
+            S: "Be careful"
+          remark:
+            S: "remark"
+          unit:
+            S: "Minute"
+          rate:
+            S: "5.6"
+          availabilityId:
+            S: "Availability_111"
+          name:
+            S: "NUS ISS Meeting Room#5"
+          sKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          currency:
+            S: "SGD"
+          pKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          tag:
+            S: "myTag"
+  Catalogue:
+    type: "object"
+    required:
+    - "name"
+    - "rate"
+    - "unit"
+    - "venue"
+    properties:
+      venue:
+          type: "string"
+      address:
+        type: "string"
+      city:
+        type: "string"
+      tnc:
+        type: "string"
+      remark:
+        type: "string"
+      unit:
+        type: "string"
+      rate:
+        type: "string"
+      availabilityId:
+        type: "string"
+      name:
+        type: "string"
+      sKey:
+        type: "string"
+      currency:
+        type: "string"
+      pKey:
+        type: "string"
+      tag:
+        type: "string"
     xml:
       name: "Catalogue"
-      
-  Enrollment:
+    example:
+      venue:
+        S: "venue"
+      address:
+        S: "address"
+      city:
+        S: "city"
+      tnc:
+        S: "Be careful"
+      remark:
+        S: "remark"
+      unit:
+        S: "Minute"
+      rate:
+        S: "5.6"
+      availabilityId:
+        S: "Availability_111"
+      name:
+        S: "NUS ISS Meeting Room#5"
+      sKey:
+        S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+      currency:
+        S: "SGD"
+      pKey:
+        S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+      tag:
+        S: "myTag"
+  NewEnrollment:
     type: "object"
     properties:
-      enrollmentId:
+      userId:
         type: "string"
-      provider:
-        $ref: '#/definitions/User'
-      catalogue: 
-        $ref: "#/definitions/Catalogue"
-      date: 
+      catalogueId:
+        type: "string"
+      expiryDate:
         type: "string"
         format: "date"
-      startTime: 
-        type: "string"
-        format: "date-time"
-      endTime: 
-        type: "string"
-        format: "date-time"
-      status: 
-        type: "string"
-        enum: 
-        - "Booked"
-        - "Reserved"
-        - "Available"
+      fee:
+        type: "number"
+        format: "currency"
     xml:
-      name: "Enrollment"
+      name: "NewEnrollment"
+    example:
+      expiryDate: "2000-01-23"
+      userId: "User_111"
+      catalogueId: "Catalogue_111"
+      fee: 1.5
+  Enrollments:
+    type: array
+    items:
+      $ref: '#/definitions/Enrollment'
+    xml:
+      name: "enrollments"
+    example:
+      enrollments:
+        - expiryDate:
+            N: "1572679412989"
+          createdAt:
+            N: "1572679412989"
+          catalogueId:
+            S: "Catalogue_ef476e39-e6cd-4f8b-ba53-0f7b84e0846f"
+          fee:
+            S: "1.5"
+          sKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          pKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          updatedAt:
+            N: "1572679412989"
+        - expiryDate:
+            N: "1572679412989"
+          createdAt:
+            N: "1572679412989"
+          catalogueId:
+            S: "Catalogue_ef476e39-e6cd-4f8b-ba53-0f7b84e0846f"
+          fee:
+            S: "1.5"
+          sKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          pKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          updatedAt:
+            N: "1572679412989"
+  Enrollment:
+    properties:
+      expiryDate:
+        type: "number"
+      createdAt:
+        type: "number"
+      catalogueId:
+        type: "string"
+      fee:
+        type: "string"
+      sKey:
+        type: "string"
+      pKey:
+        type: "string"
+      updatedAt:
+        type: "number"
+    xml:
+      name: "enrollments"
+    example:
+      expiryDate:
+        N: "1572679412989"
+      createdAt:
+        N: "1572679412989"
+      catalogueId:
+        S: "Catalogue_ef476e39-e6cd-4f8b-ba53-0f7b84e0846f"
+      fee:
+        S: "1.5"
+      sKey:
+        S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+      pKey:
+        S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+      updatedAt:
+        N: "1572679412989"
 externalDocs:
   description: "Find out more about Gardabook"
   url: "http://www.gardabook.com"

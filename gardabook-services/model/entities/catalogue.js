@@ -154,7 +154,7 @@ const createCatalogue = async props => {
 
   return await Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return catalogueCatalogue
+      return { "catalogueId": catalogueCatalogue.pKey.S }
     } else {
       return false
     }
@@ -185,7 +185,11 @@ const readCatalogues = async props => {
   })
 
   const result = await Promise.all(catalogues).then(data => {
-    return data
+    let finalData = []
+    data.forEach(function (item, index) {
+      finalData = finalData.concat(item.Items)
+    })
+    return { "catalogues": finalData }
   })
   .catch(error => {
     console.log(error)
@@ -209,7 +213,7 @@ const readCatalogue = async props => {
   const op1 = queryWithKeys(keyCatalogue.pKey.S, keyCatalogue.sKey.S)
 
   const result = await Promise.all([op1]).then(data => {
-    return data
+    return data[0].Items[0]
   })
   .catch(error => {
     console.log(error)
@@ -253,7 +257,7 @@ const updateCatalogue = async props => {
 
   return Promise.all(ops).then((res, err) => {
     if (!err) {
-      return catalogueCatalogue
+      return { "catalogueId": catalogueCatalogue.pKey.S }
     } else {
       return false
     }

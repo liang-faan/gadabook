@@ -152,7 +152,7 @@ const createEnrollment = async props => {
 
   return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return true
+      return { enrollmentId: enrollmentEnrollment.pKey.S }
     } else {
       return false
     }
@@ -228,7 +228,11 @@ const readUserEnrollment = async props => {
   })
 
   const result = await Promise.all(enrollments).then(data => {
-    return data
+    let finalData = []
+    data.forEach(function (item, index) {
+      finalData = finalData.concat(item.Items)
+    })
+    return { "enrollments": finalData }
   })
   .catch(error => {
     console.log(error)
@@ -275,7 +279,7 @@ const readEnrollment = async props => {
   })
 
   const result = await Promise.all([enrollmentResult]).then(data => {
-    return data
+    return data[0].Items[0]
   })
   .catch(error => {
     console.log(error)

@@ -38,6 +38,15 @@ var writeJson = exports.writeJson = function(response, arg1, arg2) {
   if(typeof payload === 'object') {
     payload = JSON.stringify(payload, null, 2);
   }
-  response.writeHead(code, {'Content-Type': 'application/json'});
-  response.end(payload);
+  if(process.env.NODE_ENV == 'development'){
+    response.writeHead(code, {'Content-Type': 'application/json'});
+    return response.end(payload);
+  }
+  else{
+    var respbody = {
+      statusCode: code,
+      body: payload
+    };
+    response(null, arg1)
+  }
 };
