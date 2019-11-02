@@ -12,9 +12,9 @@ const client_secret = 'pSr4oh1A3gzh_gYoBZSi-Yz9'
 const redirect_uri = 'http://localhost'
 const userPoolId = 'ap-southeast-1_Yc1XAOUfh'
 
-// const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Server clientId
+const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Server clientId
 // const cognitoClientId = '29llvpvj8sqhh8k5o1781p81k1' // Mobile clientId
-const cognitoClientId = 'CLIENT_ID_NOT_APPLICABLE'
+// const cognitoClientId = 'CLIENT_ID_NOT_APPLICABLE' // Not usable. Value used only when made by admin
 
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
   region: 'ap-southeast-1',
@@ -25,59 +25,6 @@ const oauth2Client = new google.auth.OAuth2(
   client_secret,
   redirect_uri
 )
-
-const createOrSignInUser = async username => {
-  try {
-    // Check if user is already present
-    const userPresent = await isUserPresent(username)
-
-    // If present, sign in and respond with cognito ID token
-    if (userPresent) {
-      // TODO: get static password from key store
-      const cognitoAccessToken = await getCognitoAccessToken(
-        username,
-        '1qazZAQ!'
-      )
-      return cognitoAccessToken
-    } else {
-      const createdUser = await createGoogleAuthUser(username)
-      const createdUsername = createdUser.User.Username
-      // Username would have been prepended with oauth label
-      await updateUserPassword(createdUsername)
-      const cognitoAccessToken = await getCognitoAccessToken(
-        createdUsername,
-        '1qazZAQ!'
-      )
-      return cognitoAccessToken
-    }
-  } catch (err) {
-    return err
-  }
-}
-
-const getTokens = async code => {
-  try {
-    const { tokens } = await oauth2Client.getToken(code)
-    const { id_token } = tokens
-    // No need to verify ID Token JWT as we got the data direct from Google
-    const decoded = jwt.decode(id_token)
-    const { email } = decoded
-
-    createOrSignInUser(email)
-
-    console.log(`EMAIL is ${email}`)
-  } catch (err) {
-    console.log('Error!!!')
-    console.log(err.response.data.error)
-    console.log(err.response.data.error_description)
-  }
-}
-
-module.exports.authorize = (event, context, cb) => {
-  const { body } = event
-  const code = body.serverAuthCode
-  getTokens(code)
-}
 
 const isUserPresent = async username => {
   return new Promise((resolve, reject) => {
@@ -147,6 +94,7 @@ const createGoogleAuthUser = async email => {
   })
 }
 
+// Update user status from FORCE_CHANGE_PASSWORD to CONFIRMED
 const updateUserPassword = async username => {
   return new Promise((resolve, reject) => {
     var params = {
@@ -165,30 +113,72 @@ const updateUserPassword = async username => {
   })
 }
 
-// getCognitoAccessToken('asdf', '1qazZAQ!').then(res => console.log(res))
-// isUserPresent().then(res => console.log(res))
-// createGoogleAuthUser('asdf@example.com').then(res => console.log(res))
-// updateUserPassword('oauth2-google@asdf@example.com').then(res =>
-//   console.log(res)
-// )
-
-// For local test
-// const code =
-//   '4/swGhNgUC_x0mhiPB9vrTViZv1FMzDrnU1Uhgl2YjkMGzcxfTKCnP832cjCF1u9h45HExdagp6a7DBxyC2jpwHOQ'
-// getTokens(code)
-
-const testNewUserFlow = async username => {
-  const createdUser = await createGoogleAuthUser(username)
-  const createdUsername = createdUser.User.Username
-  // Username would have been prepended with oauth label
-  await updateUserPassword(createdUsername)
-  const cognitoAccessToken = await getCognitoAccessToken(
-    createdUsername,
-    '1qazZAQ!'
-  )
-  return cognitoAccessToken
+const createOrSignInGoogleUser = async email => {
+  try {
+    // Check if user is already present
+    const username = `oauth2-google@${email}`
+    const userPresent = await isUserPresent(username)
+    // If present, sign in and respond with cognito ID token
+    if (userPresent) {
+      // TODO: get static password from key store
+      const cognitoAccessToken = await getCognitoAccessToken(
+        username,
+        '1qazZAQ!'
+      )
+      return cognitoAccessToken
+    } else {
+      // Username would have been prepended with oauth label
+      const createdUser = await createGoogleAuthUser(email)
+      const username = createdUser.User.Username
+      await updateUserPassword(username)
+      const cognitoAccessToken = await getCognitoAccessToken(
+        username,
+        '1qazZAQ!'
+      )
+      return cognitoAccessToken
+    }
+  } catch (err) {
+    return err
+  }
 }
 
-testNewUserFlow('jerome9@example.com')
-  .then(res => console.log(res))
-  .catch(err => console.log(err))
+/**
+ * Creates or signs in user using Google's oauth2 Authorization Code
+ * @param {string} code
+ */
+const getCognitoTokenFromGoogleCode = async code => {
+  try {
+    const { tokens } = await oauth2Client.getToken(code)
+    const { id_token } = tokens
+    // No need to verify ID Token JWT as we got the data direct from Google
+    const decoded = jwt.decode(id_token)
+    const { email } = decoded
+
+    createOrSignInGoogleUser(email)
+
+    console.log(`EMAIL is ${email}`)
+  } catch (err) {
+    console.log('Error!!!')
+    console.log(err.response.data.error)
+    console.log(err.response.data.error_description)
+  }
+}
+
+exports.getCognitoTokenFromGoogleCode = getCognitoTokenFromGoogleCode
+
+// TEST CODE: By pass token exchange to test user sign up/in
+// const testNewUserFlow = async username => {
+//   const createdUser = await createGoogleAuthUser(username)
+//   const createdUsername = createdUser.User.Username
+//   // Username would have been prepended with oauth label
+//   await updateUserPassword(createdUsername)
+//   const cognitoAccessToken = await getCognitoAccessToken(
+//     createdUsername,
+//     '1qazZAQ!'
+//   )
+//   return cognitoAccessToken
+// }
+// createOrSignInGoogleUser('jerome13@example.com')
+// // testNewUserFlow('jerome11@example.com')
+// .then(res => console.log(res))
+// .catch(err => console.log(err))
