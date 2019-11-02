@@ -277,7 +277,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Booking"
+            $ref: "#/definitions/Bookings"
         400:
           description: "Invalid ID supplied"
         404:
@@ -311,8 +311,9 @@ paths:
       responses:
         200:
           description: "successful operation"
-          schema:
-            $ref: "#/definitions/NewBooking"
+          examples:
+            application/json:
+              bookingId: "Booking_d298238e-59ec-4d35-9164-9bd0b929244a"
         400:
           description: "Invalid Order"
       security:
@@ -637,8 +638,13 @@ paths:
         schema:
           $ref: "#/definitions/NewEnrollment"
       responses:
-        default:
+        200:
           description: "successful operation"
+          examples:
+            application/json:
+              enrollmentId: "Enrollment_d298238e-59ec-4d35-9164-9bd0b929244a"
+        400:
+          description: "Invalid Order"
       security:
       - Bearer: []
       x-security-scopes:
@@ -749,118 +755,100 @@ definitions:
       startTime: "2000-01-23T04:56:07.000+00:00"
       endTime: "2000-01-23T04:56:07.000+00:00"
       amount: 111
-  Booking:
-    type: "object"
-    properties:
-      bookingId:
-        type: "string"
-      user:
-        $ref: "#/definitions/User"
-      catalogue:
-        $ref: "#/definitions/Catalogue"
-      availability:
-        $ref: "#/definitions/Availability"
-      amount:
-        type: "number"
-        format: "currency"
-      createDate:
-        type: "string"
-        format: "date-time"
-      bookingDate:
-        type: "string"
-        format: "date-time"
-      submitDate:
-        type: "string"
-        format: "date-time"
-      paymentDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "New"
-        - "Booked"
-        - "Rejected"
-      complete:
-        type: "boolean"
-        default: false
+  Bookings:
+    type: array
+    items:
+      $ref: '#/definitions/Booking'
     xml:
-      name: "Booking"
+      name: "bookings"
+    example:  
+      bookings:
+          - userId: 
+              S: "User_BD49B658-122B-44BE-8B2C-60846EC5864C"
+            transactionId: 
+              S: "Transaction_cafd1781-08ad-459a-81b5-aee14e230e7a"
+            catalogueId: 
+              S: "Catalogue_99088906-9357-4BA1-BB25-16F21306978E"
+            amount: 
+              S: "6.02"    
+            pKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            sKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            startTime: 
+              N: "1572662984404"
+            slot: 
+              N: "1572662984404"
+            createdAt: 
+              N: "1572662984404"
+            updatedAt: 
+              N: "1572662984404"
+          - userId: 
+              S: "User_BD49B658-122B-44BE-8B2C-60846EC5864C"
+            transactionId: 
+              S: "Transaction_cafd1781-08ad-459a-81b5-aee14e230e7a"
+            catalogueId: 
+              S: "Catalogue_99088906-9357-4BA1-BB25-16F21306978E"
+            amount: 
+              S: "6.02"    
+            pKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            sKey: 
+              S: "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+            startTime: 
+              N: "1572662984404"
+            slot: 
+              N: "1572662984404"
+            createdAt: 
+              N: "1572662984404"
+            updatedAt: 
+              N: "1572662984404"
+  Booking:
+    type: object
+    properties:
+      userId:
+        type: "string"
+      transactionId:
+        type: "string"
+      catalogueId:
+        type: "string"
+      amount:
+        type: "string"    
+      pKey:
+        type: "string"
+      sKey:
+        type: "string"
+      startTime:
+        type: "number"
+      slot:
+        type: "number"
+      createdAt:
+        type: "number"
+      updatedAt:
+        type: "number"
+    xml:
+      name: "booking"
     example:
-      amount: 6.02745618307040320615897144307382404804229736328125
-      submitDate: "2000-01-23T04:56:07.000+00:00"
-      bookingDate: "2000-01-23T04:56:07.000+00:00"
-      availability:
-        date: "2000-01-23"
-        availablityId: 0
-        catalogue:
-          venue: "venue"
-          catalogueId: 0
-          address: "address"
-          city: "city"
-          rateUnit: "Minute"
-          remark: "remark"
-          provider:
-            firstName: "firstName"
-            lastName: "lastName"
-            userStatus: 5
-            phone: "phone"
-            userId: "1"
-            email: "email"
-            username: "username"
-          rate: 5.63737665663332876420099637471139430999755859375
-          terms: "terms"
-          name: "NUS ISS Meeting Room#5"
-          currency: "SGD"
-          tag:
-          - tagId: 6
-            descritpion: "descritpion"
-            status: "Active"
-          - tagId: 6
-            descritpion: "descritpion"
-            status: "Active"
-          status: "Open"
-      paymentDate: "2000-01-23T04:56:07.000+00:00"
-      complete: false
-      user:
-        firstName: "firstName"
-        lastName: "lastName"
-        userStatus: 5
-        phone: "phone"
-        userId: "1"
-        email: "email"
-        username: "username"
-      bookingId: 0
-      catalogue:
-        venue: "venue"
-        catalogueId: 0
-        address: "address"
-        city: "city"
-        rateUnit: "Minute"
-        remark: "remark"
-        provider:
-          firstName: "firstName"
-          lastName: "lastName"
-          userStatus: 5
-          phone: "phone"
-          userId: "1"
-          email: "email"
-          username: "username"
-        rate: 5.63737665663332876420099637471139430999755859375
-        terms: "terms"
-        name: "NUS ISS Meeting Room#5"
-        currency: "SGD"
-        tag:
-        - tagId: 6
-          descritpion: "descritpion"
-          status: "Active"
-        - tagId: 6
-          descritpion: "descritpion"
-          status: "Active"
-        status: "Open"
-      createDate: "2000-01-23T04:56:07.000+00:00"
-      status: "New"
+      userId: 
+        S: "User_BD49B658-122B-44BE-8B2C-60846EC5864C"
+      transactionId: 
+        S:  "Transaction_cafd1781-08ad-459a-81b5-aee14e230e7a"
+      catalogueId: 
+        S:  "Catalogue_99088906-9357-4BA1-BB25-16F21306978E"
+      amount: 
+        S:  "6.02"    
+      pKey: 
+        S:  "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+      sKey: 
+        S:  "Booking_71f60ed3-8c78-451c-912c-85e291ee167e"
+      startTime: 
+        N:  "1572662984404"
+      slot: 
+        N:  "1572662984404"
+      createdAt: 
+        N:  "1572662984404"
+      updatedAt: 
+        N:  "1572662984404"
   Availability:
     type: "object"
     properties:

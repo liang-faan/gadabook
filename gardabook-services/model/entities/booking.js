@@ -75,13 +75,13 @@ const generateObj = (props, validateOption) => {
 
   if (props.createdAt) {
     bookingBooking.createdAt = {
-      S: props.createdAt
+      N: props.createdAt
     }
   }
 
   if (props.updatedAt) {
     bookingBooking.updatedAt = {
-      S: props.updatedAt
+      N: props.updatedAt
     }
   }
 
@@ -174,7 +174,7 @@ const createBooking = async props => {
 
   return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return true
+      return { bookingId: bookingBooking.pKey.S }
     } else {
       return false
     }
@@ -250,7 +250,11 @@ const readUserBooking = async props => {
   })
 
   const result = await Promise.all(bookings).then(data => {
-    return { "bookings": data }
+    let finalData = []
+    data.forEach(function (item, index) {
+      finalData = finalData.concat(item.Items)
+    })
+    return { "bookings": finalData }
   })
   .catch(error => {
     console.log(error)
@@ -297,7 +301,7 @@ const readBooking = async props => {
   })
 
   const result = await Promise.all([bookingResult]).then(data => {
-    return data
+    return data[0].Items[0]
   })
   .catch(error => {
     console.log(error)
