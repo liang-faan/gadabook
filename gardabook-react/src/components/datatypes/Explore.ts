@@ -3,6 +3,12 @@ export interface Props {
     [key: string]: string
   }
   vh: number
+  getCatalogueList: Function
+  catalogueList: Array<Catalogue>
+}
+
+interface Catalogue {
+  [key: string]: any
 }
 
 export interface State {

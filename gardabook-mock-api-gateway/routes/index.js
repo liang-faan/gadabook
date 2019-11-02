@@ -5,7 +5,7 @@ const userRoutes = require('./user')
 
 module.exports = (app, mockData) => {
   bookingRoutes(app, mockData)
-  catalogueRoutes(app)
+  catalogueRoutes(app, mockData)
   enrollmentRoutes(app)
   userRoutes(app)
 }

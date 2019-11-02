@@ -4,14 +4,13 @@ import injectSheet from 'react-jss'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { faStar } from '@fortawesome/free-regular-svg-icons'
+// import { faStar } from '@fortawesome/free-regular-svg-icons'
 
 import styles from './styles/Bookings'
 import { Props, State } from './datatypes/Bookings'
 import Topbar from './Topbar'
 import BottomNav from './BottomNav'
 import { getBookingList } from '../actions/bookingActionCreators'
-import { catchClause } from '@babel/types'
 
 class Bookings extends Component<Props, State> {
   componentDidMount() {
