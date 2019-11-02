@@ -39,7 +39,7 @@ module.exports.deleteCatalogue = function deleteCatalogue(req, res, next) {
     apiResponse = res;
   } else {
     // xIntRole = req.params['x-int-role'].value;
-    catalogueId = req.pathParameters['catalogueId'];
+    catalogueId = req.path.catalogueId;
     // api_key = req.params['api_key'].value;
     apiResponse = next;     
   }
@@ -84,7 +84,7 @@ module.exports.readCatalogueByAvailabilityId = function readCatalogueByAvailabil
     apiResponse = res;
   } else {
     // xIntRole = req.swagger.params['x-int-role'].value;
-    availabilityId = req.pathParameters['availabilityId'];
+    availabilityId = req.path.catalogueId;;
     apiResponse = next;
   }
   Catalogue.readCatalogueByAvailabilityId(xIntRole, availabilityId)
@@ -106,7 +106,7 @@ module.exports.readCatalogue = function readCatalogue(req, res, next) {
     apiResponse =res;
   } else {
     // xIntRole = req.params['x-int-role'].value;
-    catalogueId = req.pathParameters['catalogueId'];
+    catalogueId = req.path.catalogueId;
     apiResponse = next;
   }
   Catalogue.readCatalogue(xIntRole, catalogueId)

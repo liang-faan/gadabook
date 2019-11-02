@@ -1,3 +1,5 @@
+// var converter = require('aws-sdk/lib/dynamodb/converter.js');
+const AWS = require("aws-sdk");
 var ResponsePayload = function(code, payload) {
   this.code = code;
   this.payload = payload;
@@ -47,6 +49,6 @@ var writeJson = exports.writeJson = function(response, arg1, arg2) {
       statusCode: code,
       body: payload
     };
-    response(null, arg1)
+    response(null, AWS.DynamoDB.Converter.unmarshall(arg1));
   }
 };

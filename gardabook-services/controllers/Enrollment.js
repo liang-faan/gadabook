@@ -62,8 +62,9 @@ module.exports.getEnrollment = function getEnrollment(req, res, next) {
     enrollmentId = req.swagger.params['enrollmentId'].value;
     apiRespone=res;
   } else {
+    console.log(req);
     // xIntRole = req.headers['x-int-role'];
-    enrollmentId = req.pathParameters['enrollmentId'];
+    enrollmentId = req.path.enrollmentId;
     apiRespone=next;
   }
   Enrollment.getEnrollment(xIntRole, enrollmentId)
@@ -86,7 +87,8 @@ module.exports.deleteEnrollment = function deleteEnrollment(req, res, next) {
     apiRespone =res;
   } else {
     // xIntRole = req.params['x-int-role'].value;
-    enrollmentId = req.pathParameters['enrollmentId'];
+    console.log(req);
+    enrollmentId = req.path.enrollmentId;
     apiRespone=next;
   }
   Enrollment.deleteEnrollment(xIntRole, enrollmentId)

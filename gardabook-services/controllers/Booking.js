@@ -37,7 +37,7 @@ module.exports.deleteBooking = function deleteBooking(req, res, next) {
   } else {
     console.log(req);
     xIntRole = '';
-    bookingId= req.pathParameters['bookingId'];
+    bookingId= req.path.bookingId;
     apiResponse=next;
   }
   Booking.deleteBooking(xIntRole, bookingId)
@@ -59,7 +59,7 @@ module.exports.getBooking = function getBooking(req, res, next) {
     apiResponse=res;
   } else {
     xIntRole = '';
-    bookingId = req.pathParameters['bookingId'];
+    bookingId = req.path.bookingId;
     apiResponse=next;
   }
   Booking.getBooking(xIntRole, bookingId)
