@@ -48,6 +48,7 @@ functions:
   #             - Authorization
   #             - X-Api-Key
   #             - X-Amz-Security-Token
+  # Booking APis
   getBookingByUserId:
     handler: controllers/Booking.getUserBooking
     events:
@@ -68,6 +69,46 @@ functions:
           response:
             headers:
               Access-Control-Allow-Origin: "'*'"
+  deleteBookingById:
+    handler: controllers/Booking.deleteBooking
+    events:
+      - http:
+          path: v1/booking/deleteBookingById/{bookingId}
+          method: delete
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+          response:
+            headers:
+              Access-Control-Allow-Origin: "'*'"
+  getBookingByBookingId:
+    handler: controllers/Booking.getBooking
+    events:
+      - http:
+          path: v1/booking/getBookingByBookingId/{bookingId}
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+          response:
+              headers:
+                Access-Control-Allow-Origin: "'*'"
   createUserBooking:
     handler: controllers/Booking.createUserBooking
     events:
@@ -88,23 +129,7 @@ functions:
           response:
             headers:
               Access-Control-Allow-Origin: "'*'"
-  deleteBooking:
-    handler: controllers/Booking.deleteBooking
-    events:
-      - http:
-          path: v1/booking/deleteBooking
-          method: post
-          # authorizer: auth
-          integration: lambda
-          cors: 
-            origins: 
-              - '*'
-            headers:
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
+  
   addCatalogue:
     handler: controllers/Catalogue.addCatalogue
     events:
@@ -122,12 +147,15 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  deleteCatalogue:
+            response:
+              headers:
+                Access-Control-Allow-Origin: "'*'"
+  deleteCatalogueById:
     handler: controllers/Catalogue.deleteCatalogue
     events:
       - http:
-          path: v1/catalogue/deleteCatalogue
-          method: post
+          path: v1/catalogue/deleteCatalogueById/{catalogueId}
+          method: delete
           # authorizer: auth
           integration: lambda
           cors: 
@@ -139,11 +167,14 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  findCatalogueByTagId:
+          response:
+            headers:
+              Access-Control-Allow-Origin: "'*'"
+  findCatalogueByTags:
     handler: controllers/Catalogue.readCatalogueByTags
     events:
       - http:
-          path: v1/catalogue/findCatalogueByTagId
+          path: v1/catalogue/findCatalogueByTags
           method: get
           # authorizer: auth
           integration: lambda
@@ -156,11 +187,14 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
+          response:
+            headers:
+              Access-Control-Allow-Origin: "'*'"
   readCatalogueByAvailabilityId:
     handler: controllers/Catalogue.readCatalogueByAvailabilityId
     events:
       - http:
-          path: v1/catalogue/readCatalogueByAvailabilityId
+          path: v1/catalogue/readCatalogueByAvailabilityId/{availabilityId}
           method: get
           # authorizer: auth
           integration: lambda
@@ -177,7 +211,7 @@ functions:
     handler: controllers/Catalogue.readCatalogue
     events:
       - http:
-          path: v1/catalogue/readCatalogue
+          path: v1/getCatalogueById/{catalogueId}
           method: get
           # authorizer: auth
           integration: lambda
@@ -195,7 +229,7 @@ functions:
     events:
       - http:
           path: v1/catalogue/updateCatalogue
-          method: get
+          method: put
           # authorizer: auth
           integration: lambda
           cors: 
@@ -245,7 +279,7 @@ functions:
     handler: controllers/Enrollment.getEnrollment
     events:
       - http:
-          path: v1/enrollment/getEnrollment
+          path: v1/enrollment/getEnrollment/{enrollmentId}
           method: get
           # authorizer: auth
           integration: lambda
@@ -262,8 +296,8 @@ functions:
     handler: controllers/Enrollment.deleteEnrollment
     events:
       - http:
-          path: v1/enrollment/deleteEnrollment
-          method: get
+          path: v1/enrollment/deleteEnrollment/{enrollmentId}
+          method: delete
           # authorizer: auth
           integration: lambda
           cors: 
