@@ -1,6 +1,12 @@
 const { ddb, tableName } = require("./ddb")
 
 const { 
+  deleteWithKeys,
+  queryWithKeys,
+  updateContent 
+} = require("./dbHelper")
+
+const { 
   validateProps, 
   requiredPropKeyEnum 
 } = require("./validators/userValidator")
@@ -119,23 +125,7 @@ const createUser = async props => {
 
   const { userUser } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...userUser
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = updateContent(userUser, false)
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
@@ -158,27 +148,7 @@ const readUser = async props => {
 
   const { userUser } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    var params = {
-      ExpressionAttributeValues: {
-        ":v1": {
-          S: userUser.pKey.S
-        }
-      },
-      KeyConditionExpression: "pKey = :v1",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const op1 = queryWithKeys(userUser.sKey.S, userUser.sKey.S)
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
@@ -201,23 +171,7 @@ const updateUser = async props => {
 
   const { userUser } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...userUser
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = updateContent(userUser, false)
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
