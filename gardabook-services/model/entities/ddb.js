@@ -9,13 +9,12 @@ const options = {
   region: "ap-southeast-1",
   apiVersion: "2012-08-10"
 }
-if (process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV=='development') {
   options.endpoint = new AWS.Endpoint("http://localhost:8000")
 }
 var dynamodb = new AWS.DynamoDB(options)
 
 module.exports = {
   ddb: dynamodb,
-  tableName,
-  env
+  tableName
 }
