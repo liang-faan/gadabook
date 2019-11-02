@@ -185,7 +185,11 @@ const readCatalogues = async props => {
   })
 
   const result = await Promise.all(catalogues).then(data => {
-    return data
+    let finalData = []
+    data.forEach(function (item, index) {
+      finalData = finalData.concat(item.Items)
+    })
+    return { "catalogues": finalData }
   })
   .catch(error => {
     console.log(error)

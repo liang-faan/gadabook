@@ -65,9 +65,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Catalogue"
+            $ref: "#/definitions/Catalogue"
         400:
           description: "Invalid status value"
       security:
