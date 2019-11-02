@@ -1,12 +1,16 @@
 const { ddb, tableName } = require("./ddb")
-const { validateProps } = require("./validators/userValidator")
+
+const { 
+  validateProps, 
+  requiredPropKeyEnum 
+} = require("./validators/userValidator")
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
  */
-const generateObj = props => {
-  if (!validateProps(props)) {
+const generateObj = (props, validateOption) => {
+  if (!validateProps(props, validateOption)) {
     return false
   }
 
@@ -31,15 +35,15 @@ const generateObj = props => {
     }
   }
 
-  if (props.firstName) {
-    userUser.firstName = {
-      S: props.firstName
+  if (props.userId) {
+    userUser.userId = {
+      S: props.userId
     }
   }
 
-  if (props.lastName) {
-    userUser.lastName = {
-      S: props.lastName
+  if (props.password) {
+    userUser.password = {
+      S: props.password
     }
   }
 
@@ -108,36 +112,12 @@ const generateObj = props => {
  * @returns {Promise.<boolean>}
  */
 const createUser = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForCreate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-  console.log(requiredPropKeys)
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.CREATE)
   if (!obj) {
     return false
   }
 
-  const { userUser, userlistUser } = obj
+  const { userUser } = obj
 
   const op1 = await new Promise((resolve, reject) => {
     const params = {
@@ -157,27 +137,9 @@ const createUser = async props => {
     })
   })
 
-  const op2 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...userlistUser
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
-  return Promise.all([op1, op2]).then((res, err) => {
+  return Promise.all([op1]).then((res, err) => {
     if (!err) {
-      return true
+      return { userId: userUser.pKey.S }
     } else {
       return false
     }
@@ -189,31 +151,7 @@ const createUser = async props => {
  * @returns {Promise.<object>}
  */
 const readUser = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForRead]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
     return false
   }
@@ -256,31 +194,7 @@ const readUser = async props => {
  * @returns {Promise.<boolean>}
  */
 const updateUser = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForUpdate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.UPADTE)
   if (!obj) {
     return false
   }
@@ -319,31 +233,7 @@ const updateUser = async props => {
  * @returns {Promise.<boolean>}
  */
 const deleteUser = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForDelete]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
   if (!obj) {
     return false
   }
