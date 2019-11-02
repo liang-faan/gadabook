@@ -279,7 +279,7 @@ const readEnrollment = async props => {
   })
 
   const result = await Promise.all([enrollmentResult]).then(data => {
-    return data
+    return data[0].Items[0]
   })
   .catch(error => {
     console.log(error)
