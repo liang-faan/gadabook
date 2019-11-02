@@ -606,7 +606,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Enrollment"
+            $ref: "#/definitions/Enrollments"
         400:
           description: "Invalid ID supplied"
         404:
@@ -1175,73 +1175,75 @@ definitions:
       userId: "User_111"
       catalogueId: "Catalogue_111"
       fee: 1.5
-  Enrollment:
-    type: "object"
-    properties:
-      enrollmentId:
-        type: "string"
-      provider:
-        $ref: "#/definitions/User"
-      catalogue:
-        $ref: "#/definitions/Catalogue"
-      date:
-        type: "string"
-        format: "date"
-      startTime:
-        type: "string"
-        format: "date-time"
-      endTime:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        enum:
-        - "Booked"
-        - "Reserved"
-        - "Available"
+  Enrollments:
+    type: array
+    items:
+      $ref: '#/definitions/Enrollment'
     xml:
-      name: "Enrollment"
+      name: "enrollments"
     example:
-      date: "2000-01-23"
-      enrollmentId: 0
-      provider:
-        firstName: "firstName"
-        lastName: "lastName"
-        userStatus: 5
-        phone: "phone"
-        userId: "1"
-        email: "email"
-        username: "username"
-      startTime: "2000-01-23T04:56:07.000+00:00"
-      endTime: "2000-01-23T04:56:07.000+00:00"
-      catalogue:
-        venue: "venue"
-        catalogueId: 0
-        address: "address"
-        city: "city"
-        rateUnit: "Minute"
-        remark: "remark"
-        provider:
-          firstName: "firstName"
-          lastName: "lastName"
-          userStatus: 5
-          phone: "phone"
-          userId: "1"
-          email: "email"
-          username: "username"
-        rate: 5.63737665663332876420099637471139430999755859375
-        terms: "terms"
-        name: "NUS ISS Meeting Room#5"
-        currency: "SGD"
-        tag:
-        - tagId: 6
-          descritpion: "descritpion"
-          status: "Active"
-        - tagId: 6
-          descritpion: "descritpion"
-          status: "Active"
-        status: "Open"
-      status: "Booked"
+      enrollments:
+        - expiryDate:
+            N: "1572679412989"
+          createdAt:
+            N: "1572679412989"
+          catalogueId:
+            S: "Catalogue_ef476e39-e6cd-4f8b-ba53-0f7b84e0846f"
+          fee:
+            S: "1.5"
+          sKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          pKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          updatedAt:
+            N: "1572679412989"
+        - expiryDate:
+            N: "1572679412989"
+          createdAt:
+            N: "1572679412989"
+          catalogueId:
+            S: "Catalogue_ef476e39-e6cd-4f8b-ba53-0f7b84e0846f"
+          fee:
+            S: "1.5"
+          sKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          pKey:
+            S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+          updatedAt:
+            N: "1572679412989"
+  Enrollment:
+    properties:
+      expiryDate:
+        type: "number"
+      createdAt:
+        type: "number"
+      catalogueId:
+        type: "string"
+      fee:
+        type: "string"
+      sKey:
+        type: "string"
+      pKey:
+        type: "string"
+      updatedAt:
+        type: "number"
+    xml:
+      name: "enrollments"
+    example:
+      expiryDate:
+        N: "1572679412989"
+      createdAt:
+        N: "1572679412989"
+      catalogueId:
+        S: "Catalogue_ef476e39-e6cd-4f8b-ba53-0f7b84e0846f"
+      fee:
+        S: "1.5"
+      sKey:
+        S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+      pKey:
+        S: "Enrollment_4bbf3da7-e6d5-4aa2-9c1b-0d4d25800e86"
+      updatedAt:
+        N: "1572679412989"
 externalDocs:
   description: "Find out more about Gardabook"
   url: "http://www.gardabook.com"
