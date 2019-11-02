@@ -12,16 +12,13 @@ const client_secret = 'pSr4oh1A3gzh_gYoBZSi-Yz9'
 const redirect_uri = 'http://localhost'
 const userPoolId = 'ap-southeast-1_Yc1XAOUfh'
 
+// const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Servcer clientId
+// const cognitoClientId = '29llvpvj8sqhh8k5o1781p81k1' // Mobile clientId
+const cognitoClientId = 'CLIENT_ID_NOT_APPLICABLE'
+
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
   region: 'ap-southeast-1',
 })
-
-const cognitoidentity = new AWS.CognitoIdentity({
-  apiVersion: '2014-06-30',
-  region: 'ap-southeast-1',
-})
-
-// oauth2 - google@jeromeng999 @gmail.com
 
 const oauth2Client = new google.auth.OAuth2(
   client_id,
@@ -103,7 +100,7 @@ const getCognitoAccessToken = (username, password) => {
   return new Promise((resolve, reject) => {
     const poolData = {
       UserPoolId: userPoolId,
-      ClientId: '29llvpvj8sqhh8k5o1781p81k1',
+      ClientId: cognitoClientId,
     }
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData)
 
@@ -141,15 +138,6 @@ const createGoogleAuthUser = async email => {
           Name: 'email',
           Value: email,
         },
-
-        {
-          Name: 'custom:googleAuth',
-          Value: 'yes',
-        },
-        {
-          Name: 'custom:passwordAuth',
-          Value: 'yes',
-        },
       ],
     }
     cognitoidentityserviceprovider.adminCreateUser(params, function(err, data) {
@@ -185,7 +173,8 @@ const updateUserPassword = async username => {
 // )
 
 // For local test
-// const code = '4/sQEkyhTjOxOEUN2eg_wINuf0YcLDiMZcCnJ2Wf9voQdG-Hi4mA_-jDedgL77j_89p_TKxH8p9acsuG6ZKakwLOk'
+// const code =
+//   '4/swGhNgUC_x0mhiPB9vrTViZv1FMzDrnU1Uhgl2YjkMGzcxfTKCnP832cjCF1u9h45HExdagp6a7DBxyC2jpwHOQ'
 // getTokens(code)
 
 const testNewUserFlow = async username => {
@@ -200,6 +189,6 @@ const testNewUserFlow = async username => {
   return cognitoAccessToken
 }
 
-testNewUserFlow('superman@examddple.comddm')
+testNewUserFlow('jerome9@example.com')
   .then(res => console.log(res))
   .catch(err => console.log(err))
