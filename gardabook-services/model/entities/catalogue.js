@@ -154,7 +154,7 @@ const createCatalogue = async props => {
 
   return await Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return catalogueCatalogue
+      return { "catalogueId": catalogueCatalogue.pKey.S }
     } else {
       return false
     }

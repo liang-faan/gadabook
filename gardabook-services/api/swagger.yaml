@@ -133,12 +133,13 @@ paths:
         schema:
           $ref: "#/definitions/UpdateCatalogue"
       responses:
+        200:
+          description: "successful operation"
+          examples:
+            application/json:
+              catalogueId: "Catalogue_d298238e-59ec-4d35-9164-9bd0b929244a"
         400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Catalogue not found"
-        405:
-          description: "Validation exception"
+          description: "Invalid Order"
       security:
       - Bearer: []
       x-security-scopes:
