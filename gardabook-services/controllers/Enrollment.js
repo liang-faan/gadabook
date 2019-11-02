@@ -26,12 +26,15 @@ module.exports.getUserEnrollment = function getUserEnrollment(req, res, next) {
 
   var xIntRole = '';
   var userId;
+  console.log(req);
   if (process.env.NODE_ENV == 'development') {
     xIntRole = req.swagger.params['x-int-role'].value;
     userId = req.swagger.params['userId'].value;
   } else {
-    xIntRole = req.params['x-int-role'].value;
-    userId = req.params['userId'].value;
+    xIntRole = req.headers['x-int-role'];
+    userId = req.query.userId;
+    console.log(xIntRole);
+    console.log(userId);
   }
 
   Enrollment.getUserEnrollment(xIntRole, userId)

@@ -10,9 +10,11 @@ module.exports.addCatalogue = function addCatalogue(req, res, next) {
     xIntRole = req.swagger.params['x-int-role'].value;
     body = req.swagger.params['body'].value;
   } else {
-    xIntRole = req.params['x-int-role'].value;
-    body = req.params['body'].value;
+    // xIntRole = '';
+    body = req.body;
+    
   }
+  console.log(body);
   Catalogue.addCatalogue(xIntRole, body)
     .then(function (response) {
       utils.writeJson(res, response);
