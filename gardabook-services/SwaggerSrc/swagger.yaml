@@ -65,7 +65,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Catalogue"
+            $ref: "#/definitions/Catalogues"
         400:
           description: "Invalid status value"
       security:
@@ -98,8 +98,13 @@ paths:
         schema:
           $ref: "#/definitions/NewCatalogue"
       responses:
-        405:
-          description: "Invalid input"
+        200:
+          description: "successful operation"
+          examples:
+            application/json:
+              catalogueId: "Catalogue_d298238e-59ec-4d35-9164-9bd0b929244a"
+        400:
+          description: "Invalid Order"
       security:
       - Bearer: []
       x-security-scopes:
@@ -169,7 +174,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Catalogue"
+            $ref: "#/definitions/Catalogues"
         400:
           description: "Invalid ID supplied"
         404:
@@ -1065,93 +1070,129 @@ definitions:
       tnc: "terms"
       name: "NUS ISS Meeting Room#5"
       currency: "SGD"
+  Catalogues:
+    type: array
+    items:
+      $ref: '#/definitions/Catalogue'
+    xml:
+      name: "catalogues"
+    example:
+      catalogues:
+        - venue:
+            S: "venue"
+          address:
+            S: "address"
+          city:
+            S: "city"
+          tnc:
+            S: "Be careful"
+          remark:
+            S: "remark"
+          unit:
+            S: "Minute"
+          rate:
+            S: "5.6"
+          availabilityId:
+            S: "Availability_111"
+          name:
+            S: "NUS ISS Meeting Room#5"
+          sKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          currency:
+            S: "SGD"
+          pKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          tag:
+            S: "myTag"
+        - venue:
+            S: "venue"
+          address:
+            S: "address"
+          city:
+            S: "city"
+          tnc:
+            S: "Be careful"
+          remark:
+            S: "remark"
+          unit:
+            S: "Minute"
+          rate:
+            S: "5.6"
+          availabilityId:
+            S: "Availability_111"
+          name:
+            S: "NUS ISS Meeting Room#5"
+          sKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          currency:
+            S: "SGD"
+          pKey:
+            S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+          tag:
+            S: "myTag"
   Catalogue:
     type: "object"
     required:
     - "name"
     - "rate"
-    - "rateUnit"
+    - "unit"
     - "venue"
     properties:
-      catalogueId:
-        type: "string"
-      tag:
-        type: "array"
-        xml:
-          name: "tag"
-          wrapped: true
-        items:
-          $ref: "#/definitions/Tag"
-      provider:
-        $ref: "#/definitions/User"
-      name:
-        type: "string"
-        example: "NUS ISS Meeting Room#5"
-      currency:
-        type: "string"
-        description: "catalogue currency"
-        enum:
-        - "SGD"
-        - "USD"
-        - "MYR"
-      rate:
-        type: "number"
-        format: "currency"
-      rateUnit:
-        type: "string"
-        description: "the unit of rate"
-        enum:
-        - "Minute"
-        - "Hour"
-        - "Day"
-        - "Week"
-        - "Month"
-        - "Year"
-      remark:
-        type: "string"
-      terms:
-        type: "string"
       venue:
+          type: "string"
+      address:
         type: "string"
       city:
         type: "string"
-      address:
+      tnc:
         type: "string"
-      status:
+      remark:
         type: "string"
-        description: "Catalogue status in the system"
-        enum:
-        - "Open"
-        - "Closed"
+      unit:
+        type: "string"
+      rate:
+        type: "string"
+      availabilityId:
+        type: "string"
+      name:
+        type: "string"
+      sKey:
+        type: "string"
+      currency:
+        type: "string"
+      pKey:
+        type: "string"
+      tag:
+        type: "string"
     xml:
       name: "Catalogue"
     example:
-      venue: "venue"
-      catalogueId: 0
-      address: "address"
-      city: "city"
-      rateUnit: "Minute"
-      remark: "remark"
-      provider:
-        firstName: "firstName"
-        lastName: "lastName"
-        userStatus: 5
-        phone: "phone"
-        userId: "1"
-        email: "email"
-        username: "username"
-      rate: 5.63737665663332876420099637471139430999755859375
-      terms: "terms"
-      name: "NUS ISS Meeting Room#5"
-      currency: "SGD"
+      venue:
+        S: "venue"
+      address:
+        S: "address"
+      city:
+        S: "city"
+      tnc:
+        S: "Be careful"
+      remark:
+        S: "remark"
+      unit:
+        S: "Minute"
+      rate:
+        S: "5.6"
+      availabilityId:
+        S: "Availability_111"
+      name:
+        S: "NUS ISS Meeting Room#5"
+      sKey:
+        S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
+      currency:
+        S: "SGD"
+      pKey:
+        S: "Catalogue_46ade0a5-e0e2-45e1-afe2-e08e33eaa826"
       tag:
-      - tagId: 6
-        descritpion: "descritpion"
-        status: "Active"
-      - tagId: 6
-        descritpion: "descritpion"
-        status: "Active"
-      status: "Open"
+        S: "myTag"
   NewEnrollment:
     type: "object"
     properties:

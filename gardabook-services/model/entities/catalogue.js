@@ -213,7 +213,7 @@ const readCatalogue = async props => {
   const op1 = queryWithKeys(keyCatalogue.pKey.S, keyCatalogue.sKey.S)
 
   const result = await Promise.all([op1]).then(data => {
-    return data
+    return data[0].Items[0]
   })
   .catch(error => {
     console.log(error)
@@ -257,7 +257,7 @@ const updateCatalogue = async props => {
 
   return Promise.all(ops).then((res, err) => {
     if (!err) {
-      return catalogueCatalogue
+      return { "catalogueId": catalogueCatalogue.pKey.S }
     } else {
       return false
     }
