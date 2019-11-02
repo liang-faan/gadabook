@@ -12,7 +12,7 @@ const client_secret = 'pSr4oh1A3gzh_gYoBZSi-Yz9'
 const redirect_uri = 'http://localhost'
 const userPoolId = 'ap-southeast-1_Yc1XAOUfh'
 
-// const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Servcer clientId
+// const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Server clientId
 // const cognitoClientId = '29llvpvj8sqhh8k5o1781p81k1' // Mobile clientId
 const cognitoClientId = 'CLIENT_ID_NOT_APPLICABLE'
 
