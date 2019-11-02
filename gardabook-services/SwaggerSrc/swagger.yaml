@@ -675,9 +675,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Enrollment"
+            $ref: "#/definitions/Enrollment"
         404:
           description: "No enrollment found on current provider"
       security:
