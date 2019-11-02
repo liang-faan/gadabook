@@ -250,7 +250,7 @@ const readUserBooking = async props => {
   })
 
   const result = await Promise.all(bookings).then(data => {
-    return data
+    return { "bookings": data }
   })
   .catch(error => {
     console.log(error)
