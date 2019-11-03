@@ -225,7 +225,7 @@ functions:
     handler: controllers/Catalogue.readCatalogue
     events:
       - http:
-          path: v1/getCatalogueById/{catalogueId}
+          path: v1/catalogue/getCatalogueById/{catalogueId}
           method: get
           authorizer: auth
           integration: lambda
