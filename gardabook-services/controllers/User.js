@@ -104,11 +104,15 @@ module.exports.userLogin = function userLogin(req, res, next) {
 };
 
 module.exports.userLogout = function userLogout(req, res, next) {
+  //todo return static string - user success logout. 
   var xIntRole = '';
+  var token = '';
+  var userId = '';
   if (process.env.NODE_ENV == 'development') {
-    xIntRole = req.swagger.params['x-int-role'].value;
+    xIntRole = req.swagger.params['Authorization'].value;
   } else {
-    xIntRole = req.params['x-int-role'].value;
+    // xIntRole = req
+    token = request.headers['Authorization'];
   }
   User.userLogout(xIntRole)
     .then(function (response) {
