@@ -17,7 +17,7 @@ Amplify.configure({
   Auth: {
     region: 'ap-southeast-1',
     userPoolId: 'ap-southeast-1_n90l7WmwP',
-    userPoolWebClientId: '4jc0k206hdernuig7hs5sqhrhb',
+    userPoolWebClientId: '61ioah5nfcf9ddieampclq53j8',
     mandatorySignIn: false,
     authenticationFlowType: 'USER_PASSWORD_AUTH', // required to get auth code
   },
@@ -49,11 +49,6 @@ const reactApp = () => {
     )
   }
   deviceReady()
-  const AppWithAuth = withAuthenticator(_App)
-
-  // ReactDOM.render(<AppWithAuth federated={federated} />,
-  //   document.getElementById('root')
-  // )
   ReactDOM.render(<_App />, document.getElementById('root'))
 }
 

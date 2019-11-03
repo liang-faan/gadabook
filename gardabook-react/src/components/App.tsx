@@ -3,6 +3,10 @@ import { connect } from 'react-redux'
 import { Route, Switch, withRouter, RouteProps } from 'react-router-dom'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import injectSheet, { ThemeProvider } from 'react-jss'
+import { withAuthenticator } from 'aws-amplify-react'
+import { Auth } from 'aws-amplify'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 
 import styles from './styles/App'
 import theme from './styles/theme'
@@ -18,16 +22,25 @@ import Listings from './Listings'
 import Notifications from './Notifications'
 import ListingDetails from './ListingDetails'
 import LoadingModal from './LoadingModal'
+import { webClientId } from '../settings'
 
 import './styles/transitions.css'
 
 import { updateCurrentNavLocation } from '../actions/navActionCreators'
 import { BOOKINGS, EXPLORE } from '../reducers/navReducers'
+import { getCognitoToken } from '../actions/authActionCreators'
 
 class App extends Component<Props & RouteProps, State> {
   doc: any
   constructor(props: Props) {
     super(props)
+    let googleLogin = false
+    if (window.plugins && window.plugins.googleplus) {
+      googleLogin = true
+    }
+    this.state = {
+      googleLogin,
+    }
     this.doc = React.createRef()
   }
 
@@ -37,6 +50,7 @@ class App extends Component<Props & RouteProps, State> {
     this.doc.current.style.setProperty('--vh', `${vh}px`)
 
     // Change current nav based on url path
+    // TODO: remove when all paths are filled
     const pathname = this.props.location && this.props.location.pathname
     let navLocation
     if (pathname === '/explore') {
@@ -49,39 +63,76 @@ class App extends Component<Props & RouteProps, State> {
     this.props.updateCurrentNavLocation(navLocation)
   }
 
+  componentDidUpdate() {
+    Auth.currentAuthenticatedUser().then(res => console.log(res))
+  }
+
+  onClickGoogleLogin = () => {
+    const params = {
+      scopes: 'profile email',
+      webClientId: webClientId,
+      offline: true,
+    }
+    console.log(params)
+    const onSuccess = data => {
+      const code = data.serverAuthCode
+      this.props.getCognitoToken(code)
+      console.log('SUCCESSFUL LOGIN')
+      console.log(JSON.stringify(data))
+      // get cognito token
+    }
+    const onFailure = (msg: Object) => {
+      console.log('FAILED LOGIN')
+      console.log(msg)
+    }
+    // window.plugins.googleplus.trySilentLogin(params, onSuccess, onFailure)
+    window.plugins.googleplus.login(params, onSuccess, onFailure)
+  }
+
   render() {
-    const { classes, signinStatus, loadingScreen } = this.props
+    const { googleLogin } = this.state
+    const { classes, googleSigninStatus, loadingScreen } = this.props
+
+    const MainApp = () => (
+      <Route
+        render={({ location }) => (
+          <TransitionGroup component={null}>
+            <CSSTransition key={location.key} classNames="fade" timeout={300}>
+              <Switch location={location}>
+                {loadingScreen && <LoadingModal />}
+                <Route exact path="/explore" component={Explore} />
+                <Route exact path="/" component={Explore} />
+                <Route path="/bookings" component={Bookings} />
+                <Route path="/List" component={List} />
+                <Route path="/Listings" component={Listings} />
+                <Route path="/Notifications" component={Notifications} />
+                {/* <Route render={() => <div>Not Found</div>} /> */}
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )}
+      />
+    )
+
+    const SignInButtons = () => {
+      return (
+        <div className={classes.signInButtonsContainer}>
+          <div className={classes.google} onClick={this.onClickGoogleLogin}>
+            <FontAwesomeIcon icon={faGoogle} size={'2x'} />
+            <div className={classes.signInText}>SIGN IN WITH GOOGLE</div>
+          </div>
+        </div>
+      )
+    }
+
+    const AmplifyMainApp = withAuthenticator(MainApp)
+
     return (
       <ThemeProvider theme={theme}>
-        <Route
-          render={({ location }) => (
-            <div ref={this.doc} className={classes.root}>
-              <TransitionGroup component={null}>
-                <CSSTransition
-                  key={location.key}
-                  classNames="fade"
-                  timeout={300}
-                >
-                  <Switch location={location}>
-                    {loadingScreen && <LoadingModal />}
-                    {/* <Splash /> */}
-                    {!signinStatus && <SignIn />}
-                    {/* <SignUp /> */}
-                    {/* <SignUpSuccess /> */}
-
-                    <Route exact path="/explore" component={Explore} />
-                    <Route exact path="/" component={Explore} />
-                    <Route path="/bookings" component={Bookings} />
-                    <Route path="/List" component={List} />
-                    <Route path="/Listings" component={Listings} />
-                    <Route path="/Notifications" component={Notifications} />
-                    {/* <Route render={() => <div>Not Found</div>} /> */}
-                  </Switch>
-                </CSSTransition>
-              </TransitionGroup>
-            </div>
-          )}
-        />
+        <div ref={this.doc} className={classes.root}>
+          {(googleSigninStatus && <MainApp />) || <AmplifyMainApp />}
+          {(googleLogin && <SignInButtons />) || <SignInButtons />}
+        </div>
       </ThemeProvider>
     )
   }
@@ -89,7 +140,7 @@ class App extends Component<Props & RouteProps, State> {
 
 function mapStateToProps({ view }) {
   return {
-    signinStatus: view.signinStatus,
+    googleSigninStatus: view.googleSigninStatus,
     loadingScreen: view.loadingScreen,
   }
 }
@@ -97,5 +148,5 @@ function mapStateToProps({ view }) {
 // @ts-ignore
 export default withRouter(connect(
   mapStateToProps,
-  { updateCurrentNavLocation }
+  { updateCurrentNavLocation, getCognitoToken }
 )(injectSheet(styles(theme))(App)) as React.ComponentType<any>)

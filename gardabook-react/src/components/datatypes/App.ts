@@ -3,10 +3,11 @@ export interface Props {
     [key: string]: string
   }
   updateCurrentNavLocation(navLocation: String): Object
-  signinStatus: Boolean
+  getCognitoToken(navLocation: String): Object
+  googleSigninStatus: Boolean
   loadingScreen: Boolean
 }
 
 export interface State {
-  vh: number
+  googleLogin: Boolean
 }

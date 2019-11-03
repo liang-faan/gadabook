@@ -11,4 +11,24 @@ export default (theme: any) => ({
       textDecoration: 'none',
     },
   },
+  signInButtonsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  google: {
+    ...theme.component.buttonMain,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '5px',
+    backgroundColor: 'white',
+  },
+  signInText: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: 200,
+    marginLeft: 20,
+  },
 })

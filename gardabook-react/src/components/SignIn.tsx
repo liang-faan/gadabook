@@ -104,10 +104,6 @@ class SignIn extends Component<Props, State> {
           <div className={classes.signIn}>
             <div className={classes.signInText}>SIGN IN</div>
           </div>
-          {/* <div className={classes.facebook}>
-            <FontAwesomeIcon icon={faFacebookSquare} size={'2x'} />
-            <div className={classes.signInText}>SIGN IN WITH FACEBOOK</div>
-          </div> */}
           <div className={classes.google} onClick={this.onClickGoogleLogin}>
             <FontAwesomeIcon icon={faGoogle} size={'2x'} />
             <div className={classes.signInText}>SIGN IN WITH GOOGLE</div>

@@ -21,7 +21,10 @@ const loadingScreen = (
 }
 
 const defaultSigninStatus = false
-const signinStatus = (state: Boolean = defaultSigninStatus, action: Action) => {
+const googleSigninStatus = (
+  state: Boolean = defaultSigninStatus,
+  action: Action
+) => {
   switch (action.type) {
     case UPDATE_SIGNIN_STATUS:
       return action.payload
@@ -30,4 +33,4 @@ const signinStatus = (state: Boolean = defaultSigninStatus, action: Action) => {
   }
 }
 
-export default combineReducers({ loadingScreen, signinStatus })
+export default combineReducers({ loadingScreen, googleSigninStatus })
