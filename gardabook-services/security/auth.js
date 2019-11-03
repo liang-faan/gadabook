@@ -46,9 +46,9 @@ module.exports.authorize = (event, context, callback) => {
     // console.log(token)
     // Make a request to the iss + .well-known/jwks.json URL:
     request({
-        url: `${iss}/.well-known/jwks.json`,
-        json: true
-      },
+      url: `${iss}/.well-known/jwks.json`,
+      json: true
+    },
       (error, response, body) => {
         console.log(request.url);
         if (error || response.statusCode !== 200) {
@@ -104,12 +104,17 @@ module.exports.authorize = (event, context, callback) => {
   }
 }
 
+<<<<<<< HEAD
 function logout(token, jti, sub) {
+=======
+logout = function (jti, sub) {
+>>>>>>> 5abd7e5925bccc43397e3f11ebb344095be9990f
   //insert
   //need to store revoke token in dynamodb
   //pkey: RevokeToken_ + jti
   //skey: User_ +sub
   // attribute token: token
+<<<<<<< HEAD
   userService.writeRevokeToken(token, jti, sub)
     .then(function (response) {
       if (response) {
@@ -122,12 +127,29 @@ function logout(token, jti, sub) {
       return false;
     });
 
+=======
+  readRevokeToken(jti, sub)
+    .then(function (response) {
+      console.log(response)
+      if (response && response.pKey) {
+        return true;
+      }
+      else {
+        return false;
+      }
+
+    })
+    .catch(function (response) {
+      return false;
+    });
+>>>>>>> 5abd7e5925bccc43397e3f11ebb344095be9990f
 }
 
 function verifyRevokeToken(token, jti, sub) {
   //fetch
   //skey: User_ +sub
   //pkey: RevokeToken_ + jti
+<<<<<<< HEAD
   userService.readRevokeToken(jti, sub)
     .then(function (response) {
       console.log(response)
@@ -137,6 +159,16 @@ function verifyRevokeToken(token, jti, sub) {
         return false;
       }
 
+=======
+  writeRevokeToken(token, jti, sub)
+    .then(function (response) {
+      if (response) {
+        return true;
+      }
+      else {
+        return false;
+      }
+>>>>>>> 5abd7e5925bccc43397e3f11ebb344095be9990f
     })
     .catch(function (response) {
       return false;
