@@ -152,7 +152,7 @@ const createEnrollment = async props => {
 
   return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return { enrollmentId: enrollmentEnrollment.pKey.S }
+      return { enrollmentId: enrollmentEnrollment.pKey }
     } else {
       return false
     }

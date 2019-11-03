@@ -13,7 +13,7 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
-    "aws-sdk": "^2.543.0",
+    "amazon-cognito-identity-js": "^3.2.0",
     "connect": "^3.7.0",
     "google-auth-library": "^5.5.1",
     "googleapis": "^44.0.0",
@@ -21,12 +21,13 @@
     "js-yaml": "^3.13.1",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^1.2.6",
+    "node-fetch": "^2.6.0",
     "request": "^2.82.0",
-    "serverless": "^1.55.1",
-    "swagger-tools": "0.10.4",
-    "timekit-booking": "^2.6.0"
+    "serverless": "^1.55.1"
   },
   "devDependencies": {
-    "serverless-domain-manager": "^3.3.0"
+    "aws-sdk": "^2.562.0",
+    "serverless-domain-manager": "^3.3.0",
+    "swagger-tools": "^0.10.4"
   }
 }

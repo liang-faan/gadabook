@@ -30,7 +30,11 @@ exports.createUser = function (xIntRole, body) {
     updatedAt: String(Date.now()),
   }
 
-  return createUser(params)
+  if (createUser(params)) {
+    return params
+  }
+
+  return { message: "Create user failed", params }
 }
 
 
