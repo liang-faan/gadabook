@@ -40,7 +40,7 @@ module.exports.authorize = (event, context, callback) => {
       token = token.substring(6).trim()
     }
 
-    var options = {};
+    var options = {complete: true};
     var decodeToken = jwk.decode(token, options);
     var keyId = decodeToken.header.kid;
     // console.log(token)
