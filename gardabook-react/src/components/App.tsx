@@ -17,6 +17,7 @@ import List from './List'
 import Listings from './Listings'
 import Notifications from './Notifications'
 import ListingDetails from './ListingDetails'
+import LoadingModal from './LoadingModal'
 
 import './styles/transitions.css'
 
@@ -62,6 +63,7 @@ class App extends Component<Props & RouteProps, State> {
                   timeout={300}
                 >
                   <Switch location={location}>
+                    {loadingScreen && <LoadingModal />}
                     {/* <Splash /> */}
                     {!signinStatus && <SignIn />}
                     {/* <SignUp /> */}
