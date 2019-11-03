@@ -43,6 +43,12 @@ module.exports.authorize = (event, context, callback) => {
     var options = {complete: true};
     var decodeToken = jwk.decode(token, options);
     var keyId = decodeToken.header.kid;
+    var response = {
+      statusCode: '',
+      body: {
+        message: ''
+      }
+  };
     // console.log(token)
     // Make a request to the iss + .well-known/jwks.json URL:
     request({
@@ -78,7 +84,7 @@ module.exports.authorize = (event, context, callback) => {
         }, (err, decoded) => {
           if (err) {
             console.log('Unauthorized user:', err.message)
-            callback('Unauthorized Access')
+            callback(null, {'Unauthorized Access'})
           } else {
             jti = decoded.jti;
             sub = decoded.sub;

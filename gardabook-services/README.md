@@ -44,6 +44,29 @@ API business logic.
 Application utils
 ```
 
-
+##endpoints:
+```
+  GET - https://api.gardabook.com/v1/booking/getBookingByUserId
+  DELETE - https://api.gardabook.com/v1/booking/deleteBookingById/{bookingId}
+  GET - https://api.gardabook.com/v1/booking/getBookingByBookingId/{bookingId}
+  POST - https://api.gardabook.com/v1/booking/createUserBooking
+  POST - https://api.gardabook.com/v1/catalogue/addCatalogue
+  DELETE - https://api.gardabook.com/v1/catalogue/deleteCatalogueById/{catalogueId}
+  GET - https://api.gardabook.com/v1/catalogue/findCatalogueByTags
+  GET - https://api.gardabook.com/v1/catalogue/readCatalogueByAvailabilityId/{availabilityId}
+  GET - https://api.gardabook.com/v1/catalogue/getCatalogueById/{catalogueId}
+  PUT - https://api.gardabook.com/v1/catalogue/updateCatalogue
+  POST - https://api.gardabook.com/v1/enrollment/createEnrollment
+  GET - https://api.gardabook.com/v1/enrollment/getUserEnrollment
+  GET - https://api.gardabook.com/v1/enrollment/getEnrollment/{enrollmentId}
+  DELETE - https://api.gardabook.com/v1/enrollment/deleteEnrollment/{enrollmentId}
+  POST - https://api.gardabook.com/v1/user/createUser
+  DELETE - https://api.gardabook.com/v1/user/deleteUser
+  GET - https://api.gardabook.com/v1/user/getUserByName
+  GET - https://api.gardabook.com/v1/user/updateUser
+  GET - https://api.gardabook.com/v1/user/userLogin
+  GET - https://api.gardabook.com/v1/user/userLogout
+  GET - https://api.gardabook.com/v1/cognito/getCognitoTokenFromGoogleCode
+```
 
 add 

@@ -363,7 +363,12 @@ functions:
       - http:
           path: v1/user/getUserByName
           method: get
-          authorizer: auth
+          # authorizer: auth
+          authorizer:
+            name: authorizer
+            arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+            claims:
+              - email
           integration: lambda
           cors: 
             origins: 
