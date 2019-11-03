@@ -158,10 +158,11 @@ const getCognitoTokenFromGoogleCode = async code => {
     const decoded = jwt.decode(id_token)
     const { email } = decoded
 
-    createOrSignInGoogleUser(email)
+    const cognitoToken = await createOrSignInGoogleUser(email)
 
-    console.log(`EMAIL is ${email}`)
+    return cognitoToken
   } catch (err) {
+    return err
     console.log('Error!!!')
     console.log(err.response.data.error)
     console.log(err.response.data.error_description)
