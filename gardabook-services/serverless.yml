@@ -27,6 +27,12 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["GardabookDynamoDB", "Arn" ] }
+    - Effect: Allow
+      Action: 
+        - cognito-idp:*
+      Resource: 
+        - arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+  # role: arn:aws:iam::136165392672:role/gardabook-google-auth-lambda
   environment:
     USERS_TABLE: ${self:custom.tableName}
 functions:
