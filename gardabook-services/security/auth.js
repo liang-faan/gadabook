@@ -57,10 +57,10 @@ module.exports.authorize = (event, context, callback) => {
         }
         const keysResp = body
         // Based on the JSON of `jwks` create a Pem:
-        k = keysResp.keys[0];
+        var k = keysResp.keys[0];
         if (k.kid != keyId) {
           keysResp.keys.forEach((key, index) => {
-            if (key.kid = keyId) {
+            if (key.kid == keyId) {
               k = key;
             }
           });
