@@ -1,4 +1,4 @@
-const { ddb, tableName } = require("./ddb")
+const { ddb, tableName } = require("./ddb");
 const { validateProps, requiredPropKeyEnum } = require("./validators/bookingValidator")
 
 /**
@@ -17,13 +17,13 @@ const generateObj = (props, validateOption) => {
     sKey: {
       S: String(props.sKey)
     }
-  }
+  };
 
   if (props.userId) {
     bookingBooking.userId = {
       S: String(props.userId)
-    }
-  }
+    };
+  };
   
   if (props.transactionId) {
     bookingBooking.transactionId = {

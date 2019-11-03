@@ -127,8 +127,8 @@ const readCatalogueByGsiKeys = (keys) => {
  **/
 exports.readCatalogue = function(xIntRole, catalogueId) {
   var params = {
-    pKey: String(catalogueId)
-    // sKey: String(catalogueId),
+    pKey: String(catalogueId),
+    sKey: String(catalogueId),
   }
 
   return readCatalogue(params)

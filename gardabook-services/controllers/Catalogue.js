@@ -106,6 +106,7 @@ module.exports.readCatalogue = function readCatalogue(req, res, next) {
     apiResponse =res;
   } else {
     // xIntRole = req.params['x-int-role'].value;
+    console.log(req)
     catalogueId = req.path.catalogueId;
     apiResponse = next;
   }

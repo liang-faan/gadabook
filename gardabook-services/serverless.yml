@@ -1,7 +1,15 @@
 
 service: gadabook-services
+plugins:
+- serverless-domain-manager
+
 custom:
   tableName: 'gardabook-develop'
+  customDomain:
+    domainName: 'api.gardabook.com'
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
 
 provider:
   name: aws
@@ -207,7 +215,7 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
-  readCatalogue:
+  getCatalogueById:
     handler: controllers/Catalogue.readCatalogue
     events:
       - http:
