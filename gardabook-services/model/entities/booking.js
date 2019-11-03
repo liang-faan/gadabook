@@ -1,4 +1,12 @@
-const { ddb, tableName } = require("./ddb");
+const { 
+  deleteWithKeys,
+  queryWithKeys,
+  queryWithKeysAndConvert,
+  queryGsi,
+  updateContent,
+  convertFromAws 
+} = require("./dbHelper")
+
 const { validateProps, requiredPropKeyEnum } = require("./validators/bookingValidator")
 
 /**
@@ -118,63 +126,13 @@ const createBooking = async props => {
 
   const { bookingBooking, userBooking, catalogueBooking } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...bookingBooking
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
-  const op2 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...userBooking
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
-
-  const op3 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...catalogueBooking
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
+  const op1 = await updateContent(bookingBooking, false)
+  const op2 = await updateContent(userBooking, false)
+  const op3 = await updateContent(catalogueBooking, false)
 
   return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return { bookingId: bookingBooking.pKey }
+      return convertFromAws(bookingBooking)
     } else {
       return false
     }
@@ -193,66 +151,19 @@ const readUserBooking = async props => {
 
   const { userBooking } = obj
 
-  const b = await new Promise((resolve, reject) => {
-    var params = {
-      ExpressionAttributeValues: {
-        ":p1": {
-          S: userBooking.pKey.S
-        },
-        ":s1": {
-          S: "Booking_"
-        }
-      },
-      KeyConditionExpression: "pKey = :p1 and begins_with(sKey, :s1)",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const b = await queryGsi(userBooking.pKey.S, "Booking_")
 
   let bookings = []
 
   b.Items.forEach(function (item, index) {
-    const booking = new Promise((resolve, reject) => {
-      var params = {
-        ExpressionAttributeValues: {
-          ":p1": {
-            S: item.sKey.S
-          },
-          ":s1": {
-            S: item.sKey.S
-          }
-        },
-        KeyConditionExpression: "pKey = :p1 and sKey = :s1",
-        TableName: tableName
-      }
-
-      ddb.query(params, (err, data) => {
-        if (err) {
-          console.log(err, err.stack)
-          reject(err)
-        } else {
-          console.log(JSON.stringify(data))
-          resolve(data)
-        }
-      })
-    })
-
+    const booking = queryWithKeysAndConvert(item.sKey.S, item.sKey.S)
     bookings.push(booking)
   })
 
   const result = await Promise.all(bookings).then(data => {
     let finalData = []
     data.forEach(function (item, index) {
-      finalData = finalData.concat(item.Items)
+      finalData = finalData.concat(item)
     })
     return { "bookings": finalData }
   })
@@ -275,33 +186,10 @@ const readBooking = async props => {
 
   const { bookingBooking } = obj
 
-  const bookingResult = new Promise((resolve, reject) => {
-    const params = {
-      ExpressionAttributeValues: {
-        ":p1": {
-          S: bookingBooking.pKey.S
-        },
-        ":s1": {
-          S: bookingBooking.sKey.S
-        }
-      },
-      KeyConditionExpression: "pKey = :p1 and sKey = :s1",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const bookingResult = queryWithKeys(bookingBooking.pKey.S, bookingBooking.sKey.S)
 
   const result = await Promise.all([bookingResult]).then(data => {
-    return data[0].Items[0]
+    return convertFromAws(data[0].Items[0])
   })
   .catch(error => {
     console.log(error)
@@ -322,23 +210,7 @@ const updateBooking = async props => {
 
   const { bookingBooking } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...bookingBooking
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = await updateContent(bookingBooking, false)
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
@@ -361,77 +233,13 @@ const deleteBooking = async props => {
 
   const { bookingBooking } = obj
 
-  const bookingBookingResult = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: bookingBooking.pKey.S
-        },
-        sKey: {
-          S: bookingBooking.sKey.S
-        }
-      },
-      ReturnValues: "ALL_OLD",
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const bookingBookingResult = await deleteWithKeys(bookingBooking.pKey.S, bookingBooking.sKey.S, true)
 
   let ops = []
 
-  const userBookingResult = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: bookingBookingResult.Attributes.userId.S
-        },
-        sKey: {
-          S: bookingBooking.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const userBookingResult = deleteWithKeys(bookingBookingResult.Attributes.userId.S, bookingBooking.pKey.S, true)
 
-  const catalogueBookingResult = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: bookingBookingResult.Attributes.catalogueId.S
-        },
-        sKey: {
-          S: bookingBooking.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const catalogueBookingResult = deleteWithKeys(bookingBookingResult.Attributes.catalogueId.S, bookingBooking.pKey.S, true)
 
   return await Promise.all([userBookingResult, catalogueBookingResult]).then((res, err) => {
     if (!err) {
@@ -440,11 +248,11 @@ const deleteBooking = async props => {
       return false
     }
   })
-}
+ }
 
 module.exports = {
-  createBooking,
   readUserBooking,
+  createBooking,
   readBooking,
   updateBooking,
   deleteBooking

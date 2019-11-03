@@ -32,11 +32,7 @@ exports.createEnrollment = function(xIntRole,body) {
     updatedAt: String(Date.now())
   }
 
-  if (createEnrollment(params)) {
-    return params
-  }
-
-  return { message: "Create enrollment failed", params }
+  return createEnrollment(params)
 }
 
 

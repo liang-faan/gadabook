@@ -1,8 +1,10 @@
 const { 
   deleteWithKeys,
   queryWithKeys,
+  queryWithKeysAndConvert,
   queryGsi,
-  updateContent 
+  updateContent,
+  convertFromAws  
 } = require("./dbHelper")
 
 const { 
@@ -154,7 +156,7 @@ const createCatalogue = async props => {
 
   return await Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return { "catalogueId": catalogueCatalogue.pKey.S }
+      return convertFromAws(catalogueCatalogue)
     } else {
       return false
     }
@@ -180,14 +182,14 @@ const readCatalogues = async props => {
   let catalogues = []
 
   c.Items.forEach(function (item, index) {
-    const catalogue = queryWithKeys(item.sKey.S, item.sKey.S)
+    const catalogue = queryWithKeysAndConvert(item.sKey.S, item.sKey.S)
     catalogues.push(catalogue)
   })
 
   const result = await Promise.all(catalogues).then(data => {
     let finalData = []
     data.forEach(function (item, index) {
-      finalData = finalData.concat(item.Items)
+      finalData = finalData.concat(item)
     })
     return { "catalogues": finalData }
   })
@@ -213,7 +215,7 @@ const readCatalogue = async props => {
   const op1 = queryWithKeys(keyCatalogue.pKey.S, keyCatalogue.sKey.S)
 
   const result = await Promise.all([op1]).then(data => {
-    return data[0].Items[0]
+    return convertFromAws(data[0].Items[0])
   })
   .catch(error => {
     console.log(error)
