@@ -3,6 +3,7 @@ const { ddb, tableName } = require("./ddb")
 const { 
   deleteWithKeys,
   queryWithKeys,
+  queryWithKeysAndConvert,
   updateContent 
 } = require("./dbHelper")
 
@@ -101,6 +102,21 @@ const generateObj = (props, validateOption) => {
     }
   }
 
+  const userToken = {
+    pKey: {
+      S: props.pKey
+    },
+    sKey: {
+      S: props.sKey
+    }
+  }
+
+  if (props.token) {
+    userToken.token = {
+      S: props.token
+    }
+  }
+
   const userlistUser = {
     pKey: {
       S: "Userlist"
@@ -110,7 +126,7 @@ const generateObj = (props, validateOption) => {
     }
   }
 
-  return { userUser, userlistUser }
+  return { userUser, userlistUser, userToken }
 }
 
 /**
@@ -285,11 +301,51 @@ const readUserlist = async props => {
   })
 }
 
+const readRevokeToken = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
+  if (!obj) {
+    return false
+  }
+
+  const { userToken } = obj
+
+  const op1 = queryWithKeysAndConvert(userToken.pKey.S, userToken.sKey.S)
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return op1
+    } else {
+      return false
+    }
+  })
+}
+
+const writeRevokeToken = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.CREATETOKEN)
+  if (!obj) {
+    return false
+  }
+
+  const { userToken } = obj
+
+  const op1 = updateContent(userToken, false)
+
+  return Promise.all([op1]).then((res, err) => {
+    if (!err) {
+      return op1
+    } else {
+      return false
+    }
+  })
+}
+
 module.exports = {
   generateUserObject: generateObj,
   createUser,
   readUser,
   updateUser,
   deleteUser,
-  readUserlist
+  readUserlist,
+  readRevokeToken,
+  writeRevokeToken
 }

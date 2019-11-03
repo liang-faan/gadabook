@@ -151,22 +151,22 @@ const createOrSignInGoogleUser = async email => {
  * @param {string} code
  */
 const getCognitoTokenFromGoogleCode = async code => {
-  try {
-    const { tokens } = await oauth2Client.getToken(code)
-    const { id_token } = tokens
-    // No need to verify ID Token JWT as we got the data direct from Google
-    const decoded = jwt.decode(id_token)
-    const { email } = decoded
+  // try {
+  const { tokens } = await oauth2Client.getToken(code)
+  const { id_token } = tokens
+  // No need to verify ID Token JWT as we got the data direct from Google
+  const decoded = jwt.decode(id_token)
+  const { email } = decoded
 
-    const cognitoToken = await createOrSignInGoogleUser(email)
+  const cognitoToken = await createOrSignInGoogleUser(email)
 
-    return cognitoToken
-  } catch (err) {
-    return err
-    console.log('Error!!!')
-    console.log(err.response.data.error)
-    console.log(err.response.data.error_description)
-  }
+  return cognitoToken
+  // } catch (err) {
+  //   return err
+  //   console.log('Error!!!')
+  //   console.log(err.response.data.error)
+  //   console.log(err.response.data.error_description)
+  // }
 }
 
 exports.getCognitoTokenFromGoogleCode = getCognitoTokenFromGoogleCode

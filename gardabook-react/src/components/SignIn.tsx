@@ -10,17 +10,22 @@ import { webClientId } from '../settings'
 import styles from './styles/SignIn'
 import { Props, State } from './datatypes/SignIn'
 import logoIcon from './images/logo-icon.png'
+import { getCognitoToken } from '../actions/authActionCreators'
 
 class SignIn extends Component<Props, State> {
   onClickGoogleLogin = () => {
     const params = {
       scopes: 'profile email',
       webClientId: webClientId,
-      offline: true
+      offline: true,
     }
-    const onSuccess = (data: Object) => {
+    console.log(params)
+    const onSuccess = data => {
+      const code = data.serverAuthCode
+      this.props.getCognitoToken(code)
       console.log('SUCCESSFUL LOGIN')
       console.log(JSON.stringify(data))
+      // get cognito token
     }
     const onFailure = (msg: Object) => {
       console.log('FAILED LOGIN')
@@ -29,7 +34,6 @@ class SignIn extends Component<Props, State> {
     // window.plugins.googleplus.trySilentLogin(params, onSuccess, onFailure)
     window.plugins.googleplus.login(params, onSuccess, onFailure)
   }
-
 
   onClickGoogleLogout = () => {
     const onSuccess = (data: Object) => {
@@ -141,9 +145,8 @@ function mapStateToProps() {
 
 export default connect(
   mapStateToProps,
-  {}
+  { getCognitoToken }
 )(injectSheet(styles)(SignIn))
-
 
 // function isAvailable() {
 //   window.plugins.googleplus.isAvailable(function (avail: Object) {

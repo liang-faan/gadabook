@@ -3,11 +3,10 @@
 const jwk = require('jsonwebtoken')
 const jwkToPem = require('jwk-to-pem')
 const request = require('request')
-//require user service
-
+const userService = require("../service/UserService")
 
 // For AWS Cognito: https://cognito-idp.<region>.amazonaws.com/<user pool id>
-const iss ='https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_n90l7WmwP'
+const iss = 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_n90l7WmwP'
 
 // Generate policy to allow this user on this API:
 const generatePolicy = (principalId, effect, resource) => {
@@ -42,8 +41,8 @@ module.exports.authorize = (event, context, callback) => {
     }
 
     var options = {};
-    var decodeToken = jwk.decode(token,options);
-    var keyId= decodeToken.header.kid;
+    var decodeToken = jwk.decode(token, options);
+    var keyId = decodeToken.header.kid;
     // console.log(token)
     // Make a request to the iss + .well-known/jwks.json URL:
     request({
@@ -59,11 +58,10 @@ module.exports.authorize = (event, context, callback) => {
         const keys = body
         // Based on the JSON of `jwks` create a Pem:
         const k = keys.keys[0];
-        if(k.kid != keyId){
+        if (k.kid != keyId) {
           keys.forEach((key, index) => {
-            if(key.kid = keyId){
+            if (key.kid = keyId) {
               k = key;
-              break;
             }
           });
         }
@@ -75,7 +73,9 @@ module.exports.authorize = (event, context, callback) => {
         const pem = jwkToPem(jwkArray)
 
         // Verify the token:
-        jwk.verify(token, pem, {issuer: iss}, (err, decoded) => {
+        jwk.verify(token, pem, {
+          issuer: iss
+        }, (err, decoded) => {
           if (err) {
             console.log('Unauthorized user:', err.message)
             callback('Unauthorized Access')
@@ -106,19 +106,39 @@ module.exports.authorize = (event, context, callback) => {
 
 function logout(token, jti, sub) {
   //insert
-//need to store revoke token in dynamodb
-//pkey: RevokeToken_ + jti
-//skey: User_ +sub
-// attribute token: token
+  //need to store revoke token in dynamodb
+  //pkey: RevokeToken_ + jti
+  //skey: User_ +sub
+  // attribute token: token
+  userService.writeRevokeToken(token, jti, sub)
+    .then(function (response) {
+      if (response) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch(function (response) {
+      return false;
+    });
 
-  console.log(decodedToken.jti)
 }
 
 function verifyRevokeToken(token, jti, sub) {
   //fetch
- //skey: User_ +sub
-//pkey: RevokeToken_ + jti
+  //skey: User_ +sub
+  //pkey: RevokeToken_ + jti
+  userService.readRevokeToken(jti, sub)
+    .then(function (response) {
+      console.log(response)
+      if (response && response.pKey) {
+        return true;
+      } else {
+        return false;
+      }
 
-  console.log(decodedToken.jti);
-  return false;
+    })
+    .catch(function (response) {
+      return false;
+    });
 }
