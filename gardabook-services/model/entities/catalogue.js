@@ -123,11 +123,21 @@ const generateObj = (props, validateOption) => {
     }
   }
 
+  const allTagCatalogue = {
+    pKey: {
+      S: "Tag_All"
+    },
+    sKey: {
+      S: "Tag_" + props.tag
+    }
+  }
+
   return {
     catalogueCatalogue,
     tagCatalogue,
     availabilityCatalogue,
-    keyCatalogue
+    keyCatalogue,
+    allTagCatalogue
   }
 }
 
@@ -144,17 +154,20 @@ const createCatalogue = async props => {
   const {
     catalogueCatalogue,
     tagCatalogue,
-    availabilityCatalogue
+    availabilityCatalogue,
+    allTagCatalogue
   } = obj
 
   //TODO: need to roll if fail
   const op1 = updateContent(catalogueCatalogue, false)
 
   const op2 = updateContent(tagCatalogue, false)
+  
+  const op3 = updateContent(allTagCatalogue, false)
 
-  const op3 = updateContent(availabilityCatalogue, false)
+  const op4 = updateContent(availabilityCatalogue, false)
 
-  return await Promise.all([op1, op2, op3]).then((res, err) => {
+  return await Promise.all([op1, op2, op3, op4]).then((res, err) => {
     if (!err) {
       return convertFromAws(catalogueCatalogue)
     } else {
@@ -200,6 +213,32 @@ const readCatalogues = async props => {
   return result
 }
 
+const readAllTags = async props => {
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
+  if (!obj) {
+    return false
+  }
+
+  const {
+    allTagCatalogue
+  } = obj
+
+  const tags = queryGsi(allTagCatalogue.pKey.S, "Tag_")
+
+  const result = await Promise.all([tags]).then(data => {
+    let finalData = []
+    data[0].Items.forEach((item, index) => {
+      finalData.push(item.sKey.S)
+    })
+    return finalData
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+  return result
+}
+
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for read
  * @returns {Promise.<object>}
@@ -234,7 +273,7 @@ const updateCatalogue = async props => {
     return false
   }
 
-  const { catalogueCatalogue, tagCatalogue, availabilityCatalogue} = obj
+  const { catalogueCatalogue, tagCatalogue, availabilityCatalogue, allTagCatalogue} = obj
 
   let ops = []
 
@@ -247,14 +286,20 @@ const updateCatalogue = async props => {
 
     const op3 = await updateContent(tagCatalogue, false)
     ops.push(op3)
+
+    const op4 = await deleteWithKeys(allTagCatalogue.pKey.S, "Tag_" + op1.Attributes.tag.S, false)
+    ops.push(op4)
+
+    const op5 = await updateContent(allTagCatalogue, false)
+    ops.push(op5)
   }
 
   if (op1.Attributes.availabilityId.S != catalogueCatalogue.availabilityId.S) {
-    const op4 = await deleteWithKeys(op1.Attributes.availabilityId.S, catalogueCatalogue.pKey.S, false)
-    ops.push(op4)
+    const op6 = await deleteWithKeys(op1.Attributes.availabilityId.S, catalogueCatalogue.pKey.S, false)
+    ops.push(op6)
 
-    const op5 = await updateContent(availabilityCatalogue, false)
-    ops.push(op5)
+    const op7 = await updateContent(availabilityCatalogue, false)
+    ops.push(op7)
   }
 
   return Promise.all(ops).then((res, err) => {
@@ -287,8 +332,11 @@ const deleteCatalogue = async props => {
   const op2 = deleteWithKeys("Tag_" + catalogueResult.Attributes.tag.S, catalogueCatalogue.pKey.S, false)
   ops.push(op2)
 
-  const op3 = deleteWithKeys(catalogueResult.Attributes.availabilityId.S, catalogueCatalogue.pKey.S, false)
+  const op3 = deleteWithKeys("Tag_All", "Tag_" + catalogueResult.Attributes.tag.S, false)
   ops.push(op3)
+
+  const op4 = deleteWithKeys(catalogueResult.Attributes.availabilityId.S, catalogueCatalogue.pKey.S, false)
+  ops.push(op4)
 
   return Promise.all(ops).then((res, err) => {
     if (!err) {
@@ -304,5 +352,6 @@ module.exports = {
   readCatalogues,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue
+  deleteCatalogue,
+  readAllTags
 }

@@ -5,7 +5,8 @@ const {
   readCatalogues,
   readCatalogue,
   updateCatalogue,
-  deleteCatalogue
+  deleteCatalogue,
+  readAllTags
 } = require("../model/entities/catalogue")
 
 const {
@@ -81,12 +82,40 @@ exports.deleteCatalogue = function (xIntRole, catalogueId, api_key) {
 exports.readCatalogueByTags = function (xIntRole, tags) {
 
   let tagIds = []
+  var allTags = false
 
   tags.forEach((item, index) => {
     tagIds.push("Tag_" + item)
-  })
+    if (item == "All") {
+        allTags = true
+        return
+      }
+    })
 
-  return readCatalogueByGsiKeys(tagIds)
+  if (allTags) {
+    var params = {
+      pKey: "Tag_All",
+      sKey: ""
+    }
+
+    var data = readAllTags(params)
+    .then((response) => {
+        if (response) {
+          return readCatalogueByGsiKeys(response)
+        }
+        else {
+          return { message: "error reading ctalogue" }
+        }
+    })
+    .catch((error) => {
+      return { message: "error reading ctalogue" }
+    })
+
+    return data;
+  }
+  else {
+    return readCatalogueByGsiKeys(tagIds)
+  }
 }
 
 
