@@ -12,7 +12,8 @@ const possiblePropKeys = [
   "address",
   "status",
   "createdAt",
-  "updatedAt"
+  "updatedAt",
+  "token"
 ]
 
 const requiredPropKeysForCreate = [
@@ -28,6 +29,12 @@ const requiredPropKeysForCreate = [
   "updatedAt"
 ]
 
+const requiredPropKeysForCreateToken = [
+  "pKey",
+  "sKey",
+  "token"
+]
+
 const requiredPropKeysForRead = ["pKey"]
 
 const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
@@ -39,6 +46,7 @@ const requiredPropKeyEnum = {
   READ: 2,
   UPADTE: 3,
   DELETE: 4,
+  CREATETOKEN: 5,
   properties: {
     1: {
       values: requiredPropKeysForCreate
@@ -51,7 +59,10 @@ const requiredPropKeyEnum = {
     },
     4: {
       values: requiredPropKeysForDelete
-    }
+    },
+    5: {
+      values: requiredPropKeysForCreateToken
+    },
   }
 };
 

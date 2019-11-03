@@ -3,6 +3,7 @@
 const jwk = require('jsonwebtoken')
 const jwkToPem = require('jwk-to-pem')
 const request = require('request')
+const userService = require("../service/UserService")
 
 // For AWS Cognito: https://cognito-idp.<region>.amazonaws.com/<user pool id>
 const iss =
@@ -43,9 +44,9 @@ module.exports.authorize = (event, context, callback) => {
     // console.log(token)
     // Make a request to the iss + .well-known/jwks.json URL:
     request({
-        url: `${iss}/.well-known/jwks.json`,
-        json: true
-      },
+      url: `${iss}/.well-known/jwks.json`,
+      json: true
+    },
       (error, response, body) => {
         // console.log(request.url);
         if (error || response.statusCode !== 200) {
@@ -94,21 +95,42 @@ module.exports.authorize = (event, context, callback) => {
   }
 }
 
-logout = function (token, jti, sub) {
+logout = function (jti, sub) {
   //insert
-//need to store revoke token in dynamodb
-//pkey: RevokeToken_ + jti
-//skey: User_ +sub
-// attribute token: token
+  //need to store revoke token in dynamodb
+  //pkey: RevokeToken_ + jti
+  //skey: User_ +sub
+  // attribute token: token
+  readRevokeToken(jti, sub)
+    .then(function (response) {
+      console.log(response)
+      if (response && response.pKey) {
+        return true;
+      }
+      else {
+        return false;
+      }
 
-  console.log(decodedToken.jti)
+    })
+    .catch(function (response) {
+      return false;
+    });
 }
 
 verifyRevokeToken = function (token, jti, sub) {
   //fetch
- //skey: User_ +sub
-//pkey: RevokeToken_ + jti
-
-  console.log(decodedToken.jti);
-  return false;
+  //skey: User_ +sub
+  //pkey: RevokeToken_ + jti
+  writeRevokeToken(token, jti, sub)
+    .then(function (response) {
+      if (response) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    })
+    .catch(function (response) {
+      return false;
+    });
 }
