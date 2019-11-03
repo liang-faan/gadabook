@@ -36,9 +36,3 @@ module.exports.getCognitoTokenFromGoogleCode = function getCognitoTokenFromGoogl
 
 
 }
-
-
-
-
-
-context.succeed(response);

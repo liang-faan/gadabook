@@ -6,8 +6,7 @@ const request = require('request')
 const userService = require("../service/UserService")
 
 // For AWS Cognito: https://cognito-idp.<region>.amazonaws.com/<user pool id>
-const iss =
-  'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_n90l7WmwP'
+const iss = 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_n90l7WmwP'
 
 // Generate policy to allow this user on this API:
 const generatePolicy = (principalId, effect, resource) => {
@@ -41,6 +40,9 @@ module.exports.authorize = (event, context, callback) => {
       token = token.substring(6).trim()
     }
 
+    var options = {complete: true};
+    var decodeToken = jwk.decode(token, options);
+    var keyId = decodeToken.header.kid;
     // console.log(token)
     // Make a request to the iss + .well-known/jwks.json URL:
     request({
@@ -48,14 +50,21 @@ module.exports.authorize = (event, context, callback) => {
       json: true
     },
       (error, response, body) => {
-        // console.log(request.url);
+        console.log(request.url);
         if (error || response.statusCode !== 200) {
           console.log('Request error:', error)
           callback('Unauthorized Access')
         }
-        const keys = body
+        const keysResp = body
         // Based on the JSON of `jwks` create a Pem:
-        const k = keys.keys[0]
+        var k = keysResp.keys[0];
+        if (k.kid != keyId) {
+          keysResp.keys.forEach((key, index) => {
+            if (key.kid == keyId) {
+              k = key;
+            }
+          });
+        }
         const jwkArray = {
           kty: k.kty,
           n: k.n,
@@ -94,41 +103,38 @@ module.exports.authorize = (event, context, callback) => {
     callback('Unauthorized')
   }
 }
-
-logout = function (jti, sub) {
+function logout(token, jti, sub) {
   //insert
   //need to store revoke token in dynamodb
   //pkey: RevokeToken_ + jti
   //skey: User_ +sub
   // attribute token: token
-  readRevokeToken(jti, sub)
+  userService.writeRevokeToken(token, jti, sub)
     .then(function (response) {
-      console.log(response)
-      if (response && response.pKey) {
+      if (response) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
-
     })
     .catch(function (response) {
       return false;
     });
 }
 
-verifyRevokeToken = function (token, jti, sub) {
+function verifyRevokeToken(token, jti, sub) {
   //fetch
   //skey: User_ +sub
   //pkey: RevokeToken_ + jti
-  writeRevokeToken(token, jti, sub)
+  userService.readRevokeToken(jti, sub)
     .then(function (response) {
-      if (response) {
+      console.log(response)
+      if (response && response.pKey) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
+
     })
     .catch(function (response) {
       return false;
