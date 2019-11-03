@@ -1,4 +1,5 @@
 'use strict'
+var utils = require('../utils/writer.js')
 var gcognito = require('../service/CognitoService')
 
 module.exports.getCognitoTokenFromGoogleCode = function getCognitoTokenFromGoogleCode(
