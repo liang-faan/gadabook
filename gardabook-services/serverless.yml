@@ -419,6 +419,23 @@ functions:
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
+  getCognitoTokenFromGoogleCode:
+    handler: controllers/gCognito.getCognitoTokenFromGoogleCode
+    events:
+      - http:
+          path: v1/cognito/getCognitoTokenFromGoogleCode
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
 resources:
   Resources:
     GardabookDynamoDB:

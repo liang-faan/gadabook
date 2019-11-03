@@ -5,14 +5,18 @@ const AWS = require('aws-sdk')
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js')
 
 // TODO: edit for production
-// Configs
+// Google Configs
 const client_id =
   '761641708289-pg9crt5nlegplum9d82rbfn4vb643iks.apps.googleusercontent.com'
 const client_secret = 'pSr4oh1A3gzh_gYoBZSi-Yz9'
 const redirect_uri = 'http://localhost'
-const userPoolId = 'ap-southeast-1_Yc1XAOUfh'
 
-const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Server clientId
+// Cognito Configs
+// const userPoolId = 'ap-southeast-1_Yc1XAOUfh' // testgarda
+const userPoolId = 'ap-southeast-1_n90l7WmwP' // gardabook
+const cognitoClientId = '1av87gafk35mmvmk7g4csu6fr6' // Server clientId
+// const cognitoClientId = '4jc0k206hdernuig7hs5sqhrhb' // Mobile clientId
+// const cognitoClientId = 'd0or9299ilbul3m29ohq86n1i' // Server clientId
 // const cognitoClientId = '29llvpvj8sqhh8k5o1781p81k1' // Mobile clientId
 // const cognitoClientId = 'CLIENT_ID_NOT_APPLICABLE' // Not usable. Value used only when made by admin
 
@@ -167,18 +171,25 @@ const getCognitoTokenFromGoogleCode = async code => {
 exports.getCognitoTokenFromGoogleCode = getCognitoTokenFromGoogleCode
 
 // TEST CODE: By pass token exchange to test user sign up/in
-// const testNewUserFlow = async username => {
-//   const createdUser = await createGoogleAuthUser(username)
-//   const createdUsername = createdUser.User.Username
-//   // Username would have been prepended with oauth label
-//   await updateUserPassword(createdUsername)
-//   const cognitoAccessToken = await getCognitoAccessToken(
-//     createdUsername,
-//     '1qazZAQ!'
-//   )
-//   return cognitoAccessToken
+const testNewUserFlow = async username => {
+  const createdUser = await createGoogleAuthUser(username)
+  const createdUsername = createdUser.User.Username
+  // Username would have been prepended with oauth label
+  await updateUserPassword(createdUsername)
+  const cognitoAccessToken = await getCognitoAccessToken(
+    createdUsername,
+    '1qazZAQ!'
+  )
+  return cognitoAccessToken
+}
+createOrSignInGoogleUser('jerome13@example.com')
+  // testNewUserFlow('jerome11@example.com')
+  .then(res => console.log(res))
+  .catch(err => console.log(err))
+
+// const testCognitoAccessToken = async username => {
+//   const cognitoAccessToken = await getCognitoAccessToken(username, '1qazZAQ!')
 // }
-// createOrSignInGoogleUser('jerome13@example.com')
-// // testNewUserFlow('jerome11@example.com')
-// .then(res => console.log(res))
-// .catch(err => console.log(err))
+// testCognitoAccessToken('oauth2-google@jerome13@example.com')
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err))

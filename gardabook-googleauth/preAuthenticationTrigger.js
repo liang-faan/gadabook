@@ -5,7 +5,7 @@ exports.handler = (event, context, callback) => {
     callback(null, event)
   } else if (
     atCount === 2 &&
-    callerContext.clientId === 'd0or9299ilbul3m29ohq86n1i'
+    callerContext.clientId === '1av87gafk35mmvmk7g4csu6fr6'
   ) {
     callback(null, event)
   } else {
