@@ -3,6 +3,8 @@ export interface Props {
     [key: string]: string
   }
   updateCurrentNavLocation(navLocation: String): Object
+  signinStatus: Boolean
+  loadingScreen: Boolean
 }
 
 export interface State {

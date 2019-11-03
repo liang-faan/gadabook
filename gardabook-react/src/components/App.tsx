@@ -49,7 +49,7 @@ class App extends Component<Props & RouteProps, State> {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, signinStatus, loadingScreen } = this.props
     return (
       <ThemeProvider theme={theme}>
         <Route
@@ -63,7 +63,7 @@ class App extends Component<Props & RouteProps, State> {
                 >
                   <Switch location={location}>
                     {/* <Splash /> */}
-                    {/* <SignIn /> */}
+                    {!signinStatus && <SignIn />}
                     {/* <SignUp /> */}
                     {/* <SignUpSuccess /> */}
 
@@ -85,8 +85,11 @@ class App extends Component<Props & RouteProps, State> {
   }
 }
 
-function mapStateToProps() {
-  return {}
+function mapStateToProps({ view }) {
+  return {
+    signinStatus: view.signinStatus,
+    loadingScreen: view.loadingScreen,
+  }
 }
 
 // @ts-ignore
