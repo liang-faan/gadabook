@@ -69,7 +69,7 @@ functions:
       - http:
           path: v1/booking/getBookingByUserId
           method: get
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -89,7 +89,7 @@ functions:
       - http:
           path: v1/booking/deleteBookingById/{bookingId}
           method: delete
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -109,7 +109,7 @@ functions:
       - http:
           path: v1/booking/getBookingByBookingId/{bookingId}
           method: get
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -190,7 +190,7 @@ functions:
       - http:
           path: v1/catalogue/findCatalogueByTags
           method: get
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -210,7 +210,7 @@ functions:
       - http:
           path: v1/catalogue/readCatalogueByAvailabilityId/{availabilityId}
           method: get
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -227,7 +227,7 @@ functions:
       - http:
           path: v1/catalogue/getCatalogueById/{catalogueId}
           method: get
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -244,7 +244,7 @@ functions:
       - http:
           path: v1/catalogue/updateCatalogue
           method: put
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -278,7 +278,7 @@ functions:
       - http:
           path: v1/enrollment/getUserEnrollment
           method: get
-          authorizer: auth
+          # authorizer: auth
           integration: lambda
           cors: 
             origins: 
@@ -344,7 +344,7 @@ functions:
     handler: controllers/User.deleteUser
     events:
       - http:
-          path: v1/user/eleteUser
+          path: v1/user/deleteUser
           method: delete
           # authorizer: auth
           integration: lambda
@@ -363,7 +363,7 @@ functions:
       - http:
           path: v1/user/getUserByName
           method: get
-          # authorizer: auth
+          authorizer: auth
           integration: lambda
           cors: 
             origins: 

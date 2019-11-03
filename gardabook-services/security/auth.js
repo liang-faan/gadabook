@@ -55,11 +55,11 @@ module.exports.authorize = (event, context, callback) => {
           console.log('Request error:', error)
           callback('Unauthorized Access')
         }
-        const keys = body
+        const keysResp = body
         // Based on the JSON of `jwks` create a Pem:
-        const k = keys.keys[0];
+        k = keysResp.keys[0];
         if (k.kid != keyId) {
-          keys.forEach((key, index) => {
+          keysResp.keys.forEach((key, index) => {
             if (key.kid = keyId) {
               k = key;
             }
