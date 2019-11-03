@@ -44,13 +44,11 @@ exports.createUserBooking = function(xIntRole, body) {
     createdAt: String(Date.now()),
     updatedAt: String(Date.now())
   }
-
   if (createBooking(params)) {
     return params
   }
 
   return { message: "Create booking failed", params }
-}
 }
 
 exports.deleteBooking = function(xIntRole, bookingId) {
