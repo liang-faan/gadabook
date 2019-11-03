@@ -1,5 +1,4 @@
 'use strict';
-var swagger = require("../utils/swaggerTools");
 var utils = require('../utils/writer.js');
 var Enrollment = require('../service/EnrollmentService');
 
