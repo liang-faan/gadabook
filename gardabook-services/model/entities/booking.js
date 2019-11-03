@@ -174,7 +174,7 @@ const createBooking = async props => {
 
   return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return { bookingId: bookingBooking.pKey.S }
+      return { bookingId: bookingBooking.pKey }
     } else {
       return false
     }

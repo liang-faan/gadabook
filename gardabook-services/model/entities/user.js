@@ -129,7 +129,7 @@ const createUser = async props => {
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
-      return { userId: userUser.pKey.S }
+      return { userId: userUser.pKey }
     } else {
       return false
     }

@@ -1,6 +1,6 @@
 'use strict';
 
-const { 
+const {
   createCatalogue,
   readCatalogues,
   readCatalogue,
@@ -18,7 +18,7 @@ const { newUuid } = require("../utils/uuidGenerator")
  * body Catalogue Catalogue object that needs to be added to the system
  * no response value expected for this operation
  **/
-exports.addCatalogue = function(xIntRole,body) {
+exports.addCatalogue = function (xIntRole, body) {
   var catalogueId = newUuid("Catalogue_")
 
   var params = {
@@ -39,7 +39,11 @@ exports.addCatalogue = function(xIntRole,body) {
     updatedAt: String(Date.now())
   }
 
-  return createCatalogue(params)
+  if (createCatalogue(params)) {
+    return params
+  }
+
+  return { message: "Create catalogue failed", params }
 }
 
 
@@ -52,7 +56,7 @@ exports.addCatalogue = function(xIntRole,body) {
  * api_key String  (optional)
  * no response value expected for this operation
  **/
-exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
+exports.deleteCatalogue = function (xIntRole, catalogueId, api_key) {
   var params = {
     pKey: String(catalogueId),
     sKey: String(catalogueId)
@@ -71,7 +75,7 @@ exports.deleteCatalogue = function(xIntRole,catalogueId,api_key) {
  * providerName List Providers of the catalogue (optional)
  * returns List
  **/
-exports.readCatalogueByTags = function(xIntRole, tags) {
+exports.readCatalogueByTags = function (xIntRole, tags) {
 
   let tagIds = []
 
@@ -91,7 +95,7 @@ exports.readCatalogueByTags = function(xIntRole, tags) {
  * catalogueId Long ID of catalogue
  * returns List
  **/
-exports.readCatalogueByAvailabilityId = function(xIntRole, availabilityId) {
+exports.readCatalogueByAvailabilityId = function (xIntRole, availabilityId) {
   return readCatalogueByGsiKeys(availabilityId)
 }
 
@@ -111,9 +115,9 @@ const readCatalogueByGsiKeys = (keys) => {
   return Promise.all(results).then(data => {
     return data[0]
   })
-  .catch(error => {
-    console.log(error)
-  })
+    .catch(error => {
+      console.log(error)
+    })
 }
 
 
@@ -125,7 +129,7 @@ const readCatalogueByGsiKeys = (keys) => {
  * catalogueId Long ID of catalogue to return
  * returns Catalogue
  **/
-exports.readCatalogue = function(xIntRole, catalogueId) {
+exports.readCatalogue = function (xIntRole, catalogueId) {
   var params = {
     pKey: String(catalogueId),
     sKey: String(catalogueId),
@@ -143,7 +147,7 @@ exports.readCatalogue = function(xIntRole, catalogueId) {
  * body Catalogue Catalogue object that needs to be update into the system
  * no response value expected for this operation
  **/
-exports.updateCatalogue = function(xIntRole, body) {
+exports.updateCatalogue = function (xIntRole, body) {
   var params = {
     pKey: String(body.catalogueId),
     sKey: String(body.catalogueId),
