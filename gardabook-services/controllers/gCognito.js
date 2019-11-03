@@ -11,21 +11,22 @@ module.exports.getCognitoTokenFromGoogleCode = function getCognitoTokenFromGoogl
     gcognito
         .getCognitoTokenFromGoogleCode(code)
         .then(function (response) {
-            next(null,
+            next(null, {
                 "isBase64Encoded": false, // Set to `true` for binary support.
                 "statusCode": 200,
                 "headers": {
                     "Authorization": response
                 }
-            );
+            });
         })
         .catch(function (response) {
             next(
-                null,
-                "isBase64Encoded": false, // Set to `true` for binary support.
-                "statusCode": 404,
-                "headers": {
-                    "Authorization": null
+                null, {
+                    "isBase64Encoded": false, // Set to `true` for binary support.
+                    "statusCode": 404,
+                    "headers": {
+                        "Authorization": null
+                    }
                 }
             );
         })
