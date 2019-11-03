@@ -2,7 +2,9 @@ const {
   createUser,
   readUser,
   deleteUser,
-  updateUser
+  updateUser,
+  writeRevokeToken,
+  readRevokeToken
 } = require('../model/entities/user')
 
 const { newUuid } = require('../utils/uuidGenerator')
@@ -99,3 +101,21 @@ exports.userLogout = function (xIntRole) {
   });
 }
 
+exports.readRevokeToken = function (jti, sub) {
+  var params = {
+    pKey: "RevokeToken_" + String(jti),
+    sKey: "User_" + String(sub)
+  }
+
+  return readRevokeToken(params)
+}
+
+exports.writeRevokeToken = function (token, jti, sub) {
+  var params = {
+    pKey: "RevokeToken_" + String(jti),
+    sKey: "User_" + String(sub),
+    token: String(token)
+  }
+
+  return writeRevokeToken(params)
+}

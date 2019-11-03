@@ -38,14 +38,15 @@ var writeJson = exports.writeJson = function(response, arg1, arg2) {
     code = 200;
   }
   if(typeof payload === 'object') {
-    payload = AWS.DynamoDB.Converter.unmarshall(JSON.stringify(payload, null, 2));
-
+    //payload = AWS.DynamoDB.Converter.unmarshall(payload)
+    payload = JSON.stringify(payload, null, 2)
   }
+
   if(process.env.NODE_ENV == 'development'){
     response.writeHead(code, {'Content-Type': 'application/json'});
     return response.end(payload);
   }
   else{
-    response(undefined, AWS.DynamoDB.Converter.unmarshall(arg1));
+    response(undefined, arg1);
   }
 };

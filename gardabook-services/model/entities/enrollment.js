@@ -1,4 +1,14 @@
 const { ddb, tableName } = require("./ddb")
+
+const { 
+  deleteWithKeys,
+  queryWithKeys,
+  queryWithKeysAndConvert,
+  queryGsi,
+  updateContent,
+  convertFromAws 
+} = require("./dbHelper")
+
 const { validateProps, requiredPropKeyEnum } = require("./validators/enrollmentValidator")
 
 /**
@@ -96,63 +106,15 @@ const createEnrollment = async props => {
 
   const { enrollmentEnrollment, userEnrollment, catalogueEnrollment } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...enrollmentEnrollment
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = await updateContent(enrollmentEnrollment, false)
 
-  const op2 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...userEnrollment
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
+  const op2 = await updateContent(userEnrollment, false)
 
-  const op3 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...catalogueEnrollment
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
+  const op3 = await updateContent(catalogueEnrollment, false)
 
   return Promise.all([op1, op2, op3]).then((res, err) => {
     if (!err) {
-      return { enrollmentId: enrollmentEnrollment.pKey }
+      return convertFromAws(enrollmentEnrollment)
     } else {
       return false
     }
@@ -171,66 +133,19 @@ const readUserEnrollment = async props => {
 
   const { userEnrollment } = obj
 
-  const b = await new Promise((resolve, reject) => {
-    var params = {
-      ExpressionAttributeValues: {
-        ":p1": {
-          S: userEnrollment.pKey.S
-        },
-        ":s1": {
-          S: "Enrollment_"
-        }
-      },
-      KeyConditionExpression: "pKey = :p1 and begins_with(sKey, :s1)",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const b = await queryGsi(userEnrollment.pKey.S, "Enrollment_")
 
   let enrollments = []
 
   b.Items.forEach(function (item, index) {
-    const enrollment = new Promise((resolve, reject) => {
-      var params = {
-        ExpressionAttributeValues: {
-          ":p1": {
-            S: item.sKey.S
-          },
-          ":s1": {
-            S: item.sKey.S
-          }
-        },
-        KeyConditionExpression: "pKey = :p1 and sKey = :s1",
-        TableName: tableName
-      }
-
-      ddb.query(params, (err, data) => {
-        if (err) {
-          console.log(err, err.stack)
-          reject(err)
-        } else {
-          console.log(JSON.stringify(data))
-          resolve(data)
-        }
-      })
-    })
-
+    const enrollment = queryWithKeysAndConvert(item.sKey.S, item.sKey.S)
     enrollments.push(enrollment)
   })
 
   const result = await Promise.all(enrollments).then(data => {
     let finalData = []
     data.forEach(function (item, index) {
-      finalData = finalData.concat(item.Items)
+      finalData = finalData.concat(item)
     })
     return { "enrollments": finalData }
   })
@@ -253,33 +168,10 @@ const readEnrollment = async props => {
 
   const { enrollmentEnrollment } = obj
 
-  const enrollmentResult = new Promise((resolve, reject) => {
-    const params = {
-      ExpressionAttributeValues: {
-        ":p1": {
-          S: enrollmentEnrollment.pKey.S
-        },
-        ":s1": {
-          S: enrollmentEnrollment.sKey.S
-        }
-      },
-      KeyConditionExpression: "pKey = :p1 and sKey = :s1",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
+  const enrollmentResult = queryWithKeys(enrollmentEnrollment.pKey.S, enrollmentEnrollment.sKey.S)
 
   const result = await Promise.all([enrollmentResult]).then(data => {
-    return data[0].Items[0]
+    return convertFromAws(data[0].Items[0])
   })
   .catch(error => {
     console.log(error)
@@ -293,55 +185,15 @@ const readEnrollment = async props => {
  * @returns {Promise.<boolean>}
  */
 const updateEnrollment = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForUpdate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.UPADTE)
   if (!obj) {
     return false
   }
 
   const { enrollmentEnrollment } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...enrollmentEnrollment
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
+  const op1 = await updateContent(enrollmentEnrollment, false) 
+  
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
       return true
@@ -363,75 +215,11 @@ const deleteEnrollment = async props => {
 
   const { enrollmentEnrollment } = obj
 
-  const enrollmentEnrollmentResult = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: enrollmentEnrollment.pKey.S
-        },
-        sKey: {
-          S: enrollmentEnrollment.sKey.S
-        }
-      },
-      ReturnValues: "ALL_OLD",
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const enrollmentEnrollmentResult = await deleteWithKeys(enrollmentEnrollment.pKey.S, enrollmentEnrollment.sKey.S, true)
 
-  const userEnrollmentResult = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: enrollmentEnrollmentResult.Attributes.userId.S
-        },
-        sKey: {
-          S: enrollmentEnrollment.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const userEnrollmentResult = deleteWithKeys(enrollmentEnrollmentResult.Attributes.userId.S, enrollmentEnrollment.pKey.S, false)
 
-  const catalogueEnrollmenResult = new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: enrollmentEnrollmentResult.Attributes.catalogueId.S
-        },
-        sKey: {
-          S: enrollmentEnrollment.pKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const catalogueEnrollmenResult = deleteWithKeys(enrollmentEnrollmentResult.Attributes.catalogueId.S, enrollmentEnrollment.pKey.S, false)
 
   return await Promise.all([userEnrollmentResult, catalogueEnrollmenResult]).then((res, err) => {
     if (!err) {

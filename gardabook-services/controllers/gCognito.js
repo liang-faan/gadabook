@@ -1,33 +1,44 @@
 'use strict'
-var utils = require('../utils/writer.js')
+// var utils = require('../utils/writer.js')
 var gcognito = require('../service/CognitoService')
 
-module.exports.getCognitoTokenFromGoogleCode = function getCognitoTokenFromGoogleCode(
-    req,
-    res,
-    next
-) {
-    const code = req.query.code
-    gcognito
-        .getCognitoTokenFromGoogleCode(code)
-        .then(function (response) {
-            next(null, {
-                "isBase64Encoded": false, // Set to `true` for binary support.
-                "statusCode": 200,
-                "headers": {
-                    "Authorization": response
+module.exports.getCognitoTokenFromGoogleCode = function getCognitoTokenFromGoogleCode(event, context, cb) {
+    const code = event.query.code
+    // const response = event.Records[0].cf.response;
+    // const headers = response.headers;
+
+    gcognito.getCognitoTokenFromGoogleCode(code)
+        .then(function (token) {
+            var responseCode = 200;
+            var response = {
+                statusCode: responseCode,
+                headers: {
+                    "Authorization": token
                 }
+            };
+            // response.status = '200'
+            cb(null, {
+                response
             });
         })
-        .catch(function (response) {
-            next(
-                null, {
-                    "isBase64Encoded": false, // Set to `true` for binary support.
-                    "statusCode": 404,
-                    "headers": {
-                        "Authorization": null
-                    }
+        .catch(function (gCognitoResp) {
+            var responseCode = 401;
+            var response = {
+                statusCode: responseCode,
+                headers: {
+                    "Authorization": token
                 }
-            );
+            };
+            cb(null, {
+                response
+            });
         })
+
+
 }
+
+
+
+
+
+context.succeed(response);

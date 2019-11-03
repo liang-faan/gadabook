@@ -1,43 +1,21 @@
-const { ddb, tableName } = require("./ddb")
-const { validateProps } = require("./validators/availabilityValidator")
+const { 
+  deleteWithKeys,
+  queryWithKeys,
+  queryGsi,
+  updateContent 
+} = require("./dbHelper")
 
-// Specify properties available to each operation
-// Modifications should also be updated in generateObj
-
-const possiblePropKeys = [
-  "pKey",
-  "sKey",
-  "catalogueId",
-  "date",
-  "time",
-  "slot",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForCreate = [
-  "pKey",
-  "sKey",
-  "catalogueId",
-  "date",
-  "time",
-  "slot",
-  "createdAt",
-  "updatedAt"
-]
-
-const requiredPropKeysForRead = ["pKey"]
-
-const requiredPropKeysForUpdate = ["pKey", "sKey", "updatedAt"]
-
-const requiredPropKeysForDelete = ["pKey", "sKey"]
+const { 
+  validateProps, 
+  requiredPropKeyEnum 
+} = require("./validators/availabilityValidator")
 
 /**
  * @param {Object.<string, any>} props An object containing the relevant properties for update
  * @returns {Object.<object, any> | boolean}
  */
-const generateObj = props => {
-  if (!validateProps(props)) {
+const generateObj = (props, validateOption) => {
+  if (!validateProps(props, validateOption)) {
     return false
   }
 
@@ -103,74 +81,16 @@ const generateObj = props => {
  * @returns {Promise.<boolean>}
  */
 const createAvailability = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForCreate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.CREATE)
   if (!obj) {
     return false
   }
 
-  const { availabilityAvailability, catalogueAvailability } = obj
+  const { availabilityAvailability } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...availabilityAvailability
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = await updateContent(availabilityAvailability, false)
 
-  const op2 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...catalogueAvailability
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject()
-      } else {
-        console.log(data)
-        resolve()
-      }
-    })
-  })
-
-  return Promise.all([op1, op2]).then((res, err) => {
+  return Promise.all([op1]).then((res, err) => {
     if (!err) {
       return true
     } else {
@@ -184,59 +104,15 @@ const createAvailability = async props => {
  * @returns {Promise.<object>}
  */
 const readAvailability = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForRead]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
     return false
   }
 
   const { availabilityAvailability } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    var params = {
-      ExpressionAttributeValues: {
-        ":v1": {
-          S: availabilityAvailability.pKey.S
-        }
-      },
-      KeyConditionExpression: "pKey = :v1",
-      TableName: tableName
-    }
-
-    ddb.query(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(JSON.stringify(data))
-        resolve(data)
-      }
-    })
-  })
-
+  const op1 = await queryWithKeys(availabilityAvailability.pKey.S, availabilityAvailability.sKey.S)
+  
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
       return op1
@@ -251,54 +127,14 @@ const readAvailability = async props => {
  * @returns {Promise.<boolean>}
  */
 const updateAvailability = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForUpdate]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.UPADTE)
   if (!obj) {
     return false
   }
 
   const { availabilityAvailability } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Item: {
-        ...availabilityAvailability
-      },
-      TableName: tableName
-    }
-    ddb.putItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = await new updateContent(availabilityAvailability, false)
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
@@ -314,82 +150,14 @@ const updateAvailability = async props => {
  * @returns {Promise.<boolean>}
  */
 const deleteAvailability = async props => {
-  // Check properties
-  const propKeys = Object.keys(props)
-  let correctProps = true
-
-  const requiredPropKeys = [...requiredPropKeysForDelete]
-
-  propKeys.forEach(key => {
-    if (!possiblePropKeys.includes(key)) {
-      correctProps = false
-    } else {
-      const index = requiredPropKeys.indexOf(key)
-      requiredPropKeys.splice(index, 1)
-    }
-  })
-
-  if (requiredPropKeys.length > 0) {
-    correctProps = false
-  }
-
-  if (!correctProps) {
-    return false
-  }
-
-  // Create API payload and call
-  const obj = generateObj(props)
+  const obj = generateObj(props, requiredPropKeyEnum.DELETE)
   if (!obj) {
     return false
   }
 
-  const { availabilityAvailability, catalogueAvailability } = obj
+  const { availabilityAvailability } = obj
 
-  const op1 = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: availabilityAvailability.pKey.S
-        },
-        sKey: {
-          S: availabilityAvailability.sKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
-
-  const op2 = await new Promise((resolve, reject) => {
-    const params = {
-      Key: {
-        pKey: {
-          S: catalogueAvailability.pKey.S
-        },
-        sKey: {
-          S: catalogueAvailability.sKey.S
-        }
-      },
-      TableName: tableName
-    }
-    ddb.deleteItem(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack)
-        reject(err)
-      } else {
-        console.log(data)
-        resolve(data)
-      }
-    })
-  })
+  const op1 = await new deleteWithKeys(availabilityAvailability.pKey.S, availabilityAvailability.sKey.S, false)
 
   return Promise.all([op1, op2]).then((res, err) => {
     if (!err) {
@@ -401,7 +169,6 @@ const deleteAvailability = async props => {
 }
 
 module.exports = {
-  generateAvailabilityObject: generateObj,
   createAvailability,
   readAvailability,
   updateAvailability,

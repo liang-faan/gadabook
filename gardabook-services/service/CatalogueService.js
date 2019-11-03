@@ -8,6 +8,13 @@ const {
   deleteCatalogue
 } = require("../model/entities/catalogue")
 
+const {
+  createAvailability,
+  readAvailability,
+  updateAvailability,
+  deleteAvailability
+} = require("../model/entities/availability")
+
 const { newUuid } = require("../utils/uuidGenerator")
 
 /**
@@ -39,11 +46,7 @@ exports.addCatalogue = function (xIntRole, body) {
     updatedAt: String(Date.now())
   }
 
-  if (createCatalogue(params)) {
-    return params
-  }
-
-  return { message: "Create catalogue failed", params }
+  return createCatalogue(params)
 }
 
 
@@ -136,6 +139,27 @@ exports.readCatalogue = function (xIntRole, catalogueId) {
   }
 
   return readCatalogue(params)
+}
+
+exports.createAvailability = function (xIntRole) {
+
+  var i;
+  for (i = 1; i < 5; i++) {
+
+    var availabilityId = newUuid("Availability_")
+
+    var params = {
+      pKey: String(availabilityId),
+      sKey: String(availabilityId),
+      date: String(Date.now() + i),
+      time: String(availabilityId),
+      slot: String(availabilityId),
+      createdAt: String(Date.now()),
+      updatedAt: String(Date.now())
+    }
+
+    createAvailability(params)
+  }
 }
 
 

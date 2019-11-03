@@ -3,6 +3,7 @@
 const jwk = require('jsonwebtoken')
 const jwkToPem = require('jwk-to-pem')
 const request = require('request')
+const userService = require("../service/UserService")
 
 // For AWS Cognito: https://cognito-idp.<region>.amazonaws.com/<user pool id>
 const iss =
@@ -28,8 +29,11 @@ const generatePolicy = (principalId, effect, resource) => {
 }
 
 // Reusable Authorizer function, set on `authorizer` field in serverless.yml
-module.exports.authorize = (event, context, cb) => {
+module.exports.authorize = (event, context, callback) => {
   console.log('Auth function invoked')
+  var requestPath = event.requestPath;
+  var sub;
+  var jti;
   if (event.authorizationToken) {
     // Remove 'Bearer ' from token:
     var token = event.authorizationToken
@@ -37,15 +41,17 @@ module.exports.authorize = (event, context, cb) => {
       token = token.substring(6).trim()
     }
 
-    console.log(token)
+    // console.log(token)
     // Make a request to the iss + .well-known/jwks.json URL:
-    request(
-      { url: `${iss}/.well-known/jwks.json`, json: true },
+    request({
+      url: `${iss}/.well-known/jwks.json`,
+      json: true
+    },
       (error, response, body) => {
         // console.log(request.url);
         if (error || response.statusCode !== 200) {
           console.log('Request error:', error)
-          cb('Unauthorized Access')
+          callback('Unauthorized Access')
         }
         const keys = body
         // Based on the JSON of `jwks` create a Pem:
@@ -58,18 +64,73 @@ module.exports.authorize = (event, context, cb) => {
         const pem = jwkToPem(jwkArray)
 
         // Verify the token:
-        jwk.verify(token, pem, { issuer: iss }, (err, decoded) => {
+        jwk.verify(token, pem, {
+          issuer: iss
+        }, (err, decoded) => {
           if (err) {
             console.log('Unauthorized user:', err.message)
-            cb('Unauthorized Access')
+            callback('Unauthorized Access')
           } else {
-            cb(null, generatePolicy(decoded.sub, 'Allow', event.methodArn))
+            jti = decoded.jti;
+            sub = decoded.sub;
+            console.log(decoded.jti) //jwt token id
+            console.log(decoded.sub) //sub id
+            console.log(decoded);
+            if (requestPath.includes('userLogout')) {
+              logout(token, jti, sub);
+              callback(null, generatePolicy(decoded.sub, 'Allow', event.methodArn))
+            } else {
+              if (verifyRevokeToken(token, jti, sub)) {
+                callback('Unauthorized Access')
+              }
+              callback(null, generatePolicy(decoded.sub, 'Allow', event.methodArn))
+            }
           }
         })
       }
     )
   } else {
     console.log('No authorizationToken found in the header.')
-    cb('Unauthorized')
+    callback('Unauthorized')
   }
+}
+
+logout = function (jti, sub) {
+  //insert
+  //need to store revoke token in dynamodb
+  //pkey: RevokeToken_ + jti
+  //skey: User_ +sub
+  // attribute token: token
+  readRevokeToken(jti, sub)
+    .then(function (response) {
+      console.log(response)
+      if (response && response.pKey) {
+        return true;
+      }
+      else {
+        return false;
+      }
+
+    })
+    .catch(function (response) {
+      return false;
+    });
+}
+
+verifyRevokeToken = function (token, jti, sub) {
+  //fetch
+  //skey: User_ +sub
+  //pkey: RevokeToken_ + jti
+  writeRevokeToken(token, jti, sub)
+    .then(function (response) {
+      if (response) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    })
+    .catch(function (response) {
+      return false;
+    });
 }

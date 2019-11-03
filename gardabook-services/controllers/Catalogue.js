@@ -30,7 +30,7 @@ module.exports.addCatalogue = function addCatalogue(req, res, next) {
 module.exports.deleteCatalogue = function deleteCatalogue(req, res, next) {
   var xIntRole = '';
   var catalogueId = '';
-  // var api_key = '';
+   var api_key = '';
   var apiResponse;
   if (process.env.NODE_ENV == 'development') {
     xIntRole = req.swagger.params['x-int-role'].value;
