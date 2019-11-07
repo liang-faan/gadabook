@@ -2,8 +2,10 @@ export interface Props {
   classes: {
     [key: string]: string
   }
-  googleSigninStatus: Boolean
+  signinType: String
   cognitoToken: String
+  updateShowGoogleLogin: Function
+  signout: Function
 }
 
 export interface State {}

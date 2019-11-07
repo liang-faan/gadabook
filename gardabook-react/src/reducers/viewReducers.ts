@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { UPDATE_LOADING_SCREEN, UPDATE_SIGNIN_STATUS } from '../actions/types'
+import { UPDATE_LOADING_SCREEN, UPDATE_SIGNIN_TYPE } from '../actions/types'
 
 interface Action {
   type: String
@@ -20,17 +20,4 @@ const loadingScreen = (
   }
 }
 
-const defaultSigninStatus = false
-const googleSigninStatus = (
-  state: Boolean = defaultSigninStatus,
-  action: Action
-) => {
-  switch (action.type) {
-    case UPDATE_SIGNIN_STATUS:
-      return action.payload
-    default:
-      return state
-  }
-}
-
-export default combineReducers({ loadingScreen, googleSigninStatus })
+export default combineReducers({ loadingScreen })

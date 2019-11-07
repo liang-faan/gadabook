@@ -11,10 +11,6 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import styles from './styles/App'
 import theme from './styles/theme'
 import { Props, State } from './datatypes/App'
-import Splash from './Splash'
-import SignIn from './SignIn'
-import SignUp from './SignUp'
-import SignUpSuccess from './SignUpSuccess'
 import Explore from './Explore'
 import Bookings from './Bookings'
 import List from './List'
@@ -22,25 +18,21 @@ import Listings from './Listings'
 import Notifications from './Notifications'
 import ListingDetails from './ListingDetails'
 import LoadingModal from './LoadingModal'
-import { webClientId } from '../settings'
 
 import './styles/transitions.css'
 
 import { updateCurrentNavLocation } from '../actions/navActionCreators'
 import { BOOKINGS, EXPLORE } from '../reducers/navReducers'
-import { getCognitoToken } from '../actions/authActionCreators'
+import {
+  loginWithGoogle,
+  updateShowGoogleLogin,
+  updateCognitoToken,
+} from '../actions/authActionCreators'
 
 class App extends Component<Props & RouteProps, State> {
   doc: any
   constructor(props: Props) {
     super(props)
-    let googleLogin = false
-    if (window.plugins && window.plugins.googleplus) {
-      googleLogin = true
-    }
-    this.state = {
-      googleLogin,
-    }
     this.doc = React.createRef()
   }
 
@@ -68,51 +60,54 @@ class App extends Component<Props & RouteProps, State> {
   }
 
   onClickGoogleLogin = () => {
-    const params = {
-      scopes: 'profile email',
-      webClientId: webClientId,
-      offline: true,
-    }
-    console.log(params)
-    const onSuccess = data => {
-      const code = data.serverAuthCode
-      this.props.getCognitoToken(code)
-      console.log('SUCCESSFUL LOGIN')
-      console.log(JSON.stringify(data))
-      // get cognito token
-    }
-    const onFailure = (msg: Object) => {
-      console.log('FAILED LOGIN')
-      console.log(msg)
-    }
-    // window.plugins.googleplus.trySilentLogin(params, onSuccess, onFailure)
-    window.plugins.googleplus.login(params, onSuccess, onFailure)
+    this.props.loginWithGoogle()
   }
 
   render() {
-    const { googleLogin } = this.state
-    const { classes, googleSigninStatus, loadingScreen } = this.props
+    const {
+      classes,
+      signinType,
+      loadingScreen,
+      showGoogleLogin,
+      updateShowGoogleLogin,
+      updateCognitoToken,
+    } = this.props
 
-    const MainApp = () => (
-      <Route
-        render={({ location }) => (
-          <TransitionGroup component={null}>
-            <CSSTransition key={location.key} classNames="fade" timeout={300}>
-              <Switch location={location}>
-                {loadingScreen && <LoadingModal />}
-                <Route exact path="/explore" component={Explore} />
-                <Route exact path="/" component={Explore} />
-                <Route path="/bookings" component={Bookings} />
-                <Route path="/List" component={List} />
-                <Route path="/Listings" component={Listings} />
-                <Route path="/Notifications" component={Notifications} />
-                {/* <Route render={() => <div>Not Found</div>} /> */}
-              </Switch>
-            </CSSTransition>
-          </TransitionGroup>
-        )}
-      />
-    )
+    let googleLogin = false
+    if (window.plugins && window.plugins.googleplus) {
+      googleLogin = true
+    }
+
+    const MainApp = () => {
+      console.log('JER')
+      if (signinType === 'COGNITO') {
+        Auth.currentSession().then(data => {
+          const amplifyCognitoToken = data.getIdToken().getJwtToken()
+          updateCognitoToken(amplifyCognitoToken)
+        })
+      }
+      updateShowGoogleLogin(false)
+      return (
+        <Route
+          render={({ location }) => (
+            <TransitionGroup component={null}>
+              <CSSTransition key={location.key} classNames="fade" timeout={300}>
+                <Switch location={location}>
+                  {loadingScreen && <LoadingModal />}
+                  <Route exact path="/explore" component={Explore} />
+                  <Route exact path="/" component={Explore} />
+                  <Route path="/bookings" component={Bookings} />
+                  <Route path="/List" component={List} />
+                  <Route path="/Listings" component={Listings} />
+                  <Route path="/Notifications" component={Notifications} />
+                  {/* <Route render={() => <div>Not Found</div>} /> */}
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          )}
+        />
+      )
+    }
 
     const SignInButtons = () => {
       return (
@@ -130,23 +125,29 @@ class App extends Component<Props & RouteProps, State> {
     return (
       <ThemeProvider theme={theme}>
         <div ref={this.doc} className={classes.root}>
-          {(googleSigninStatus && <MainApp />) || <AmplifyMainApp />}
-          {(googleLogin && <SignInButtons />) || <SignInButtons />}
+          {(signinType === 'GOOGLE' && <MainApp />) || <AmplifyMainApp />}
+          {(googleLogin && showGoogleLogin && <SignInButtons />) || null}
         </div>
       </ThemeProvider>
     )
   }
 }
 
-function mapStateToProps({ view }) {
+function mapStateToProps({ view, auth }) {
   return {
-    googleSigninStatus: view.googleSigninStatus,
+    signinType: auth.signinType,
     loadingScreen: view.loadingScreen,
+    showGoogleLogin: auth.showGoogleLogin,
   }
 }
 
 // @ts-ignore
 export default withRouter(connect(
   mapStateToProps,
-  { updateCurrentNavLocation, getCognitoToken }
+  {
+    updateCurrentNavLocation,
+    loginWithGoogle,
+    updateShowGoogleLogin,
+    updateCognitoToken,
+  }
 )(injectSheet(styles(theme))(App)) as React.ComponentType<any>)
