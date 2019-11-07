@@ -71,20 +71,16 @@ export const signout = () => (dispatch, getState) => {
         type: UPDATE_SIGNIN_TYPE,
         payload: 'COGNITO',
       })
-      dispatch(updateShowGoogleLogin(true))
+      setTimeout(dispatch(updateShowGoogleLogin(true)), 1000)
     })
   }
   if (signinType === 'GOOGLE') {
     generalSignout()
   } else if (signinType === 'COGNITO') {
     generalSignout().then(() => {
-      Auth.currentSession()
-        .then(() => {
-          Auth.signOut()
-            .then(data => {
-              console.log(data)
-            })
-            .catch(err => console.log(err))
+      Auth.signOut()
+        .then(data => {
+          console.log(data)
         })
         .catch(err => console.log(err))
     })
