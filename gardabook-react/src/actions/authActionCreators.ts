@@ -17,33 +17,11 @@ export const updateShowGoogleLogin = showGoogleLogin => {
   }
 }
 
-const getCognitoTokenFromGoogleCode = code => dispatch => {
+export const loginWithGoogle = () => (dispatch, getState) => {
   dispatch({
     type: UPDATE_LOADING_SCREEN,
     payload: true,
   })
-  axios
-    .get(`${rootUrl}/cognito/getCognitoTokenFromGoogleCode?code=${code}`)
-    .then(res => {
-      const cognitoToken = res.data.response.headers.Authorization
-      console.log(`JER: ${cognitoToken}`)
-      dispatch({
-        type: UPDATE_COGNITO_TOKEN,
-        payload: cognitoToken,
-      })
-      dispatch({
-        type: UPDATE_SIGNIN_TYPE,
-        payload: 'GOOGLE',
-      })
-      console.log(res)
-      dispatch({
-        type: UPDATE_LOADING_SCREEN,
-        payload: false,
-      })
-    })
-}
-
-export const loginWithGoogle = () => {
   const params = {
     scopes: 'profile email',
     webClientId: webClientId,
@@ -51,7 +29,26 @@ export const loginWithGoogle = () => {
   }
   const onSuccess = data => {
     const code = data.serverAuthCode
-    getCognitoTokenFromGoogleCode(code)
+    axios
+      .get(`${rootUrl}/cognito/getCognitoTokenFromGoogleCode?code=${code}`)
+      .then(res => {
+        const cognitoToken = res.data.response.headers.Authorization
+        console.log(`JER: ${cognitoToken}`)
+        dispatch({
+          type: UPDATE_COGNITO_TOKEN,
+          payload: cognitoToken,
+        })
+        dispatch({
+          type: UPDATE_SIGNIN_TYPE,
+          payload: 'GOOGLE',
+        })
+        console.log(res)
+        dispatch({
+          type: UPDATE_LOADING_SCREEN,
+          payload: false,
+        })
+        console.log(JSON.stringify(getState()))
+      })
   }
   const onFailure = (msg: Object) => {
     console.log('FAILED LOGIN')
@@ -74,6 +71,7 @@ export const signout = () => (dispatch, getState) => {
         type: UPDATE_SIGNIN_TYPE,
         payload: 'COGNITO',
       })
+      dispatch(updateShowGoogleLogin(true))
     })
   }
   if (signinType === 'GOOGLE') {
@@ -84,7 +82,6 @@ export const signout = () => (dispatch, getState) => {
         .then(() => {
           Auth.signOut()
             .then(data => {
-              updateShowGoogleLogin(true)
               console.log(data)
             })
             .catch(err => console.log(err))
