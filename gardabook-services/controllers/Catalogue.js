@@ -52,6 +52,19 @@ module.exports.deleteCatalogue = function deleteCatalogue(req, res, next) {
     });
 };
 
+module.exports.getAllCatalogues = function getAllCatalogues(req, res, next) {
+  let tags = [];
+  tags.push('All');
+  var xIntRole = '';
+  Catalogue.readCatalogueByTags(xIntRole, tags)
+    .then(function (response) {
+      utils.writeJson(next, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(next, response);
+    });
+}
+
 module.exports.readCatalogueByTags = function readCatalogueByTags(req, res, next) {
   var xIntRole = '';
   var tags = '';
@@ -62,6 +75,7 @@ module.exports.readCatalogueByTags = function readCatalogueByTags(req, res, next
     apiResponse = res;
   } else {
     // xIntRole = req.params['x-int-role'].value;
+    console.log(req);
     tags = req.query.tags;
     apiResponse=next;
   }
