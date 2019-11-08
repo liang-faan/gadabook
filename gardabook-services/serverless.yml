@@ -204,6 +204,26 @@ functions:
           response:
             headers:
               Access-Control-Allow-Origin: "'*'"
+  getAllCatalogues:
+    handler: controllers/Catalogue.getAllCatalogues
+    events:
+      - http:
+          path: v1/catalogue/getAllCatalogues
+          method: get
+          # authorizer: auth
+          integration: lambda
+          cors: 
+            origins: 
+              - '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+          response:
+            headers:
+              Access-Control-Allow-Origin: "'*'"
   readCatalogueByAvailabilityId:
     handler: controllers/Catalogue.readCatalogueByAvailabilityId
     events:
@@ -366,6 +386,7 @@ functions:
           # authorizer: auth
           authorizer:
             name: authorizer
+            type: COGNITO_USER_POOLS
             arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
             claims:
               - email
