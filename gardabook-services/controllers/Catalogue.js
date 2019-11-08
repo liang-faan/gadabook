@@ -101,7 +101,7 @@ module.exports.readCatalogueByAvailabilityId = function readCatalogueByAvailabil
     apiResponse = res;
   } else {
     // xIntRole = req.swagger.params['x-int-role'].value;
-    availabilityId = req.path.catalogueId;;
+    availabilityId = req.path.availabilityId;
     apiResponse = next;
   }
   Catalogue.readCatalogueByAvailabilityId(xIntRole, availabilityId)
