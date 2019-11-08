@@ -27,6 +27,7 @@ import {
   loginWithGoogle,
   updateShowGoogleLogin,
   updateCognitoToken,
+  updateLogoutFlag,
 } from '../actions/authActionCreators'
 
 class App extends Component<Props & RouteProps, State> {
@@ -71,6 +72,8 @@ class App extends Component<Props & RouteProps, State> {
       showGoogleLogin,
       updateShowGoogleLogin,
       updateCognitoToken,
+      cognitoToken,
+      logoutFlag,
     } = this.props
 
     let googleLogin = false
@@ -80,13 +83,20 @@ class App extends Component<Props & RouteProps, State> {
 
     const MainApp = () => {
       console.log('JER')
-      if (signinType === 'COGNITO') {
-        Auth.currentSession().then(data => {
-          const amplifyCognitoToken = data.getIdToken().getJwtToken()
-          updateCognitoToken(amplifyCognitoToken)
-        })
+
+      if (!logoutFlag) {
+        if (signinType === 'COGNITO') {
+          Auth.currentSession().then(data => {
+            const amplifyCognitoToken = data.getIdToken().getJwtToken()
+            updateCognitoToken(amplifyCognitoToken)
+          })
+        }
+        updateShowGoogleLogin(false)
       }
-      updateShowGoogleLogin(false)
+
+      if (cognitoToken === '') {
+        return null
+      }
       return (
         <Route
           render={({ location }) => (
@@ -138,6 +148,8 @@ function mapStateToProps({ view, auth }) {
     signinType: auth.signinType,
     loadingScreen: view.loadingScreen,
     showGoogleLogin: auth.showGoogleLogin,
+    cognitoToken: auth.cognitoToken,
+    logoutFlag: auth.logoutFlag,
   }
 }
 
@@ -149,5 +161,6 @@ export default withRouter(connect(
     loginWithGoogle,
     updateShowGoogleLogin,
     updateCognitoToken,
+    updateLogoutFlag,
   }
 )(injectSheet(styles(theme))(App)) as React.ComponentType<any>)

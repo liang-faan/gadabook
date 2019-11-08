@@ -106,7 +106,7 @@ class Explore extends Component<Props, State> {
               <div className={classes.tags}>
                 {tags.map(tag => {
                   return (
-                    <div className={classes.tag} key={tag.tagId}>
+                    <div className={classes.tag} key={tag}>
                       {tag.status === 'Active' ? tag.descritpion : null}
                     </div>
                   )
@@ -134,28 +134,32 @@ class Explore extends Component<Props, State> {
                 <DateComponent date={datetime} />
 
                 {catalogueList.map(data => {
-                  const { availability, catalogueDate, catalogueId } = data
+                  const {
+                    pKey,
+                    sKey,
+                    unit: rateUnit,
+                    rate,
+                    address,
+                    name: catalogueName,
+                    tag,
+                  } = data
+
+                  const catalogueId = `${pKey}+${sKey}`
+
+                  // TODO: temp as api does not have yet. use variables when available in api.
+                  const catalogueDate = new Date()
+                  const providerFirstName = 'Handsome'
+                  const providerLastName = 'Guy'
+
                   const d = moment(catalogueDate)
                   if (datetime !== d.format('D/M/YYYY')) {
                     return
                   }
-                  const {
-                    address,
-                    name: catalogueName,
-                    provider,
-                    rate,
-                    rateUnit,
-                    tag: tags,
-                  } = availability.catalogue
-                  const {
-                    lastName: providerLastName,
-                    firstName: providerFirstName,
-                  } = provider
 
                   const dateTime = moment(catalogueDate)
                   const time = dateTime.format('LT')
 
-                  let duration = `${rate.toFixed(2)} ${rateUnit}`
+                  let duration = `${(+rate).toFixed(2)} ${rateUnit}`
                   duration += rate !== 1 ? 's' : ''
 
                   return (
@@ -165,7 +169,7 @@ class Explore extends Component<Props, State> {
                       catalogueName={catalogueName}
                       address={address}
                       time={time}
-                      tags={tags}
+                      tags={[tag]}
                       duration={duration}
                       key={catalogueId}
                     />

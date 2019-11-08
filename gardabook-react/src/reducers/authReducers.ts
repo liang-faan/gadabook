@@ -4,6 +4,7 @@ import {
   UPDATE_COGNITO_TOKEN,
   USE_GOOGLE_LOGIN,
   UPDATE_SIGNIN_TYPE,
+  UPDATE_LOGOUT_FLAG,
 } from '../actions/types'
 
 interface Action {
@@ -39,8 +40,19 @@ const signinType = (state: String = defaultSigninStatus, action: Action) => {
   }
 }
 
+const defaultLogoutFlag = false
+const logoutFlag = (state: Boolean = defaultLogoutFlag, action: Action) => {
+  switch (action.type) {
+    case UPDATE_LOGOUT_FLAG:
+      return action.payload
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   cognitoToken,
   showGoogleLogin,
   signinType,
+  logoutFlag,
 })

@@ -7,6 +7,7 @@ import {
   UPDATE_SIGNIN_TYPE,
   UPDATE_COGNITO_TOKEN,
   USE_GOOGLE_LOGIN,
+  UPDATE_LOGOUT_FLAG,
 } from './types'
 import { webClientId } from '../settings'
 
@@ -15,6 +16,14 @@ export const updateShowGoogleLogin = showGoogleLogin => {
   return {
     type: USE_GOOGLE_LOGIN,
     payload: showGoogleLogin,
+  }
+}
+
+export const updateLogoutFlag = status => {
+  console.log('authActionCreators: updateLogoutFlag' + status)
+  return {
+    type: UPDATE_LOGOUT_FLAG,
+    payload: status,
   }
 }
 
@@ -74,6 +83,10 @@ export const signout = () => (dispatch, getState) => {
         type: UPDATE_SIGNIN_TYPE,
         payload: 'COGNITO',
       })
+      dispatch(updateLogoutFlag(true))
+      setTimeout(() => {
+        dispatch(updateLogoutFlag(false))
+      }, 200)
       setTimeout(() => dispatch(updateShowGoogleLogin(true)), 1000)
     })
   }
