@@ -79,6 +79,9 @@ module.exports.readCatalogueByTags = function readCatalogueByTags(req, res, next
     tags = req.query.tags;
     apiResponse=next;
   }
+
+  tags = String(tags).split(',');
+
   Catalogue.readCatalogueByTags(xIntRole, tags)
     .then(function (response) {
       utils.writeJson(apiResponse, response);
