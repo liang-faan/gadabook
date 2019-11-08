@@ -134,7 +134,7 @@ exports.readCatalogueByAvailabilityId = function (xIntRole, availabilityId) {
 const readCatalogueByGsiKeys = (keys) => {
   var list = String(keys).split(',');
 
-  var results = []
+  let results = [];
 
   list.forEach((item, index) => {
     var params = {
@@ -145,7 +145,13 @@ const readCatalogueByGsiKeys = (keys) => {
   })
 
   return Promise.all(results).then(data => {
-    return data[0]
+    let temp = [];
+    data.forEach((item, index) => {
+      item.forEach((item2, index) => {
+        temp.push(item2)
+      })
+    })
+    return { "catalogues": Array.prototype.concat.apply(temp) }
   })
     .catch(error => {
       console.log(error)
