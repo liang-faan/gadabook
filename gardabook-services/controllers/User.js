@@ -108,12 +108,18 @@ module.exports.userLogout = function userLogout(req, res, next) {
   var xIntRole = '';
   var token = '';
   var userId = '';
+  var email;
   if (process.env.NODE_ENV == 'development') {
     xIntRole = req.swagger.params['Authorization'].value;
   } else {
     // xIntRole = req
-    token = request.headers['Authorization'];
+    token = req.headers.Authorization;
+    userId=req.cognitoPoolClaims.sub;
+    email=req.cognitoPoolClaims.email;
   }
+  console.log(token);
+  console.log(userId);
+  console.log(email);
   User.userLogout(xIntRole)
     .then(function (response) {
       utils.writeJson(res, response);

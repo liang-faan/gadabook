@@ -56,6 +56,7 @@ module.exports.deleteCatalogue = function deleteCatalogue(req, res, next) {
 };
 
 module.exports.getAllCatalogues = function getAllCatalogues(req, res, next) {
+  console.log(req);
   let tags = [];
   tags.push('All');
   var jwtSub = getJwtUser(req);
