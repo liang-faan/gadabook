@@ -12,7 +12,7 @@ import Topbar from './Topbar'
 import BottomNav from './BottomNav'
 import { getBookingList } from '../actions/bookingActionCreators'
 
-class Bookings extends Component<Props, State> {
+class Bookings extends Component {
   componentDidMount() {
     this.props.getBookingList()
   }
@@ -83,7 +83,7 @@ class Bookings extends Component<Props, State> {
     }
 
     const Listings = () => {
-      const DateComponent = (props: any) => {
+      const DateComponent = props => {
         return <div className={classes.date}>{props.date}</div>
       }
 
@@ -106,8 +106,8 @@ class Bookings extends Component<Props, State> {
               <div className={classes.tags}>
                 {tags.map(tag => {
                   return (
-                    <div className={classes.tag} key={tag.tagId}>
-                      {tag.status === 'Active' ? tag.descritpion : null}
+                    <div className={classes.tag} key={tag}>
+                      {tag || null}
                     </div>
                   )
                 })}
@@ -134,40 +134,55 @@ class Bookings extends Component<Props, State> {
                 <DateComponent date={datetime} />
 
                 {bookingList.map(data => {
-                  const { availability, bookingDate, bookingId } = data
-                  const d = moment(bookingDate)
+                  const {
+                    startTime,
+                    pKey,
+                    endTime,
+                    userId,
+                    updatedAt,
+                    createdAt,
+                    amount,
+                    catalogueData,
+                    slot,
+                    sKey,
+                  } = data
+                  const {
+                    unit: rateUnit,
+                    rate,
+                    currency,
+                    tnc,
+                    address,
+                    availabilityId,
+                    venue,
+                    name,
+                    // sKey,
+                    city,
+                    remark,
+                    // pKey,
+                    tag,
+                  } = catalogueData
+
+                  const d = moment(createdAt)
                   if (datetime !== d.format('D/M/YYYY')) {
                     return
                   }
-                  const {
-                    address,
-                    name: catalogueName,
-                    provider,
-                    rate,
-                    rateUnit,
-                    tag: tags,
-                  } = availability.catalogue
-                  const {
-                    lastName: providerLastName,
-                    firstName: providerFirstName,
-                  } = provider
 
-                  const dateTime = moment(bookingDate)
-                  const time = dateTime.format('LT')
+                  const dateTime = moment(createdAt)
+                  // const time = dateTime.format('LT')
 
-                  let duration = `${rate.toFixed(2)} ${rateUnit}`
-                  duration += rate !== 1 ? 's' : ''
+                  // let duration = `${rate.toFixed(2)} ${rateUnit}`
+                  // duration += rate !== 1 ? 's' : ''
 
                   return (
                     <Listing
-                      providerFirstName={providerFirstName}
-                      providerLastName={providerLastName}
-                      catalogueName={catalogueName}
-                      address={address}
-                      time={time}
-                      tags={tags}
-                      duration={duration}
-                      key={bookingId}
+                      providerFirstName={'providerFirstName'}
+                      providerLastName={'providerLastName'}
+                      catalogueName={catalogueData.name}
+                      address={catalogueData.address}
+                      time={'time'}
+                      tags={[tag]}
+                      duration={'duration'}
+                      key={'bookingId'}
                     />
                   )
                 })}
