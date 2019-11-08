@@ -11,6 +11,7 @@ import {
 import { webClientId } from '../settings'
 
 export const updateShowGoogleLogin = showGoogleLogin => {
+  console.log('authActionCreators: updateShowGoogleLogin' + showGoogleLogin)
   return {
     type: USE_GOOGLE_LOGIN,
     payload: showGoogleLogin,
@@ -18,6 +19,7 @@ export const updateShowGoogleLogin = showGoogleLogin => {
 }
 
 export const loginWithGoogle = () => (dispatch, getState) => {
+  console.log('authActionCreators: loginWithGoogle')
   dispatch({
     type: UPDATE_LOADING_SCREEN,
     payload: true,
@@ -58,6 +60,7 @@ export const loginWithGoogle = () => (dispatch, getState) => {
 }
 
 export const signout = () => (dispatch, getState) => {
+  console.log('authActionCreators: signout')
   const { cognitoToken, signinType } = getState().auth
   // TODO: Update logout path (whole of below)
   const headers = { Authorization: `Bearer ${cognitoToken}` }
@@ -71,7 +74,7 @@ export const signout = () => (dispatch, getState) => {
         type: UPDATE_SIGNIN_TYPE,
         payload: 'COGNITO',
       })
-      setTimeout(dispatch(updateShowGoogleLogin(true)), 1000)
+      setTimeout(() => dispatch(updateShowGoogleLogin(true)), 1000)
     })
   }
   if (signinType === 'GOOGLE') {
@@ -88,6 +91,7 @@ export const signout = () => (dispatch, getState) => {
 }
 
 export const updateCognitoToken = token => {
+  console.log('authActionCreators: updateCognitoToken')
   return {
     type: UPDATE_COGNITO_TOKEN,
     payload: token,
