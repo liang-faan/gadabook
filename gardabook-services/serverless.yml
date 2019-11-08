@@ -70,6 +70,12 @@ functions:
           path: v1/booking/getBookingByUserId
           method: get
           # authorizer: auth
+          authorizer:
+            name: authorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+            claims:
+              - email
           integration: lambda
           cors: 
             origins: 
@@ -110,6 +116,12 @@ functions:
           path: v1/booking/getBookingByBookingId/{bookingId}
           method: get
           # authorizer: auth
+          authorizer:
+            name: authorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+            claims:
+              - email
           integration: lambda
           cors: 
             origins: 
@@ -447,6 +459,12 @@ functions:
           path: v1/user/userLogout
           method: get
           # authorizer: auth
+          authorizer:
+            name: authorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+            claims:
+              - email
           integration: lambda
           cors: 
             origins: 

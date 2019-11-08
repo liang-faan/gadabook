@@ -1,5 +1,6 @@
-'use strict';
+'use strict'
 
+const jwk = require('jsonwebtoken')
 var utils = require('../utils/writer.js');
 var User = require('../service/UserService');
 
@@ -108,24 +109,32 @@ module.exports.userLogout = function userLogout(req, res, next) {
   var xIntRole = '';
   var token = '';
   var userId = '';
-  var email;
+  var email='';
+  var apiResponse;
   if (process.env.NODE_ENV == 'development') {
     xIntRole = req.swagger.params['Authorization'].value;
+    apiResponse = res;
   } else {
     // xIntRole = req
     token = req.headers.Authorization;
     userId=req.cognitoPoolClaims.sub;
     email=req.cognitoPoolClaims.email;
+    apiResponse = next; 
   }
+
+  var options = {};
+  var decodeToken = jwk.decode(token, options);
+
+  console.log(decodeToken);
+
   console.log(token);
   console.log(userId);
   console.log(email);
-  User.userLogout(xIntRole)
-    .then(function (response) {
-      utils.writeJson(res, response);
+  User.userLogout(xIntRole).then(function (response) {
+      utils.writeJson(apiResponse, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(apiResponse, response);
   });
   // var token = "eyJraWQiOiIrVUhOYjQ0bGlSZ2VDbGNKV2VicEdJc01Ubm9MbVE2ZXkxNVRBbDNJdmVjPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxYzMxNGE5MS1kYzZlLTRmOWItOGE5My1lZWM0Y2NlNGE3NWQiLCJldmVudF9pZCI6ImJmMTFjMWFhLTFlMjMtNGJjMC1iM2RhLWM3MmU0NTRmNzc3YSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NzI3NzQyOTAsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aGVhc3QtMS5hbWF6b25hd3MuY29tXC9hcC1zb3V0aGVhc3QtMV9uOTBsN1dtd1AiLCJleHAiOjE1NzI3Nzc4OTAsImlhdCI6MTU3Mjc3NDI5MCwianRpIjoiN2IyZDJhYjYtOTNjMy00MWE4LWJkNTMtMDNkMjBiNzNkNTgwIiwiY2xpZW50X2lkIjoiMWF2ODdnYWZrMzVtbXZtazdnNGNzdTZmcjYiLCJ1c2VybmFtZSI6Im9hdXRoMi1nb29nbGVAamVyb21lMTNAZXhhbXBsZS5jb20ifQ.Foo6KHuRTeJeerJBvFjg-u6iYxxCqOyH_rno2sGuIG6UVap0wNl-RDQ5tmD-uUIS2Pxau002MuKkmWXVSjKN7sve4kM3WJxmjsJS8y6LFryflwfTtC5HNphefeQ5OnmT5Kn7OCa4JqyTx9hwC_zS7v0ww3av-vHQP75Ox9FL0k4_QuFj_4FBojJbQIKhUqD8BvwMearpj-2CdAhoYBEFkgX-n0UVS3AEvp1x0gEEoursp6jnRVMcPJbKcYXICG1oN1Q6i0d_MaHX_p42CrO7GItvQT_-s1nPFfEKj0DxQIU1-zzDzGiyep4im1P-9ZC1FzWnxlLIpHvwpsrJjQw3GA"
   // var jti = "1c314a91-dc6e-4f9b-8a93-eec4cce4a75d"
