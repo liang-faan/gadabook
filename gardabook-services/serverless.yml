@@ -188,7 +188,7 @@ functions:
     handler: controllers/Catalogue.readCatalogueByTags
     events:
       - http:
-          path: v1/catalogue/findCatalogueByTags
+          path: v1/catalogue/getCatalogueByTags
           method: get
           # authorizer: auth
           integration: lambda
@@ -211,6 +211,12 @@ functions:
           path: v1/catalogue/getAllCatalogues
           method: get
           # authorizer: auth
+          authorizer:
+            name: authorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+            claims:
+              - email
           integration: lambda
           cors: 
             origins: 
@@ -228,7 +234,7 @@ functions:
     handler: controllers/Catalogue.readCatalogueByAvailabilityId
     events:
       - http:
-          path: v1/catalogue/readCatalogueByAvailabilityId/{availabilityId}
+          path: v1/catalogue/getCatalogueByAvailabilityId/{availabilityId}
           method: get
           # authorizer: auth
           integration: lambda

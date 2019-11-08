@@ -46,14 +46,15 @@ Application utils
 
 ##endpoints:
 ```
-  GET - https://api.gardabook.com/v1/booking/getBookingByUserId
+    GET - https://api.gardabook.com/v1/booking/getBookingByUserId
   DELETE - https://api.gardabook.com/v1/booking/deleteBookingById/{bookingId}
   GET - https://api.gardabook.com/v1/booking/getBookingByBookingId/{bookingId}
   POST - https://api.gardabook.com/v1/booking/createUserBooking
   POST - https://api.gardabook.com/v1/catalogue/addCatalogue
   DELETE - https://api.gardabook.com/v1/catalogue/deleteCatalogueById/{catalogueId}
-  GET - https://api.gardabook.com/v1/catalogue/findCatalogueByTags
-  GET - https://api.gardabook.com/v1/catalogue/readCatalogueByAvailabilityId/{availabilityId}
+  GET - https://api.gardabook.com/v1/catalogue/getCatalogueByTags
+  GET - https://api.gardabook.com/v1/catalogue/getAllCatalogues
+  GET - https://api.gardabook.com/v1/catalogue/getCatalogueByAvailabilityId/{availabilityId}
   GET - https://api.gardabook.com/v1/catalogue/getCatalogueById/{catalogueId}
   PUT - https://api.gardabook.com/v1/catalogue/updateCatalogue
   POST - https://api.gardabook.com/v1/enrollment/createEnrollment
