@@ -22,11 +22,11 @@ const { newUuid } = require("../utils/uuidGenerator")
  * Add a new catalogue to GardaBook
  * 
  *
- * xIntRole String 
+ * jwtSub String 
  * body Catalogue Catalogue object that needs to be added to the system
  * no response value expected for this operation
  **/
-exports.addCatalogue = function (xIntRole, body) {
+exports.addCatalogue = function (jwtSub, body) {
   var catalogueId = newUuid("Catalogue_")
 
   var params = {
@@ -55,12 +55,12 @@ exports.addCatalogue = function (xIntRole, body) {
  * Deletes a catalogue
  * 
  *
- * xIntRole String 
+ * jwtSub String 
  * catalogueId Long Catalogue id to delete
  * api_key String  (optional)
  * no response value expected for this operation
  **/
-exports.deleteCatalogue = function (xIntRole, catalogueId, api_key) {
+exports.deleteCatalogue = function (jwtSub, catalogueId, api_key) {
   var params = {
     pKey: String(catalogueId),
     sKey: String(catalogueId)
@@ -74,12 +74,12 @@ exports.deleteCatalogue = function (xIntRole, catalogueId, api_key) {
  * Finds catalogue by tags
  * Multiple tag values can be provided with comma separated strings
  *
- * xIntRole String 
+ * jwtSub String 
  * tag List Status values that need to be considered for filter (optional)
  * providerName List Providers of the catalogue (optional)
  * returns List
  **/
-exports.readCatalogueByTags = function (xIntRole, tags) {
+exports.readCatalogueByTags = function (jwtSub, tags) {
 
   let tagIds = []
   var allTags = false
@@ -123,11 +123,11 @@ exports.readCatalogueByTags = function (xIntRole, tags) {
  * Find catalogue by availabilityID
  * Returns list of catalogues with the availability Id
  *
- * xIntRole String 
+ * jwtSub String 
  * catalogueId Long ID of catalogue
  * returns List
  **/
-exports.readCatalogueByAvailabilityId = function (xIntRole, availabilityId) {
+exports.readCatalogueByAvailabilityId = function (jwtSub, availabilityId) {
   return readCatalogueByGsiKeys(availabilityId)
 }
 
@@ -163,11 +163,11 @@ const readCatalogueByGsiKeys = (keys) => {
  * Find Catalogue by ID
  * Returns a single Catalogue
  *
- * xIntRole String 
+ * jwtSub String 
  * catalogueId Long ID of catalogue to return
  * returns Catalogue
  **/
-exports.readCatalogue = function (xIntRole, catalogueId) {
+exports.readCatalogue = function (jwtSub, catalogueId) {
   var params = {
     pKey: String(catalogueId),
     sKey: String(catalogueId),
@@ -176,7 +176,7 @@ exports.readCatalogue = function (xIntRole, catalogueId) {
   return readCatalogue(params)
 }
 
-exports.createAvailability = function (xIntRole) {
+exports.createAvailability = function (jwtSub) {
 
   var i;
   for (i = 1; i < 5; i++) {
@@ -202,11 +202,11 @@ exports.createAvailability = function (xIntRole) {
  * Update an existing catalogue item
  * 
  *
- * xIntRole String 
+ * jwtSub String 
  * body Catalogue Catalogue object that needs to be update into the system
  * no response value expected for this operation
  **/
-exports.updateCatalogue = function (xIntRole, body) {
+exports.updateCatalogue = function (jwtSub, body) {
   var params = {
     pKey: String(body.catalogueId),
     sKey: String(body.catalogueId),

@@ -1,23 +1,30 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
+const { getJwtUser, validateUserId } = require('../utils/jwtHelper')
 var Booking = require('../service/BookingService');
 
 module.exports.getUserBooking = function getUserBooking(req, res, next) {
-  var xIntRole = '';
+  var jwtSub = '';
   var userId = '';
   var apiResponse;
   if (process.env.NODE_ENV == 'development') {
-    xIntRole = req.swagger.params['x-int-role'].value;
+    jwtSub = req.swagger.params['x-int-role'].value;
     userId = req.swagger.params['userId'].value;
     apiResponse=res;
   } else {
     console.log(req);
-    xIntRole = '';
+    jwtSub = getJwtUser(req);
     userId = req.query.userId;
     apiResponse=next;
   }
-  Booking.getUserBooking(xIntRole, userId)
+
+  if (!validateUserId(jwtSub, userId)) {
+    utils.writeJson(apiResponse, { ErrorMessage: "No user right to get booking" });
+    return
+  }
+
+  Booking.getUserBooking(jwtSub, userId)
     .then(function (response) {
       utils.writeJson(apiResponse, response);
     })
@@ -27,20 +34,20 @@ module.exports.getUserBooking = function getUserBooking(req, res, next) {
 };
 
 module.exports.deleteBooking = function deleteBooking(req, res, next) {
-  var xIntRole = '';
+  var jwtSub = '';
   var bookingId = '';
   var apiResponse;
   if (process.env.NODE_ENV == 'development') {
-    xIntRole = req.swagger.params['x-int-role'].value;
+    jwtSub = req.swagger.params['x-int-role'].value;
     bookingId = req.swagger.params['bookingId'].value;
     apiResponse = res;
   } else {
     console.log(req);
-    xIntRole = '';
+    jwtSub = getJwtUser(req);
     bookingId= req.path.bookingId;
     apiResponse=next;
   }
-  Booking.deleteBooking(xIntRole, bookingId)
+  Booking.deleteBooking(jwtSub, bookingId)
     .then(function (response) {
       utils.writeJson(apiResponse, response);
     })
@@ -50,20 +57,28 @@ module.exports.deleteBooking = function deleteBooking(req, res, next) {
 };
 
 module.exports.getBooking = function getBooking(req, res, next) {
-  var xIntRole = '';
+  var jwtSub = '';
   var bookingId = '';
   var apiResponse;
   if (process.env.NODE_ENV == 'development') {
-    xIntRole = req.swagger.params['x-int-role'].value;
+    jwtSub = req.swagger.params['x-int-role'].value;
     bookingId = req.swagger.params['bookingId'].value;
     apiResponse=res;
   } else {
-    xIntRole = '';
+    jwtSub = getJwtUser(req);
     bookingId = req.path.bookingId;
     apiResponse=next;
   }
-  Booking.getBooking(xIntRole, bookingId)
+  Booking.getBooking(jwtSub, bookingId)
     .then(function (response) {
+
+      if (response.userId) {
+        if (!validateUserId(jwtSub, response.userId)) {
+          utils.writeJson(apiResponse, { ErrorMessage: "No user right to get booking" });
+          return
+        }
+      }
+
       utils.writeJson(apiResponse, response);
     })
     .catch(function (response) {
@@ -72,19 +87,19 @@ module.exports.getBooking = function getBooking(req, res, next) {
 };
 
 module.exports.createUserBooking = function createUserBooking(req, res, next) {
-  var xIntRole = '';
+  var jwtSub = '';
   var body;
   var apiResponse;
   if (process.env.NODE_ENV == 'development') {
-    xIntRole = req.swagger.params['x-int-role'].value;
+    jwtSub = req.swagger.params['x-int-role'].value;
     body = req.swagger.params['body'].value;
     apiResponse = res;
   } else {
-    // xIntRole = req.params['x-int-role'].value;
+    jwtSub = getJwtUser(req);
     body = req.body;
     apiResponse = next;
   }
-  Booking.createUserBooking(xIntRole, body)
+  Booking.createUserBooking(jwtSub, body)
     .then(function (response) {
       utils.writeJson(apiResponse, response);
     })

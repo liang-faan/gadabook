@@ -14,11 +14,11 @@ const { newUuid } = require("../utils/uuidGenerator")
  * Create an enrollemnt
  * This can only be done by the enrolled user.
  *
- * xIntRole String 
+ * jwtSub String 
  * body Enrollment Created enrollement object
  * no response value expected for this operation
  **/
-exports.createEnrollment = function(xIntRole,body) {
+exports.createEnrollment = function(jwtSub,body) {
   var enrollmentId = newUuid("Enrollment_")
   
   var params = {
@@ -40,11 +40,11 @@ exports.createEnrollment = function(xIntRole,body) {
  * get enrollemnt by providerId
  * This can only be done by the enrolled user.
  *
- * xIntRole String 
+ * jwtSub String 
  * providerId String the provider id of enrollment
  * returns List
  **/
-exports.getUserEnrollment = function(xIntRole, userId) {
+exports.getUserEnrollment = function(jwtSub, userId) {
   var params = {
     userId: userId,
   }
@@ -52,7 +52,7 @@ exports.getUserEnrollment = function(xIntRole, userId) {
   return readUserEnrollment(params)
 }
 
-exports.getEnrollment = function(xIntRole, enrollmentId) {
+exports.getEnrollment = function(jwtSub, enrollmentId) {
   var params = {
     pKey: enrollmentId,
     sKey: enrollmentId
@@ -61,7 +61,7 @@ exports.getEnrollment = function(xIntRole, enrollmentId) {
   return readEnrollment(params)
 }
 
-exports.deleteEnrollment = function(xIntRole, enrollmentId) {
+exports.deleteEnrollment = function(jwtSub, enrollmentId) {
   var params = {
     pKey: enrollmentId,
     sKey: enrollmentId

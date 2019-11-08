@@ -10,7 +10,7 @@ const { newUuid } = require("../utils/uuidGenerator")
 
 var _ = require('lodash')
 
-exports.getUserBooking = function(xIntRole, userId) {
+exports.getUserBooking = function(jwtSub, userId) {
   var params = {
     userId: userId,
   }
@@ -18,7 +18,7 @@ exports.getUserBooking = function(xIntRole, userId) {
   return readUserBooking(params)
 }
 
-exports.getBooking = function(xIntRole, bookingId) {
+exports.getBooking = function(jwtSub, bookingId) {
   var params = {
     pKey: bookingId,
     sKey: bookingId,
@@ -27,7 +27,7 @@ exports.getBooking = function(xIntRole, bookingId) {
   return readBooking(params)
 }
 
-exports.createUserBooking = function(xIntRole, body) {
+exports.createUserBooking = function(jwtSub, body) {
   var bookingId = newUuid("Booking_")
   var transactionId = newUuid("Transaction_")
   
@@ -48,7 +48,7 @@ exports.createUserBooking = function(xIntRole, body) {
   return createBooking(params)
 }
 
-exports.deleteBooking = function(xIntRole, bookingId) {
+exports.deleteBooking = function(jwtSub, bookingId) {
   var params = {
     pKey: String(bookingId),
     sKey: String(bookingId)
