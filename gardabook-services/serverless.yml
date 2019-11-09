@@ -36,6 +36,12 @@ provider:
   environment:
     USERS_TABLE: ${self:custom.tableName}
 functions:
+  cfLambda:
+    handler: security/cfLambdaEdge.tokenVerification
+    events: 
+      - cloudFront:
+        eventType: origin-request
+        origin: https://api.gardabook.com
   # publicEndpoint:
   #   handler: handler.publicEndpoint
   #   events:
@@ -44,8 +50,8 @@ functions:
   #         method: get
   #         integration: lambda
   #         cors: true
-  auth:
-    handler: security/auth.authorize
+  # auth:
+  #   handler: security/auth.authorize
   # privateEndpoint:
   #   handler: handler.privateEndpoint
   #   events:
@@ -96,6 +102,12 @@ functions:
           path: v1/booking/deleteBookingById/{bookingId}
           method: delete
           # authorizer: auth
+          authorizer:
+            name: authorizer
+            type: COGNITO_USER_POOLS
+            arn: arn:aws:cognito-idp:ap-southeast-1:136165392672:userpool/ap-southeast-1_n90l7WmwP
+            claims:
+              - email
           integration: lambda
           cors: 
             origins: 
