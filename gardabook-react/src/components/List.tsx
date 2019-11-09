@@ -120,7 +120,7 @@ class List extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        <Topbar />
+        <Topbar title="My Listings" />
         <SearchSection />
         <Listings />
         <BottomNav />

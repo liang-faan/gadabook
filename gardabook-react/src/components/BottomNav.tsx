@@ -11,6 +11,7 @@ import {
   LIST,
   LISTINGS,
   NOTIFICATIONS,
+  CREATE_BOOKING,
 } from '../reducers/navReducers'
 
 import {

@@ -184,7 +184,7 @@ class Explore extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        <Topbar />
+        <Topbar title="EXPLORE" />
         <SearchSection />
         <Listings />
         <BottomNav />

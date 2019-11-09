@@ -12,6 +12,7 @@ export const EXPLORE = 'EXPLORE'
 export const LIST = 'LIST'
 export const LISTINGS = 'LISTINGS'
 export const NOTIFICATIONS = 'NOTIFICATIONS'
+export const CREATE_BOOKING = 'CREATE_BOOKING'
 const current = (state: String = EXPLORE, action: Action) => {
   switch (action.type) {
     case NAV_UPDATE_CURRENT_LOCATION:

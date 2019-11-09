@@ -74,7 +74,7 @@ class ListingDetails extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        <Topbar />
+        <Topbar title="Listing Details" />
         <Details />
         <BookNow />
         <BottomNav />

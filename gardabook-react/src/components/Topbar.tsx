@@ -13,7 +13,7 @@ class Topbar extends Component<Props, State> {
     this.props.signout()
   }
   render() {
-    const { classes } = this.props
+    const { classes, title } = this.props
     return (
       <div className={classes.topbar}>
         <div className={classes.logoContainer}>
@@ -23,7 +23,7 @@ class Topbar extends Component<Props, State> {
             alt="Logo Icon"
           />
         </div>
-        <div className={classes.page}>EXPLORE</div>
+        <div className={classes.page}>{title}</div>
         <div onClick={this.onClickLogout}>Logout</div>
         {/* <div className={classes.hamburger} onClick={this.onClickLogout}>
           <div className={classes.hamburgerLine}></div>

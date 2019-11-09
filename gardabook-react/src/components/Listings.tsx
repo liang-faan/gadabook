@@ -120,7 +120,7 @@ class Listings extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        <Topbar />
+        <Topbar title="Listings" />
         <SearchSection />
         <Listings />
         <BottomNav />

@@ -4,17 +4,30 @@ import injectSheet from 'react-jss'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
 // import { faStar } from '@fortawesome/free-regular-svg-icons'
 
 import styles from './styles/Bookings'
 import { Props, State } from './datatypes/Bookings'
 import Topbar from './Topbar'
 import BottomNav from './BottomNav'
-import { getBookingList } from '../actions/bookingActionCreators'
+import {
+  getBookingList,
+  updateCurrentBooking,
+} from '../actions/bookingActionCreators'
+import { updateCurrentNavLocation } from '../actions/navActionCreators'
+import { CREATE_BOOKING } from '../reducers/navReducers'
 
 class Bookings extends Component {
   componentDidMount() {
     this.props.getBookingList()
+  }
+
+  onClickBooking = e => {
+    // TODO: update currentBooking
+    const bookingId = e.currentTarget.getAttribute('data')
+    this.props.updateCurrentBooking(bookingId)
+    this.props.updateCurrentNavLocation(CREATE_BOOKING)
   }
 
   getUniqueDates = bookingList => {
@@ -96,9 +109,16 @@ class Bookings extends Component {
           providerFirstName,
           tags,
           time,
+          pKey,
         } = props
         return (
-          <div className={classes.listing}>
+          <Link
+            to="/booking"
+            onClick={this.onClickBooking}
+            data={pKey}
+            className={classes.listing}
+          >
+            {/* <div className={classes.listing}> */}
             <div className={classes.listingRow1}>
               <div
                 className={classes.owner}
@@ -123,7 +143,8 @@ class Bookings extends Component {
                 <FontAwesomeIcon icon={faStar} />
               </div> */}
             </div>
-          </div>
+            {/* </div> */}
+          </Link>
         )
       }
       return (
@@ -183,6 +204,7 @@ class Bookings extends Component {
                       tags={[tag]}
                       duration={'duration'}
                       key={'bookingId'}
+                      pKey={pKey}
                     />
                   )
                 })}
@@ -195,7 +217,7 @@ class Bookings extends Component {
 
     return (
       <div className={classes.root}>
-        <Topbar />
+        <Topbar title="BOOKINGS" />
         <SearchSection />
         <Listings />
         <BottomNav />
@@ -212,5 +234,5 @@ function mapStateToProps({ booking }) {
 
 export default connect(
   mapStateToProps,
-  { getBookingList }
+  { getBookingList, updateCurrentNavLocation, updateCurrentBooking }
 )(injectSheet(styles)(Bookings))

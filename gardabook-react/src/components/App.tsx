@@ -13,6 +13,7 @@ import theme from './styles/theme'
 import { Props, State } from './datatypes/App'
 import Explore from './Explore'
 import Bookings from './Bookings'
+import Booking from './Booking'
 import List from './List'
 import Listings from './Listings'
 import Notifications from './Notifications'
@@ -22,7 +23,7 @@ import LoadingModal from './LoadingModal'
 import './styles/transitions.css'
 
 import { updateCurrentNavLocation } from '../actions/navActionCreators'
-import { BOOKINGS, EXPLORE } from '../reducers/navReducers'
+import { BOOKINGS, CREATE_BOOKING, EXPLORE } from '../reducers/navReducers'
 import {
   loginWithGoogle,
   updateShowGoogleLogin,
@@ -50,6 +51,8 @@ class App extends Component<Props & RouteProps, State> {
       navLocation = EXPLORE
     } else if (pathname === '/bookings') {
       navLocation = BOOKINGS
+    } else if (pathname === '/booking') {
+      navLocation = CREATE_BOOKING
     } else {
       navLocation = '/'
     }
@@ -106,10 +109,15 @@ class App extends Component<Props & RouteProps, State> {
                   {loadingScreen && <LoadingModal />}
                   <Route exact path="/explore" component={Explore} />
                   <Route exact path="/" component={Explore} />
-                  <Route path="/bookings" component={Bookings} />
-                  <Route path="/List" component={List} />
-                  <Route path="/Listings" component={Listings} />
-                  <Route path="/Notifications" component={Notifications} />
+                  <Route exact path="/booking" component={Booking} />
+                  <Route exact path="/bookings" component={Bookings} />
+                  <Route exact path="/List" component={List} />
+                  <Route exact path="/Listings" component={Listings} />
+                  <Route
+                    exact
+                    path="/Notifications"
+                    component={Notifications}
+                  />
                   {/* <Route render={() => <div>Not Found</div>} /> */}
                 </Switch>
               </CSSTransition>

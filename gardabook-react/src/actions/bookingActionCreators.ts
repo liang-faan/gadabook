@@ -2,7 +2,21 @@ import axios from 'axios'
 import jwtDecode from 'jwt-decode'
 
 import { rootUrl } from '../settings'
-import { BOOKING_UPDATE_BOOKING_LIST } from './types'
+import {
+  BOOKING_UPDATE_BOOKING_LIST,
+  BOOKING_UPDATE_CURRENT_BOOKING,
+} from './types'
+
+export const updateCurrentBooking = bookingId => async (dispatch, getState) => {
+  const { cognitoToken } = getState().auth
+  const headers = { Authorization: `Bearer ${cognitoToken}` }
+  let bookingRes = await axios.get(
+    `${rootUrl}/booking/getBookingByBookingId/${bookingId}`,
+    { headers }
+  )
+
+  dispatch({ type: BOOKING_UPDATE_CURRENT_BOOKING, payload: bookingRes.data })
+}
 
 export const getBookingList = () => async (dispatch, getState) => {
   const { cognitoToken } = getState().auth
@@ -22,11 +36,11 @@ export const getBookingList = () => async (dispatch, getState) => {
       { headers }
     )
     booking.catalogueData = catalogueRes.data
-    const availabilityRes = await axios.get(
-      `${rootUrl}/catalogue/readCatalogueByAvailabilityId/${booking.catalogueData.availabilityId}`,
-      { headers }
-    )
-    booking.catalogueData.availabilityData = availabilityRes.data
+    // const availabilityRes = await axios.get(
+    //   `${rootUrl}/catalogue/readCatalogueByAvailabilityId/${booking.catalogueData.availabilityId}`,
+    //   { headers }
+    // )
+    // booking.catalogueData.availabilityData = availabilityRes.data
     return booking
   })
 

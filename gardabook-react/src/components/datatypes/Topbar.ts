@@ -3,6 +3,7 @@ export interface Props {
     [key: string]: string
   }
   signinType: String
+  title: String
   cognitoToken: String
   updateShowGoogleLogin: Function
   signout: Function
