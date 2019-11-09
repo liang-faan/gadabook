@@ -4,7 +4,10 @@ const {
   queryWithKeysAndConvert,
   queryGsi,
   updateContent,
-  convertFromAws 
+  convertFromAws,
+  errorPromise,
+  errorMessage,
+  successMessage
 } = require("./dbHelper")
 
 const { validateProps, requiredPropKeyEnum } = require("./validators/bookingValidator")
@@ -121,7 +124,7 @@ const generateObj = (props, validateOption) => {
 const createBooking = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.CREATE)
   if (!obj) {
-    return false
+    return errorPromise("Error passing object")
   }
 
   const { bookingBooking, userBooking, catalogueBooking } = obj
@@ -134,7 +137,7 @@ const createBooking = async props => {
     if (!err) {
       return convertFromAws(bookingBooking)
     } else {
-      return false
+      return errorMessage("Error creating booking")
     }
   })
 }
@@ -146,7 +149,7 @@ const createBooking = async props => {
 const readUserBooking = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
-    return false
+    return errorPromise("Error passing object")
   }
 
   const { userBooking } = obj
@@ -169,6 +172,7 @@ const readUserBooking = async props => {
   })
   .catch(error => {
     console.log(error)
+    return errorMessage("Error readinng booking")
   })
 
   return result
@@ -181,7 +185,7 @@ const readUserBooking = async props => {
 const readBooking = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.READ)
   if (!obj) {
-    return false
+    return errorPromise("Error passing object")
   }
 
   const { bookingBooking } = obj
@@ -189,10 +193,16 @@ const readBooking = async props => {
   const bookingResult = queryWithKeys(bookingBooking.pKey.S, bookingBooking.sKey.S)
 
   const result = await Promise.all([bookingResult]).then(data => {
-    return convertFromAws(data[0].Items[0])
+    if (data[0].Items.length > 0) {
+      return convertFromAws(data[0].Items[0])
+    }
+    else {
+      return errorMessage("Error reading booking")
+    }
   })
   .catch(error => {
     console.log(error)
+    return errorMessage("Error reading booking")
   })
 
   return result
@@ -205,7 +215,7 @@ const readBooking = async props => {
 const updateBooking = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.UPADTE)
   if (!obj) {
-    return false
+    return errorPromise("Error passing object")
   }
 
   const { bookingBooking } = obj
@@ -214,9 +224,9 @@ const updateBooking = async props => {
 
   return Promise.all([op1]).then((res, err) => {
     if (!err) {
-      return true
+      return successMessage("Booking updated successfully")
     } else {
-      return false
+      return errorMessage("Error updating booking")
     }
   })
 }
@@ -228,7 +238,7 @@ const updateBooking = async props => {
 const deleteBooking = async props => {
   const obj = generateObj(props, requiredPropKeyEnum.DELETE)
   if (!obj) {
-    return false
+    return errorPromise("Error passing object")
   }
 
   const { bookingBooking } = obj
@@ -243,9 +253,9 @@ const deleteBooking = async props => {
 
   return await Promise.all([userBookingResult, catalogueBookingResult]).then((res, err) => {
     if (!err) {
-      return true
+      return successMessage("Booking deleted successfully")
     } else {
-      return false
+      return errorMessage("Error deleting booking")
     }
   })
  }
