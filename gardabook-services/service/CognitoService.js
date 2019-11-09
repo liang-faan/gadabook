@@ -185,10 +185,10 @@ const testNewUserFlow = async username => {
   )
   return cognitoAccessToken
 }
-createOrSignInGoogleUser('jerome13@example.com')
-  // testNewUserFlow('jerome11@example.com')
-  .then(res => console.log(res))
-  .catch(err => console.log(err))
+// createOrSignInGoogleUser('jerome13@example.com')
+//   // testNewUserFlow('jerome11@example.com')
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err))
 
 // const testCognitoAccessToken = async username => {
 //   const cognitoAccessToken = await getCognitoAccessToken(username, '1qazZAQ!')
