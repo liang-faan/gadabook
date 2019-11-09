@@ -169,6 +169,20 @@ const convertFromAws = (input) => {
   return AWS.DynamoDB.Converter.unmarshall(input)
 }
 
+const errorPromise = async (data) => {
+  return await new Promise((resolve, reject) => {
+    reject( { ErrorMessage: data })
+  })
+}
+
+const errorMessage = async (data) => {
+  return { ErrorMessage: data }
+}
+
+const successMessage = async (data) => {
+  return { Success: data }
+}
+
 module.exports = {
     deleteWithKeys,
     queryWithKeys,
@@ -177,4 +191,7 @@ module.exports = {
     queryGsi,
     updateContent,
     convertFromAws,
+    errorPromise,
+    errorMessage,
+    successMessage
 }

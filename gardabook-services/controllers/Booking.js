@@ -47,8 +47,31 @@ module.exports.deleteBooking = function deleteBooking(req, res, next) {
     bookingId= req.path.bookingId;
     apiResponse=next;
   }
-  Booking.deleteBooking(jwtSub, bookingId)
+
+  Booking.getBooking(jwtSub, bookingId)
     .then(function (response) {
+
+      if (!response) {
+        utils.writeJson(apiResponse, { ErrorMessage: "Error gettinng booking" });
+      }
+
+      if (response.userId) {
+        if (!validateUserId(jwtSub, response.userId)) {
+          utils.writeJson(apiResponse, { ErrorMessage: "No user right to get booking" });
+          return
+        }
+
+        Booking.deleteBooking(jwtSub, bookingId)
+        .then(function (response) {
+          utils.writeJson(apiResponse, response);
+        })
+        .catch(function (response) {
+          utils.writeJson(apiResponse, response);
+        });
+
+        return
+      }
+
       utils.writeJson(apiResponse, response);
     })
     .catch(function (response) {
@@ -71,6 +94,9 @@ module.exports.getBooking = function getBooking(req, res, next) {
   }
   Booking.getBooking(jwtSub, bookingId)
     .then(function (response) {
+      if (!response) {
+        utils.writeJson(apiResponse, { ErrorMessage: "Error gettinng booking" });
+      }
 
       if (response.userId) {
         if (!validateUserId(jwtSub, response.userId)) {
