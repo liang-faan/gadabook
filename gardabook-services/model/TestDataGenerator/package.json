@@ -7,7 +7,7 @@
   "license": "Gardabook",
   "dependencies": {
     "async": "^2.2.0",
-    "aws-sdk": "^2.32.0",
+    "aws-sdk": "^2.814.0",
     "faker": "^4.1.0",
     "utf8-length": "0.0.1"
   }
