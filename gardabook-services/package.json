@@ -23,7 +23,7 @@
     "jwk-to-pem": "^1.2.6",
     "node-fetch": "^2.6.0",
     "request": "^2.82.0",
-    "serverless": "^1.55.1"
+    "serverless": "^3.25.1"
   },
   "devDependencies": {
     "aws-sdk": "^2.562.0",
